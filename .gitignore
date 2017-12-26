@@ -1,0 +1,7 @@
+build/
+nbproject/private
+test/
+~$*.doc*
+log/log*
+dist/log/*
+dist/*.zip
