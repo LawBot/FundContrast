@@ -21,20 +21,11 @@ public class FundContrast {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        String inputPath = "data\\sample\\"
-                + "工银瑞信\\20161223工银瑞信新动力混合型"
-                + "\\工银瑞信新动力灵活配置混合型证券投资基金基金合同（草案）－定稿20161220.docx";
+        String inputPath = "data\\StandardDoc\\"
+                + "（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）.doc";
 
         StockTypeProcessor proc = new StockTypeProcessor();
         proc.readText(inputPath);
-        List textList = proc.getLines();
-        for (int i = 0; i < textList.size(); ++i) {
-            Pattern pattern = Pattern.compile("^第.*?部分");
-            Matcher matcher = pattern.matcher((String) textList.get(i));
-            while (matcher.find()) {
-                System.out.println((String) textList.get(i));
-            }
-//            System.out.println(i + ": " + textList.get(i));
-        }
+        proc.process();
     }
 }

@@ -11,6 +11,7 @@ package cn.com.xiaofabo.tylaw.fundcontrast.entity;
  */
 public class Subsection {
 
+    private String title;
     private String text;
 
     public Subsection(String text) {
@@ -23,6 +24,14 @@ public class Subsection {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
 }

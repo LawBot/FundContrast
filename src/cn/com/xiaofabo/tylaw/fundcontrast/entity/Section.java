@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class Section {
 
+    private String title;
     private String text;
     private List<Subsection> subsections;
 
@@ -25,6 +26,14 @@ public class Section {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public boolean hasText() {
