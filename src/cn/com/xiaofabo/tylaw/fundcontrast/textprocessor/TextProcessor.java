@@ -33,6 +33,7 @@ public class TextProcessor {
             FileInputStream fis = new FileInputStream(filePath);
             XWPFDocument docx = new XWPFDocument(fis);
             XWPFWordExtractor we = new XWPFWordExtractor(docx);
+            // read text
             docText = we.getText();
         } /// Old version word documents
         catch (org.apache.poi.openxml4j.exceptions.OLE2NotOfficeXmlFileException e) {

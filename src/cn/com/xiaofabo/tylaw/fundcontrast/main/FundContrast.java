@@ -21,9 +21,7 @@ public class FundContrast {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        String inputPath = "data\\StandardDoc\\"
-                + "（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）.doc";
-
+        String inputPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）.doc";
         StockTypeProcessor proc = new StockTypeProcessor();
         proc.readText(inputPath);
         proc.process();
