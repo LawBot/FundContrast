@@ -5,29 +5,7 @@ package cn.com.xiaofabo.tylaw.fundcontrast.textprocessor;
  * by 杨敏
  * email ddl-15 at outlook.com
  **/
-public class TypeAnalyzer {
-    public boolean isTypeOne() {
-        boolean result = false;
-        return result;
-    }
-
-
-    public boolean isTypeTwo() {
-        boolean result = false;
-        return result;
-    }
-
-
-    public boolean isTypeThree() {
-        boolean result = false;
-        return result;
-    }
-
-
-    public boolean isTypeFour() {
-        boolean result = false;
-        return result;
-    }
+public class ChapterAnalyzer {
 
 
     public boolean isChapterA() {
