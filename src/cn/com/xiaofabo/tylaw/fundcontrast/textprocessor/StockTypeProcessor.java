@@ -21,6 +21,12 @@ public class StockTypeProcessor extends TextProcessor {
         List textList = super.getLines();
         List textChunkList = new LinkedList<>();
         int startIdx = 0;
+        int chapterStartId = 0;
+        int sectionStartId = 0;
+        int subSectionStartId = 0;
+        int subSubSectionStartId = 0;
+        int textPointStartId = 0;
+
         List chunk;
 
         for (int i = 0; i < textList.size(); ++i) {
@@ -45,12 +51,108 @@ public class StockTypeProcessor extends TextProcessor {
             chunk = (List) textChunkList.get(i);
             System.out.println("Chapter " + (i + 1) + ":");
             for (int j = 0; j < chunk.size(); ++j) {
-                System.out.println(chunk.get(j));
+                if (j == 0) {
+                    chapterStartId = j;
+                }
+                // process chapter 1
+                if (i == 0) {
+                    // System.out.println(j + ": " + chunk.get(j));
+                }
+                // process chapter 2
+                if (i == 1) {
+                    // System.out.println(j + ": " + chunk.get(j));
+                }
+                // process chapter 3
+                if (i == 2) {
+                    //System.out.println(j + ": " + chunk.get(j));
+                }
+                // process chapter 4
+                if (i == 3) {
+                    // System.out.println(j + ": " + chunk.get(j));
+                }
+                // process chapter 5
+                if (i == 4) {
+                    //System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 6
+                if (i == 5) {
+                    // System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 7
+                if (i == 6) {
+                    //System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 8
+                if (i == 7) {
+                    //System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 9
+                if (i == 8) {
+                    //System.out.println("Chunk " + j + " : " + chunk.get(j));
+                }
+                // process chapter 10
+                if (i == 9) {
+                    //System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 11
+                if (i == 10) {
+                    //System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 12
+                if (i == 11) {
+                  // System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 13
+                if (i == 12) {
+                 //   System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 11
+                if (i == 13) {
+                    //System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 15
+                if (i == 14) {
+                   // System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 16
+                if (i == 15) {
+                   //System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 17
+                if (i == 16) {
+                   // System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 18
+                if (i == 17) {
+                    //System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 19
+                if (i == 18) {
+                    //System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 20
+                if (i == 19) {
+                 //  System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 21
+                if (i == 20) {
+                 //   System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 22
+                if (i == 21) {
+                  //  System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 23
+                if (i == 22) {
+                    //System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                // process chapter 24
+                if (i == 23) {
+                   // System.out.println("Chunk "+j + " : " + chunk.get(j));
+                }
+                //System.out.println(chunk.get(j));
             }
         }
-
-
-
         FundDoc fundDoc = new FundDoc("");
         return fundDoc;
     }
