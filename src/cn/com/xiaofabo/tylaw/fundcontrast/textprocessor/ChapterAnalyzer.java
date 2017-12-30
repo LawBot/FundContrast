@@ -1,5 +1,8 @@
 package cn.com.xiaofabo.tylaw.fundcontrast.textprocessor;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created @ 28.12.17
  * by 杨敏
@@ -10,6 +13,7 @@ public class ChapterAnalyzer {
 
     public boolean isChapterA() {
         boolean result = false;
+
         return result;
     }
 
