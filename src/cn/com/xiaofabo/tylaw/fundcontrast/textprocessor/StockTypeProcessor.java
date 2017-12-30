@@ -7,6 +7,7 @@ package cn.com.xiaofabo.tylaw.fundcontrast.textprocessor;
 
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.Chapter;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
+import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.ChapterNotCorrectException;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.regex.Pattern;
  */
 public class StockTypeProcessor extends TextProcessor {
 
-    public FundDoc process() {
+    public FundDoc process() throws ChapterNotCorrectException {
         List textList = super.getLines();
         List textChunkList = new LinkedList<>();
         int startIdx = 0;
@@ -58,13 +59,14 @@ public class StockTypeProcessor extends TextProcessor {
                 // process chapter 1
                 if (i == 0) {
                     //  System.out.println(j + ": " + chunk.get(j));
-                    String readLine = (String) chunk.get(j);
-                    if (readLine.startsWith("第")) {
-                        String[] contentChapter = readLine.split("\\s+");
-                        Chapter newChapter = new Chapter(readLine);
-                        newChapter.setTitle(contentChapter[0]);
-                        newChapter.setText(contentChapter[1]);
-                        System.out.println("newChapter title: " + newChapter.getTitle() + ". text is : " + newChapter.getText());
+                    String currentLine = (String) chunk.get(j);
+                    if (j == 0) {
+                        processChapter(chunk);
+                    } else if (currentLine.startsWith("一")) {
+                        String[] contentSection = currentLine.split("\\s+");
+                        if (contentSection.length == 2) {
+
+                        }
                     }
                 }
                 // process chapter 2
@@ -164,5 +166,34 @@ public class StockTypeProcessor extends TextProcessor {
         }
         FundDoc fundDoc = new FundDoc("");
         return fundDoc;
+    }
+
+    private Chapter processChapter(List chunk) throws ChapterNotCorrectException {
+        String title = null;
+        String text = null;
+        String currentLine = null;
+        Chapter newChapter = new Chapter(title);
+        for (int i = 0; i < chunk.size(); i++) {
+            currentLine = ((String) chunk.get(i)).trim();
+            if (i == 0) {
+                String[] tmp = currentLine.split("\\s+");
+                if (tmp.length == 2) {
+                    title = tmp[1];
+                    newChapter.setTitle(title);
+                    continue;
+                } else {
+                    throw new ChapterNotCorrectException();
+                }
+            } else if ((!currentLine.startsWith("一")) && (!currentLine.startsWith("1")) && (!currentLine.startsWith("（一）"))) {
+                text = text + currentLine.trim();
+                newChapter.setText(text);
+            }else{
+                System.out.println("Current text is: " + text +", title is: " + title);
+
+                break;
+            }
+        }
+        System.out.println("newChapter title: " + newChapter.getTitle() + ". text is : " + newChapter.getText());
+        return newChapter;
     }
 }
