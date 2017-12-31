@@ -8,6 +8,7 @@ package cn.com.xiaofabo.tylaw.fundcontrast.entity;
 public class TextPoint {
     private String title;
     private String text;
+
     public TextPoint(String text) {
         this.text = text;
     }

@@ -5,5 +5,5 @@ package cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler;
  * by 杨敏
  * email ddl-15 at outlook.com
  **/
-public class SectionNotCorrectException extends Exception{
+public class ChapterIncorrectException extends  Exception{
 }

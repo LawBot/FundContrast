@@ -5,29 +5,29 @@
  */
 package cn.com.xiaofabo.tylaw.fundcontrast.textprocessor;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
- *
  * @author 陈光曦
  */
 public class TextProcessor {
-    
+
+    private static final String LINE_BREAK = "\\r?\\n";
     private String docText;
     private List<String> textList;
-    private static final String LINE_BREAK = "\\r?\\n";
-    
+
     public TextProcessor() {
     }
-    
+
     public boolean readText(String filePath) throws IOException {
         try {
             FileInputStream fis = new FileInputStream(filePath);
@@ -45,11 +45,11 @@ public class TextProcessor {
         }
         return true;
     }
-    
+
     public String getText() {
         return docText;
     }
-    
+
     public List getLines() {
         String lines[] = docText.split(LINE_BREAK);
         textList = new LinkedList(Arrays.asList(lines));

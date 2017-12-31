@@ -10,13 +10,13 @@ import java.util.List;
 /**
  * @author 陈光曦
  */
-public class Subsection {
+public class SubSection {
 
     private String title;
     private String text;
-    private List<Subsection> subSubSections;
+    private List<SubSubsection> subSubSections;
 
-    public Subsection() {
+    public SubSection() {
     }
 
     public String getText() {
@@ -35,20 +35,21 @@ public class Subsection {
         this.title = title;
     }
 
-    public boolean hasText() {
-        return (text != null) && (!text.isEmpty());
-    }
 
-    public List<Subsection> getSubSubSections() {
+    public List<SubSubsection> getSubSubSections() {
         return subSubSections;
     }
 
-    public void setSubSubSections(List<Subsection> subSubSections) {
+    public void setSubSubSections(List<SubSubsection> subSubSections) {
         this.subSubSections = subSubSections;
     }
 
-    public boolean hasSubsection() {
+    public boolean hasSubSubsection() {
         return !subSubSections.isEmpty();
+    }
+
+    public boolean hasText() {
+        return (text != null) && (!text.isEmpty());
     }
 
 }

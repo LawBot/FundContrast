@@ -10,7 +10,7 @@ import java.util.List;
 public class SubSubsection {
     private String title;
     private String text;
-    private List<Subsection> subSubSections;
+    private List<TextPoint> textPoints;
 
     public SubSubsection() {
     }
@@ -31,19 +31,21 @@ public class SubSubsection {
         this.title = title;
     }
 
+
+    public List<TextPoint> getTextPoints() {
+        return textPoints;
+    }
+
+    public void setTextPoints(List<TextPoint> textPoints) {
+        this.textPoints = textPoints;
+    }
+
+    public boolean hasTextPoint() {
+        return !textPoints.isEmpty();
+    }
+
     public boolean hasText() {
         return (text != null) && (!text.isEmpty());
     }
 
-    public List<Subsection> getSubSubSections() {
-        return subSubSections;
-    }
-
-    public void setSubSubSections(List<Subsection> subSubSections) {
-        this.subSubSections = subSubSections;
-    }
-
-    public boolean hasSubsection() {
-        return !subSubSections.isEmpty();
-    }
 }

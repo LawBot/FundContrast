@@ -8,8 +8,8 @@ package cn.com.xiaofabo.tylaw.fundcontrast.textprocessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.Chapter;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.Section;
-import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.ChapterNotCorrectException;
-import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.SectionNotCorrectException;
+import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.ChapterIncorrectException;
+import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.SectionIncorrectException;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -22,10 +22,8 @@ import java.util.regex.Pattern;
  */
 public class StockTypeProcessor extends TextProcessor {
 
-    FundDoc fundDoc = new FundDoc("");
-    private int sectionStartId = 0;
+    FundDoc fundDoc = new FundDoc("（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）");
     private List<String> sectionTitles = new ArrayList<String>();
-    private int sectionCounter = 0;
 
     /**
      * Constructor
@@ -49,8 +47,10 @@ public class StockTypeProcessor extends TextProcessor {
         List textChunkList = new LinkedList<>();
         int startIdx = 0;
         int chapterStartId = 0;
-
         List chunk;
+        String currentLine = "";
+        List<Chapter> chapters = new ArrayList<>();
+        int index = 0;
 
         for (int i = 0; i < textList.size(); ++i) {
             Pattern pattern = Pattern.compile("^第.*?部分.*?[^0-9]$");
@@ -64,17 +64,14 @@ public class StockTypeProcessor extends TextProcessor {
                     textChunkList.add(chunk);
                 }
             }
-            //System.out.println(i + ": " + textList.get(i));
+            //System.out.println(i + ": " + textList.get(0));
         }
         chunk = textList.subList(startIdx, textList.size() - 1);
         textChunkList.add(chunk);
-        String currentLine = "";
-        //  for (int i = 0; i < textChunkList.size(); ++i) {
 
-        for (int i = 0; i < 1; ++i) {
+        //process chapter
+        for (int i = 0; i < textChunkList.size(); ++i) {
             chunk = (List) textChunkList.get(i);
-            //System.out.println("Processing Chapter " + (i + 1) + ": " + chunk);
-            //System.out.println("SOOOO");
             for (int j = 0; j < chunk.size(); ++j) {
                 if (j == 0) {
                     chapterStartId = j;
@@ -82,30 +79,39 @@ public class StockTypeProcessor extends TextProcessor {
                 currentLine = (String) chunk.get(j);
                 if (j == 0) {
                     try {
-                        processChapter(chunk);
-                    } catch (ChapterNotCorrectException e) {
-                        //TODO
+                        chapters.add(processChapter(chunk));
+                    } catch (ChapterIncorrectException e) {
+                        e.printStackTrace();
                     }
-                }
-                // process sections
-                if (currentLine.startsWith("一、")) {
-                    List<Integer> lineNumbers = sectionCount(chunk);
-                    try {
-                        for (int k = 0; k < lineNumbers.size(); k++) {
-                            System.out.println(lineNumbers.get(k) + "  " + k);
-                            Section tmp = processSection(chunk, lineNumbers.get(k), k);
-                            System.out.println(tmp.getTitle() + " the text is: " + tmp.getText());
-                        }
-                    } catch (SectionNotCorrectException e) {
-                        //TODO
-                    }
-                }
-                //process sub-sections
-                if (currentLine.startsWith("(一)")) {
-
                 }
             }
-            //System.out.println("Processing Finish");
+        }
+
+        //process section
+        for (Chapter c : chapters) {
+            //      System.out.println(c.getTitle() + "---" + c.getText());
+            chunk = (List) textChunkList.get(index);
+            List<Integer> secStatus = secLineNumber(chunk);
+            if (!secStatus.isEmpty()) {
+                // System.out.println(c.getTitle()+ c.getText());
+                List<Section> sectionList = new ArrayList<Section>();
+                for (int lineNumber : secStatus) {
+                    try {
+                        sectionList.add(processSection(chunk, lineNumber));
+                    } catch (SectionIncorrectException e) {
+                        e.printStackTrace();
+                    }
+                }
+                c.setSections(sectionList);
+            }
+            index++;
+        }
+        for (Chapter c : chapters) {
+            //System.out.println("Chapter" + c.getTitle());
+            for (Section s : c.getSections()) {
+                //System.out.println(s.getTitle() + " //" + s.getText());
+            }
+            //System.out.println("-------------------------");
         }
         return fundDoc;
     }
@@ -113,9 +119,9 @@ public class StockTypeProcessor extends TextProcessor {
     /**
      * @param chunk
      * @return Chapter entity
-     * @throws ChapterNotCorrectException
+     * @throws ChapterIncorrectException
      */
-    private Chapter processChapter(List chunk) throws ChapterNotCorrectException {
+    private Chapter processChapter(List chunk) throws ChapterIncorrectException {
         String title = "";
         String text = "";
         String currentLine = "";
@@ -128,18 +134,15 @@ public class StockTypeProcessor extends TextProcessor {
                     newChapter.setText(text);
                     title = tmp[1];
                     newChapter.setTitle(title);
-                    //System.out.println("Chapter:" + title);
                     continue;
                 } else {
-                    throw new ChapterNotCorrectException();
+                    throw new ChapterIncorrectException();
                 }
             }
             if ((!currentLine.startsWith("一、")) && (!currentLine.startsWith("1、")) && (!currentLine.startsWith("（一）"))) {
                 text += currentLine.trim();
             } else {
-                sectionStartId = i;
                 newChapter.setText(text);
-                //System.out.println(" Chapter text: " + text + " ,id is :" + sectionStartId + " Get this: " + chunk.get(sectionStartId));
                 break;
             }
         }
@@ -148,22 +151,22 @@ public class StockTypeProcessor extends TextProcessor {
 
     /**
      * @param chunk
-     * @param lineNumber
-     * @param sectionNo
      * @return Section entity
-     * @throws SectionNotCorrectException
+     * @throws SectionIncorrectException
      */
-    private Section processSection(List chunk, int lineNumber, int sectionNo) throws SectionNotCorrectException {
+    private Section processSection(List chunk, int secStartId) throws SectionIncorrectException {
+        String currentLine = "";
         String title = "";
         String text = "";
-        String currentLine = "";
         Section newSection = new Section();
-        for (int i = lineNumber; i < chunk.size(); i++) {
+        int index = 0;
+
+        for (int i = secStartId; i < chunk.size() && index < this.sectionTitles.size(); i++) {
             currentLine = ((String) chunk.get(i)).trim();
-            String[] tmp = currentLine.split(this.sectionTitles.get(sectionNo));
+            String[] tmp = currentLine.split(this.sectionTitles.get(index));
             if (tmp.length >= 2) {
-                title = tmp[0] + this.sectionTitles.get(sectionNo);
-                this.sectionCounter++;
+                title = tmp[0] + this.sectionTitles.get(index);
+                index++;
                 newSection.setTitle(title);
                 text = tmp[1];
             } else if ((!currentLine.startsWith("^[0-9]*$、")) && (!currentLine.startsWith("（一）"))) {
@@ -175,17 +178,13 @@ public class StockTypeProcessor extends TextProcessor {
         return newSection;
     }
 
-    /**
-     * @param chunk
-     * @return List of section number
-     */
-    private List<Integer> sectionCount(List chunk) {
-        List<Integer> lineNumberOfSection = new ArrayList<Integer>();
-        this.sectionCounter = 0;
-        for (int k = 0; k < chunk.size(); k++) {
-            if (chunk.get(k).toString().trim().contains(this.sectionTitles.get(this.sectionCounter))) {
+    private List<Integer> secLineNumber(List chunk) {
+        List<Integer> lineNumberOfSection = new ArrayList();
+        int j = 0;
+        for (int k = 0; k < chunk.size() && j < this.sectionTitles.size(); k++) {
+            if (chunk.get(k).toString().trim().contains(this.sectionTitles.get(j))) {
                 lineNumberOfSection.add(k);
-                this.sectionCounter++;
+                j++;
             }
         }
         return lineNumberOfSection;
