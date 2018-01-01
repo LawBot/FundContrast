@@ -95,9 +95,11 @@ public class StockTypeProcessor extends TextProcessor {
             if (!secStatus.isEmpty()) {
                 // System.out.println(c.getTitle()+ c.getText());
                 List<Section> sectionList = new ArrayList<Section>();
-                for (int lineNumber : secStatus) {
+                int lineNumber = 0;
+                for (int i = 0;i <secStatus.size();i++) {
+                    lineNumber = secStatus.get(i);
                     try {
-                        sectionList.add(processSection(chunk, lineNumber));
+                        sectionList.add(processSection(chunk, lineNumber, i));
                     } catch (SectionIncorrectException e) {
                         e.printStackTrace();
                     }
@@ -107,9 +109,9 @@ public class StockTypeProcessor extends TextProcessor {
             index++;
         }
         for (Chapter c : chapters) {
-            System.out.println("Chapter" + c.getTitle());
+            System.out.println("Chapter: " + c.getTitle());
             for (Section s : c.getSections()) {
-               // System.out.println(s.getTitle() + " //" + s.getText());
+                System.out.println(s.getTitle() + " //" + s.getText());
             }
             System.out.println("-------------------------");
         }
@@ -154,15 +156,16 @@ public class StockTypeProcessor extends TextProcessor {
      * @return Section entity
      * @throws SectionIncorrectException
      */
-    private Section processSection(List chunk, int secStartId) throws SectionIncorrectException {
+    private Section processSection(List chunk, int secStartId, int index) throws SectionIncorrectException {
         String currentLine = "";
         String title = "";
         String text = "";
         Section newSection = new Section();
-        int index = 0;
+
 
         for (int i = secStartId; i < chunk.size() && index < this.sectionTitles.size(); i++) {
             currentLine = ((String) chunk.get(i)).trim();
+            String checktitles = this.sectionTitles.get(index);
             String[] tmp = currentLine.split(this.sectionTitles.get(index));
             if (tmp.length >= 2) {
                 title = tmp[0] + this.sectionTitles.get(index);
