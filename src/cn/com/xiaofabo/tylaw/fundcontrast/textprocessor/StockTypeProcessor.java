@@ -96,7 +96,7 @@ public class StockTypeProcessor extends TextProcessor {
                 // System.out.println(c.getTitle()+ c.getText());
                 List<Section> sectionList = new ArrayList<Section>();
                 int lineNumber = 0;
-                for (int i = 0;i <secStatus.size();i++) {
+                for (int i = 0; i < secStatus.size(); i++) {
                     lineNumber = secStatus.get(i);
                     try {
                         sectionList.add(processSection(chunk, lineNumber, i));
