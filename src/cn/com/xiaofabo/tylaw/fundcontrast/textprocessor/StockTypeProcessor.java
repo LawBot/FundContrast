@@ -107,11 +107,11 @@ public class StockTypeProcessor extends TextProcessor {
             index++;
         }
         for (Chapter c : chapters) {
-            //System.out.println("Chapter" + c.getTitle());
+            System.out.println("Chapter" + c.getTitle());
             for (Section s : c.getSections()) {
-                //System.out.println(s.getTitle() + " //" + s.getText());
+               // System.out.println(s.getTitle() + " //" + s.getText());
             }
-            //System.out.println("-------------------------");
+            System.out.println("-------------------------");
         }
         return fundDoc;
     }
