@@ -1,0 +1,109 @@
+
+public Chapter processChapter(List chapterStrChunk){
+	// Just in case empty lines may affect further processing, remove them first.
+	List chapterStrChunk = removeAllEmptyLines(chapterStrChunk);
+	String firstLine = (String)chapterStrChunk.get(0);
+	
+	// We might need different strategies to process different chapters (because of their different numbering schemes).
+	// As you have counted, there are 8 types of chapter numberings in total (?)
+	// So we need 8 different ways to process the chapters
+	// Here we should identify and separate them according to their chapter index
+	int chapterIdx = getChapterIndex(firstLine);
+	
+	int type = 0;
+	// This is just an example. For instance when chapter index is 1, 2, or 5, they are of type 1, etc.
+	switch(chapterIdx){
+		case 1:
+		case 2:
+		case 5:
+			type = 1;
+			break;
+		case 3:
+		case 6:
+			type = 2;
+			break;
+		default:
+			type = 3;
+			break;
+	}
+	
+	return processChapter(chapterStrChunk, type);
+}
+
+// Here we process the chapters according to their types
+private Chapter processChapter(List chapterStrChunk, int type){
+	Chapter c;
+	// Since process of each type will be totally different,
+	// we could separate them into different methods instead of write everything in here.
+	switch(type){
+		case 1:
+			c = chapterStrType1(chapterStrChunk);
+			break;
+		case 2:
+			c = chapterStrType2(chapterStrChunk);
+			break;
+		default:
+			c = null;
+			break;
+	}
+	return c;
+}
+
+// Be more specific
+// This type 1 is an example for processing chapter 1 "第一部分 前言"
+private Chapter chapterStrType1(List chapterStrChunk){
+	Chapter c = new Chapter();
+	String firstLine = (String)chapterStrChunk.get(0);
+	// getTitle() should be implemented
+	c.setTitle(getTitle(firstLine));
+	
+	// Start from second line because first line is title part
+	int lineIdx = 1;
+	StringBuilder tmpText = new StringBuilder();
+	while(lineIdx != chapterStrChunk.size()){
+		String currentline = chapterStrChunk.get(lineIdx).trim();
+		// If there is text before first section, it should be stored.
+		if(!currentLine.startsWith("一、订立本基金合同")){
+			tmpText.append(currentLine);
+			lineIdx++;
+		}else{
+			break;
+		}
+	}
+	String chapterText = tmpText.isEmpty()? null : tmpText.toString();
+	c.setText(chapterText);
+	
+	List txtChunk;
+	List sectionChunkList = new LinkedList();
+	int startIdx = 0;
+	// Process from the line where "一、" starts
+	// NOTE: Here we process the chapter string chunk EXACTLY as we did with the document string chunk
+	// We first divide the text into chunks. Each chunk contains the text for a SECTION
+	// Then we process the section text with processSection methods!
+	for(int i = lineIdx; i < chapterStrChunk.size(); ++i){
+		// TODO: You may need to add more possibilities
+		Pattern pattern = Pattern.compile("^[一、|二、|三、]" );
+		Matcher matcher = pattern.matcher((String)chapterStrChunk.get(i));
+		while(matcher.find()){
+			if(startIdx == 0){
+				startIdx = i;
+			}else{
+				txtChunk = chapterStrChunk.subList(startIdx, i);
+				startIdx = i;
+				sectionChunkList.add(txtChunk);
+			}
+		}
+		txtChunk = chapterStrChunk.subList(startIdx, chapterStrChunk.size() - 1);
+		sectionChunkList.add(txtChunk);
+		
+		// When the string is divided into section chunks, we can process them using the same way as we processed chapters!
+		for(int i = 0; i < sectionChunkList.size(); ++i){
+			List sectionStrChunk = sectionChunkList.get(i);
+			// TODO: processSection() will be very similar to processChapter()!
+			// As well as processSubSection, and etc.
+			Section s = processSection(sectionStrChunk);
+			c.addSection(s);
+		}
+	}
+	return c;
+}
