@@ -46,9 +46,7 @@ public class StockTypeProcessor extends TextProcessor {
         List textList = super.getLines();
         List textChunkList = new LinkedList<>();
         int startIdx = 0;
-        int chapterStartId = 0;
         List chunk;
-        String currentLine = "";
         List<Chapter> chapters = new ArrayList<>();
         int index = 0;
 
@@ -64,7 +62,6 @@ public class StockTypeProcessor extends TextProcessor {
                     textChunkList.add(chunk);
                 }
             }
-            //System.out.println(i + ": " + textList.get(0));
         }
         chunk = textList.subList(startIdx, textList.size() - 1);
         textChunkList.add(chunk);
@@ -72,27 +69,18 @@ public class StockTypeProcessor extends TextProcessor {
         //process chapter
         for (int i = 0; i < textChunkList.size(); ++i) {
             chunk = (List) textChunkList.get(i);
-//            for (int j = 0; j < chunk.size(); ++j) {
-//                if (j == 0) {
-//                    chapterStartId = j;
-//                }
-//               if (j == 0) {
             try {
                 chapters.add(processChapter(chunk));
             } catch (ChapterIncorrectException e) {
                 e.printStackTrace();
             }
         }
-//            }
-        //   }
 
         //process section
         for (Chapter c : chapters) {
-            //      System.out.println(c.getTitle() + "---" + c.getText());
             chunk = (List) textChunkList.get(index);
             List<Integer> secStatus = secLineNumber(chunk);
             if (!secStatus.isEmpty()) {
-                // System.out.println(c.getTitle()+ c.getText());
                 List<Section> sectionList = new ArrayList<Section>();
                 int lineNumber = 0;
                 for (int i = 0; i < secStatus.size(); i++) {
@@ -136,19 +124,19 @@ public class StockTypeProcessor extends TextProcessor {
             if (i == 0) {
                 String[] tmp = currentLine.split("\\s+");
                 if (tmp.length >= 2) {
-                    title = tmp[1];
+                    title = tmp[1].trim();
                     newChapter.setTitle(title);
                     continue;
                 } else {
                     throw new ChapterIncorrectException();
                 }
             }
-            if ((!currentLine.startsWith("一、")) && (!currentLine.startsWith("1、")) && (!currentLine.startsWith("（一）"))) {
+            if ((!currentLine.startsWith("一、")) && (!currentLine.startsWith("1、")) && (!currentLine.startsWith("(一)"))) {
                 text += currentLine.trim();
             } else {
-                newChapter.setText(text);
                 break;
             }
+            newChapter.setText(text);
         }
         return newChapter;
     }
@@ -181,6 +169,7 @@ public class StockTypeProcessor extends TextProcessor {
         }
         return newSection;
     }
+
 
     private List<Integer> secLineNumber(List chunk) {
         List<Integer> lineNumberOfSection = new ArrayList();
