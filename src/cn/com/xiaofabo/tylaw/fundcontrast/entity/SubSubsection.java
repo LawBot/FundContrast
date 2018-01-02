@@ -8,7 +8,6 @@ import java.util.List;
  * email ddl-15 at outlook.com
  **/
 public class SubSubsection {
-    private String title;
     private String text;
     private List<TextPoint> textPoints;
 
@@ -22,15 +21,6 @@ public class SubSubsection {
     public void setText(String text) {
         this.text = text;
     }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
 
     public List<TextPoint> getTextPoints() {
         return textPoints;

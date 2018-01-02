@@ -72,20 +72,19 @@ public class StockTypeProcessor extends TextProcessor {
         //process chapter
         for (int i = 0; i < textChunkList.size(); ++i) {
             chunk = (List) textChunkList.get(i);
-            for (int j = 0; j < chunk.size(); ++j) {
-                if (j == 0) {
-                    chapterStartId = j;
-                }
-                currentLine = (String) chunk.get(j);
-                if (j == 0) {
-                    try {
-                        chapters.add(processChapter(chunk));
-                    } catch (ChapterIncorrectException e) {
-                        e.printStackTrace();
-                    }
-                }
+//            for (int j = 0; j < chunk.size(); ++j) {
+//                if (j == 0) {
+//                    chapterStartId = j;
+//                }
+//               if (j == 0) {
+            try {
+                chapters.add(processChapter(chunk));
+            } catch (ChapterIncorrectException e) {
+                e.printStackTrace();
             }
         }
+//            }
+        //   }
 
         //process section
         for (Chapter c : chapters) {
@@ -109,10 +108,11 @@ public class StockTypeProcessor extends TextProcessor {
             index++;
         }
         for (Chapter c : chapters) {
-            System.out.println("Chapter: " + c.getTitle());
-            for (Section s : c.getSections()) {
-                System.out.println(s.getTitle() + " //" + s.getText());
-            }
+
+            System.out.println("Chapter: " + c.getTitle() + "\n***" + c.getText());
+//            for (Section s : c.getSections()) {
+//                System.out.println(s.getTitle() + " //" + s.getText());
+//            }
             System.out.println("-------------------------");
         }
         return fundDoc;
@@ -130,10 +130,12 @@ public class StockTypeProcessor extends TextProcessor {
         Chapter newChapter = new Chapter(title);
         for (int i = 0, j = 0; i < chunk.size(); i++) {
             currentLine = ((String) chunk.get(i)).trim();
+            if (currentLine == "" || currentLine == null) {
+                continue;
+            }
             if (i == 0) {
                 String[] tmp = currentLine.split("\\s+");
                 if (tmp.length >= 2) {
-                    newChapter.setText(text);
                     title = tmp[1];
                     newChapter.setTitle(title);
                     continue;
@@ -162,16 +164,15 @@ public class StockTypeProcessor extends TextProcessor {
         String text = "";
         Section newSection = new Section();
 
-
         for (int i = secStartId; i < chunk.size() && index < this.sectionTitles.size(); i++) {
             currentLine = ((String) chunk.get(i)).trim();
+            if (currentLine == "" || currentLine == null) {
+                continue;
+            }
             String checktitles = this.sectionTitles.get(index);
             String[] tmp = currentLine.split(this.sectionTitles.get(index));
             if (tmp.length >= 2) {
-                title = tmp[0] + this.sectionTitles.get(index);
                 index++;
-                newSection.setTitle(title);
-                text = tmp[1];
             } else if ((!currentLine.startsWith("^[0-9]*$、")) && (!currentLine.startsWith("（一）"))) {
                 text += currentLine.trim();
                 newSection.setText(text);

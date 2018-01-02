@@ -6,7 +6,6 @@ package cn.com.xiaofabo.tylaw.fundcontrast.entity;
  * email ddl-15 at outlook.com
  **/
 public class TextPoint {
-    private String title;
     private String text;
 
     public TextPoint(String text) {
@@ -19,14 +18,6 @@ public class TextPoint {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
 }
