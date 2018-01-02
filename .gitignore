@@ -3,5 +3,7 @@ nbproject/private
 test/
 ~$*.doc*
 log/log*
-dist/log/*
-dist/*.zip
+dist
+.classpath
+.settings
+.project
