@@ -53,6 +53,7 @@ public class StockTypeProcessor extends TextProcessor {
         for (int i = 0; i < textList.size(); ++i) {
             Pattern pattern = Pattern.compile("^第.*?部分.*?[^0-9]$");
             Matcher matcher = pattern.matcher((String) textList.get(i));
+
             while (matcher.find()) {
                 if (startIdx == 0) {
                     startIdx = i;
@@ -75,9 +76,10 @@ public class StockTypeProcessor extends TextProcessor {
                 e.printStackTrace();
             }
         }
+        fundDoc.setChapters(chapters);
 
         //process section
-        for (Chapter c : chapters) {
+        for (Chapter c : fundDoc.getChapters()) {
             chunk = (List) textChunkList.get(index);
             List<Integer> secStatus = secLineNumber(chunk);
             if (!secStatus.isEmpty()) {
@@ -95,13 +97,15 @@ public class StockTypeProcessor extends TextProcessor {
             }
             index++;
         }
-        for (Chapter c : chapters) {
 
-            System.out.println("Chapter: " + c.getTitle() + "\n***" + c.getText());
-//            for (Section s : c.getSections()) {
-//                System.out.println(s.getTitle() + " //" + s.getText());
-//            }
-            System.out.println("-------------------------");
+        //printout current structured fundDoc
+        System.out.println("FundDoc: " + fundDoc.getTitle());
+        for (Chapter c : fundDoc.getChapters()) {
+            //System.out.println("Chapter: " + c.getTitle() + "\nText: " + c.getText());
+            for (Section s : c.getSections()) {
+                System.out.println("Section: " + s.getText());
+            }
+            System.out.println("------------End-------------");
         }
         return fundDoc;
     }
@@ -147,21 +151,20 @@ public class StockTypeProcessor extends TextProcessor {
      * @throws SectionIncorrectException
      */
     private Section processSection(List chunk, int secStartId, int index) throws SectionIncorrectException {
-        String currentLine = "";
-        String title = "";
+        String currentLine;
         String text = "";
         Section newSection = new Section();
 
         for (int i = secStartId; i < chunk.size() && index < this.sectionTitles.size(); i++) {
             currentLine = ((String) chunk.get(i)).trim();
+            // currentLine = "1、订立本基金合同的目的是保护投资人合法权益，明确基金合同当事人的权利义务，规范基金运作。";
             if (currentLine == "" || currentLine == null) {
                 continue;
             }
-            String checktitles = this.sectionTitles.get(index);
             String[] tmp = currentLine.split(this.sectionTitles.get(index));
             if (tmp.length >= 2) {
-                index++;
-            } else if ((!currentLine.startsWith("^[0-9]*$、")) && (!currentLine.startsWith("（一）"))) {
+                text = tmp[1];
+            } else if ((!currentLine.startsWith("1、")) && (!currentLine.contains("^[1-9]\\d*、")) && (!currentLine.contains("（[\\u4e00-\\u9fa5]）"))) {
                 text += currentLine.trim();
                 newSection.setText(text);
                 break;
@@ -169,7 +172,6 @@ public class StockTypeProcessor extends TextProcessor {
         }
         return newSection;
     }
-
 
     private List<Integer> secLineNumber(List chunk) {
         List<Integer> lineNumberOfSection = new ArrayList();
