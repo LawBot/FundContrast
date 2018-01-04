@@ -1,9 +1,10 @@
 build/
 nbproject/private
+nbproject/
 test/
 ~$*.doc*
 log/log*
-dist
+dist/*
 .classpath
 .settings
 .project
