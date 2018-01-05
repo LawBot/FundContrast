@@ -19,10 +19,10 @@ public class FundContrast {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException, ChapterIncorrectException {
-        //String inputPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）.doc";
+        String inputPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）.doc";
         //String inputPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第2号——指数型证券投资基金基金合同填报指引（试行）.doc";
         //String inputPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第3号——债券型证券投资基金基金合同填报指引（试行）.doc";
-        String inputPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第4号——货币市场基金基金合同填报指引（试行）.doc";
+        // String inputPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第4号——货币市场基金基金合同填报指引（试行）.doc";
 
         // 工银瑞信
         //String inputPath = "data/Sample/工银瑞信/20161223工银瑞信新动力混合型/工银瑞信新动力灵活配置混合型证券投资基金基金合同（草案）－定稿20161220.docx";
