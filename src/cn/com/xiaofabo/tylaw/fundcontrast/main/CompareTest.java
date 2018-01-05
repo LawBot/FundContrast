@@ -1,4 +1,4 @@
-package com.mindpin.rsync;
+package cn.com.xiaofabo.tylaw.fundcontrast.main;
 
 import java.util.ArrayList;
 import java.util.Arrays;
