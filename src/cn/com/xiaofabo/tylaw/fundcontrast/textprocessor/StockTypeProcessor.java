@@ -8,6 +8,7 @@ package cn.com.xiaofabo.tylaw.fundcontrast.textprocessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.Chapter;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.Section;
+import cn.com.xiaofabo.tylaw.fundcontrast.entity.SubSection;
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.ChapterIncorrectException;
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.SectionIncorrectException;
 
@@ -118,7 +119,6 @@ public class StockTypeProcessor extends TextProcessor {
             }
             if ((!currentLine.startsWith("一、")) && (!currentLine.startsWith("1、")) && (!currentLine.startsWith("(一)"))) {
                 text += currentLine.trim();
-
             } else if (currentLine.startsWith("一、")) {
                 StartSectionId = i;
                 processSection(chunk, StartSectionId, "一、");
@@ -146,24 +146,88 @@ public class StockTypeProcessor extends TextProcessor {
         String text = "";
         Section newSection = new Section();
         String sectionType = signalOfSection;
+
         Pattern chinese = Pattern.compile("[\\u4e00-\\u9fa5]、");
         Pattern chineseBraces = Pattern.compile("（[\\u4e00-\\u9fa5]）");
-        Pattern arobicNumbers = Pattern.compile("^[1-9]\\d*、");
+        Pattern arabNumbers = Pattern.compile("^[1-9]\\d*、");
+
+        Matcher mChinese = chinese.matcher(sectionType);
+        Matcher mChineseBraces = chineseBraces.matcher(sectionType);
+        Matcher mArabNumbers = arabNumbers.matcher(sectionType);
 
 
         for (int i = secStartId; i < chunk.size(); i++) {
             currentLine = ((String) chunk.get(i)).trim();
-            // currentLine = "1、订立本基金合同的目的是保护投资人合法权益，明确基金合同当事人的权利义务，规范基金运作。";
             if (currentLine == "" || currentLine == null) {
                 continue;
             }
-            if ((!currentLine.startsWith("1、")) && (!currentLine.contains("^[1-9]\\d*、")) && (!currentLine.contains("（[\\u4e00-\\u9fa5]）"))) {
-                text += currentLine.trim();
-                newSection.setText(text);
-                break;
+
+            if (mChinese.find()) {
+                if ((!currentLine.startsWith("1、")) && (!currentLine.startsWith("(一)")) && (currentLine.split("[\u4e00-\u9fa5]、").length == 2)) {
+                    text += currentLine;
+                    newSection.setText(text);
+                } else if (currentLine.split("[\u4e00-\u9fa5]、").length == 2) {
+                    // TODO process sibling section
+                } else if (currentLine.startsWith("1、")) {
+                    processSubSection(chunk, i, "1、");
+                } else if (currentLine.startsWith("(一)")) {
+                    processSubSection(chunk, i, "(一)");
+                }
             }
+            if (mChineseBraces.find()) {
+                if ((!currentLine.startsWith("(一)"))) {
+                    text += currentLine;
+                }
+            }
+            if (mArabNumbers.find()) {
+                if ((!currentLine.startsWith("1、"))) {
+                    text += currentLine;
+                }
+            }
+            newSection.setText(text);
         }
         return newSection;
+    }
+
+    /**
+     * TODO
+     *
+     * @param chunk
+     * @param startSubSectionId
+     * @param type
+     * @return
+     */
+    private SubSection processSubSection(List chunk, int startSubSectionId, String type) {
+        SubSection newSubSection = new SubSection();
+        String currentLine;
+        String text = "";
+        String subSectionType = type;
+        int start = startSubSectionId;
+
+        Pattern chineseBraces = Pattern.compile("（[\\u4e00-\\u9fa5]）");
+        Pattern arabNumbers = Pattern.compile("^[1-9]\\d*、");
+
+        Matcher mChineseBraces = chineseBraces.matcher(subSectionType);
+        Matcher mArabNumbers = arabNumbers.matcher(subSectionType);
+
+        for (int i = start; i < chunk.size(); i++) {
+            currentLine = ((String) chunk.get(i)).trim();
+            if (currentLine == "" || currentLine == null) {
+                continue;
+            }
+            if (mChineseBraces.find()) {
+                if ((!currentLine.startsWith("1、"))) {
+                    text += currentLine;
+                }
+            }
+            if (mArabNumbers.find()) {
+                if ((!currentLine.startsWith("（1）"))) {
+                    text += currentLine;
+                }
+            }
+            newSubSection.setText(text);
+        }
+        return newSubSection;
     }
 
     private List<Integer> secLineNumber(List chunk) {
