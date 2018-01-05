@@ -5,10 +5,7 @@
  */
 package cn.com.xiaofabo.tylaw.fundcontrast.textprocessor;
 
-import cn.com.xiaofabo.tylaw.fundcontrast.entity.Chapter;
-import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
-import cn.com.xiaofabo.tylaw.fundcontrast.entity.Section;
-import cn.com.xiaofabo.tylaw.fundcontrast.entity.SubSection;
+import cn.com.xiaofabo.tylaw.fundcontrast.entity.*;
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.ChapterIncorrectException;
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.SectionIncorrectException;
 
@@ -184,7 +181,6 @@ public class StockTypeProcessor extends TextProcessor {
                     text += currentLine;
                 }
             }
-            newSection.setText(text);
         }
         return newSection;
     }
@@ -216,8 +212,13 @@ public class StockTypeProcessor extends TextProcessor {
                 continue;
             }
             if (mChineseBraces.find()) {
-                if ((!currentLine.startsWith("1、"))) {
+                if ((!currentLine.startsWith("1、")) && (currentLine.split("（[\u4e00-\u9fa5]）").length == 2)) {
                     text += currentLine;
+                    newSubSection.setText(text);
+                } else if (currentLine.split("（[\u4e00-\u9fa5]）").length == 2) {
+                    // TODO process sibling SubSection
+                } else if (currentLine.startsWith("1、")) {
+                    processSubSubSection(chunk, i);
                 }
             }
             if (mArabNumbers.find()) {
@@ -225,9 +226,53 @@ public class StockTypeProcessor extends TextProcessor {
                     text += currentLine;
                 }
             }
-            newSubSection.setText(text);
         }
         return newSubSection;
+    }
+
+    private SubSubSection processSubSubSection(List chunk, int subSubSectionStartId) {
+        SubSubSection newSubSubSection = new SubSubSection();
+        String text = "";
+        int start = subSubSectionStartId;
+        String currentLine;
+        //Pattern arabNumbers = Pattern.compile("^[1-9]\\d*、");
+        for (int i = start; i < chunk.size(); i++) {
+            currentLine = ((String) chunk.get(i)).trim();
+            if (currentLine == "" || currentLine == null) {
+                continue;
+            }
+            if ((!currentLine.startsWith("（1）")) && (currentLine.split("[\u4e00-\u9fa5]、").length == 2)) {
+                text += currentLine;
+                newSubSubSection.setText(text);
+            }
+            if (currentLine.split("[\u4e00-\u9fa5]、").length == 2) {
+                // TODO process sibling SubSubSection
+            }
+            if (currentLine.startsWith("（1）")) {
+                processTextPoint(chunk, i);
+            }
+        }
+        return newSubSubSection;
+    }
+
+    private TextPoint processTextPoint(List chunk, int textPointStartId) {
+        TextPoint newText = new TextPoint();
+        String text = "";
+        int start = textPointStartId;
+        String currentLine = "";
+        for (int i = start; i < chunk.size(); i++) {
+            currentLine = ((String) chunk.get(i)).trim();
+            if (currentLine == "" || currentLine == null) {
+                continue;
+            }
+            if (!(currentLine.split("[\u4e00-\u9fa5]、").length == 2)) {
+                text += currentLine;
+                newText.setText(text);
+            } else {
+                //TODO process textPoint siblings
+            }
+        }
+        return newText;
     }
 
     private List<Integer> secLineNumber(List chunk) {

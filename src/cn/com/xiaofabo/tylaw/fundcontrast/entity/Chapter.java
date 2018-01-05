@@ -17,7 +17,7 @@ public class Chapter {
     private String text;
     private List<Section> sections;
     private List<SubSection> subSections;
-    private List<SubSubsection> subSubsections;
+    private List<SubSubSection> subSubsections;
 
     public Chapter(String title) {
         this.title = title;
@@ -50,7 +50,7 @@ public class Chapter {
         this.sections = sectionList;
     }
 
-    public void setSubSubSections(List<SubSubsection> subSubSectionList) {
+    public void setSubSubSections(List<SubSubSection> subSubSectionList) {
         this.subSubsections = subSubSectionList;
     }
 
@@ -62,7 +62,7 @@ public class Chapter {
         this.subSections = subSectionList;
     }
 
-    public List<SubSubsection> getSubSubsections() {
+    public List<SubSubSection> getSubSubsections() {
         return this.subSubsections;
     }
 

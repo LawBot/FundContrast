@@ -7,11 +7,11 @@ import java.util.List;
  * by 杨敏
  * email ddl-15 at outlook.com
  **/
-public class SubSubsection {
+public class SubSubSection {
     private String text;
     private List<TextPoint> textPoints;
 
-    public SubSubsection() {
+    public SubSubSection() {
     }
 
     public String getText() {

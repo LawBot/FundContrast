@@ -12,6 +12,10 @@ public class TextPoint {
         this.text = text;
     }
 
+    public TextPoint() {
+
+    }
+
     public String getText() {
         return text;
     }

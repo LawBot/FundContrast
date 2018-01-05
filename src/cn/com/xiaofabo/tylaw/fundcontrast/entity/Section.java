@@ -14,7 +14,7 @@ public class Section {
 
     private String text;
     private List<SubSection> subSections;
-    private List<SubSubsection> subSubsections;
+    private List<SubSubSection> subSubsections;
 
     public Section() {
     }
@@ -35,11 +35,11 @@ public class Section {
         this.subSections = subSections;
     }
 
-    public List<SubSubsection> getSubSubsections() {
+    public List<SubSubSection> getSubSubsections() {
         return subSubsections;
     }
 
-    public void setSubSubsections(List<SubSubsection> subSubsectionList) {
+    public void setSubSubsections(List<SubSubSection> subSubsectionList) {
         this.subSubsections = subSubsectionList;
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 public class SubSection {
 
     private String text;
-    private List<SubSubsection> subSubSections;
+    private List<SubSubSection> subSubSections;
 
     public SubSection() {
     }
@@ -26,11 +26,11 @@ public class SubSection {
         this.text = text;
     }
 
-    public List<SubSubsection> getSubSubSections() {
+    public List<SubSubSection> getSubSubSections() {
         return subSubSections;
     }
 
-    public void setSubSubSections(List<SubSubsection> subSubSections) {
+    public void setSubSubSections(List<SubSubSection> subSubSections) {
         this.subSubSections = subSubSections;
     }
 
