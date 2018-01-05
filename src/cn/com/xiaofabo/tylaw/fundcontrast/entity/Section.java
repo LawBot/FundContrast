@@ -8,14 +8,13 @@ package cn.com.xiaofabo.tylaw.fundcontrast.entity;
 import java.util.List;
 
 /**
- *
  * @author 陈光曦
  */
 public class Section {
 
-    private String title;
     private String text;
-    private List<Subsection> subsections;
+    private List<SubSection> subSections;
+    private List<SubSubsection> subSubsections;
 
     public Section() {
     }
@@ -28,28 +27,31 @@ public class Section {
         this.text = text;
     }
 
-    public String getTitle() {
-        return title;
+    public List<SubSection> getSubSections() {
+        return subSections;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setSubSections(List<SubSection> subSections) {
+        this.subSections = subSections;
+    }
+
+    public List<SubSubsection> getSubSubsections() {
+        return subSubsections;
+    }
+
+    public void setSubSubsections(List<SubSubsection> subSubsectionList) {
+        this.subSubsections = subSubsectionList;
+    }
+
+    public boolean hasSubsection() {
+        return !subSections.isEmpty();
+    }
+
+    private boolean hasSubSubSection() {
+        return !subSubsections.isEmpty();
     }
 
     public boolean hasText() {
         return (text != null) && (!text.isEmpty());
     }
-
-    public List<Subsection> getSubsections() {
-        return subsections;
-    }
-
-    public void setSubsections(List<Subsection> subsections) {
-        this.subsections = subsections;
-    }
-
-    public boolean hasSubsection() {
-        return !subsections.isEmpty();
-    }
-
 }

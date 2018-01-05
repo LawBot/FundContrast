@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *
  * @author 陈光曦
  */
 public class Chapter {
@@ -17,6 +16,8 @@ public class Chapter {
     private String title;
     private String text;
     private List<Section> sections;
+    private List<SubSection> subSections;
+    private List<SubSubsection> subSubsections;
 
     public Chapter(String title) {
         this.title = title;
@@ -40,20 +41,44 @@ public class Chapter {
         this.text = text;
     }
 
-    public boolean hasText() {
-        return (text != null) && (!text.isEmpty());
-    }
 
     public List<Section> getSections() {
         return sections;
     }
 
-    public boolean addSection(Section s) {
-        return sections.add(s);
+    public void setSections(List<Section> sectionList) {
+        this.sections = sectionList;
+    }
+
+    public void setSubSubSections(List<SubSubsection> subSubSectionList) {
+        this.subSubsections = subSubSectionList;
+    }
+
+    public List<SubSection> getSubSections() {
+        return this.subSections;
+    }
+
+    public void setSubSections(List<SubSection> subSectionList) {
+        this.subSections = subSectionList;
+    }
+
+    public List<SubSubsection> getSubSubsections() {
+        return this.subSubsections;
     }
 
     public boolean hasSection() {
         return !sections.isEmpty();
     }
 
+    public boolean hasText() {
+        return (text != null) && (!text.isEmpty());
+    }
+
+    public boolean hasSubSections() {
+        return !this.subSections.isEmpty();
+    }
+
+    public boolean hasSubSubSections() {
+        return !this.subSubsections.isEmpty();
+    }
 }
