@@ -21,20 +21,12 @@ import java.util.regex.Pattern;
 public class StockTypeProcessor extends TextProcessor {
 
     FundDoc fundDoc = new FundDoc("（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）");
-    private List<String> sectionTitles = new ArrayList<String>();
 
     /**
      * Constructor
      */
     public StockTypeProcessor() {
-        this.sectionTitles.add("一、");
-        this.sectionTitles.add("二、");
-        this.sectionTitles.add("三、");
-        this.sectionTitles.add("四、");
-        this.sectionTitles.add("五、");
-        this.sectionTitles.add("六、");
-        this.sectionTitles.add("七、");
-        this.sectionTitles.add("八、");
+
     }
 
     /**
@@ -65,7 +57,7 @@ public class StockTypeProcessor extends TextProcessor {
         chunk = textList.subList(startIdx, textList.size() - 1);
         textChunkList.add(chunk);
 
-        //process chapter
+        // process chapter
         for (int i = 0; i < textChunkList.size(); ++i) {
             chunk = (List) textChunkList.get(i);
             try {
@@ -99,6 +91,7 @@ public class StockTypeProcessor extends TextProcessor {
         String currentLine = "";
         Chapter newChapter = new Chapter(title);
         int StartSectionId = 0;
+
         for (int i = 0, j = 0; i < chunk.size(); i++) {
             currentLine = ((String) chunk.get(i)).trim();
             if (currentLine == "" || currentLine == null) {
@@ -116,19 +109,23 @@ public class StockTypeProcessor extends TextProcessor {
             }
             if ((!currentLine.startsWith("一、")) && (!currentLine.startsWith("1、")) && (!currentLine.startsWith("(一)"))) {
                 text += currentLine.trim();
-            } else if (currentLine.startsWith("一、")) {
+                newChapter.setText(text);
+            }
+            if (currentLine.startsWith("一、")) {
                 StartSectionId = i;
                 processSection(chunk, StartSectionId, "一、");
-            } else if (currentLine.startsWith("1、")) {
+                break;
+            }
+            if (currentLine.startsWith("1、")) {
                 StartSectionId = i;
                 processSection(chunk, StartSectionId, "1、");
-            } else if (currentLine.startsWith("(一)")) {
+                break;
+            }
+            if (currentLine.startsWith("(一)")) {
                 StartSectionId = i;
                 processSection(chunk, StartSectionId, "(一)");
-            } else {
-
+                break;
             }
-            newChapter.setText(text);
         }
         return newChapter;
     }
@@ -273,17 +270,5 @@ public class StockTypeProcessor extends TextProcessor {
             }
         }
         return newText;
-    }
-
-    private List<Integer> secLineNumber(List chunk) {
-        List<Integer> lineNumberOfSection = new ArrayList();
-        int j = 0;
-        for (int k = 0; k < chunk.size() && j < this.sectionTitles.size(); k++) {
-            if (chunk.get(k).toString().trim().contains(this.sectionTitles.get(j))) {
-                lineNumberOfSection.add(k);
-                j++;
-            }
-        }
-        return lineNumberOfSection;
     }
 }
