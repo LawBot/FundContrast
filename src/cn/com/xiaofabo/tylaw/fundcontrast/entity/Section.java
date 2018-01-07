@@ -15,7 +15,6 @@ public class Section {
     private String title;
     private String text;
     private List<SubSection> subSections;
-    private List<SubSubSection> subSubsections;
 
     public Section() {
     }
@@ -44,20 +43,8 @@ public class Section {
         this.subSections = subSections;
     }
 
-    public List<SubSubSection> getSubSubsections() {
-        return subSubsections;
-    }
-
-    public void setSubSubsections(List<SubSubSection> subSubsectionList) {
-        this.subSubsections = subSubsectionList;
-    }
-
     public boolean hasSubsection() {
         return !subSections.isEmpty();
-    }
-
-    private boolean hasSubSubSection() {
-        return !subSubsections.isEmpty();
     }
 
     public boolean hasText() {

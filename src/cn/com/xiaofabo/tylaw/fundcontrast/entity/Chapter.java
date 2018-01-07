@@ -16,8 +16,7 @@ public class Chapter {
     private String title;
     private String text;
     private List<Section> sections;
-    private List<SubSection> subSections;
-    private List<SubSubSection> subSubsections;
+
 
     public Chapter(String title) {
         this.title = title;
@@ -41,29 +40,12 @@ public class Chapter {
         this.text = text;
     }
 
-
     public List<Section> getSections() {
         return sections;
     }
 
     public void setSections(List<Section> sectionList) {
         this.sections = sectionList;
-    }
-
-    public void setSubSubSections(List<SubSubSection> subSubSectionList) {
-        this.subSubsections = subSubSectionList;
-    }
-
-    public List<SubSection> getSubSections() {
-        return this.subSections;
-    }
-
-    public void setSubSections(List<SubSection> subSectionList) {
-        this.subSections = subSectionList;
-    }
-
-    public List<SubSubSection> getSubSubsections() {
-        return this.subSubsections;
     }
 
     public boolean hasSection() {
@@ -74,11 +56,4 @@ public class Chapter {
         return (text != null) && (!text.isEmpty());
     }
 
-    public boolean hasSubSections() {
-        return !this.subSections.isEmpty();
-    }
-
-    public boolean hasSubSubSections() {
-        return !this.subSubsections.isEmpty();
-    }
 }
