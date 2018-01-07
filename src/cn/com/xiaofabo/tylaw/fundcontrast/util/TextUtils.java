@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *
  * @author 陈光曦
  */
 public class TextUtils {
@@ -69,6 +68,15 @@ public class TextUtils {
         return title;
     }
 
+    public static String getType3SubSectionTitle(String titleLine) {
+        int start = titleLine.indexOf("）") + "）".length();
+        if (start == 0) {
+            return null;
+        }
+        String title = titleLine.substring(start).trim();
+        return title;
+    }
+
     public static String getSubSubSectionTitle(String titleLine) {
         int start = titleLine.indexOf("）") + "）".length();
         if (start == 0) {
@@ -87,10 +95,10 @@ public class TextUtils {
         int q = j * 100;
         return l < 2
                 ? i : l < 3
-                        ? i == 10
-                                ? j * 10 : i > 10
-                                        ? q : 10 + i : l < 4
-                                ? j * 10 + i : l < 5
-                                        ? q + i : q + i + x.indexOf(s.charAt(2)) * 10;
+                ? i == 10
+                ? j * 10 : i > 10
+                ? q : 10 + i : l < 4
+                ? j * 10 + i : l < 5
+                ? q + i : q + i + x.indexOf(s.charAt(2)) * 10;
     }
 }
