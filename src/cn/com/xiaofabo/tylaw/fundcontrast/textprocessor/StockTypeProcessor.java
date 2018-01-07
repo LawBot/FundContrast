@@ -437,7 +437,7 @@ public class StockTypeProcessor extends TextProcessor {
 //        for(int i = 0; i < subsecStrList.size(); ++i){
 //            System.out.println("\t\t" + subsecStrList.get(i));
 //        }
-        String title = TextUtils.getType3SubSectionTitle((String) subsecStrList.get(0));
+        String title = TextUtils.getSubSectionTitle((String) subsecStrList.get(0));
         System.out.println("\t\tSub-Section Title: " + title);
         ss.setTitle(title);
 
@@ -499,7 +499,7 @@ public class StockTypeProcessor extends TextProcessor {
     private SubSection processType3SubSection(List sectionStrChunk) {
         SubSection s = new SubSection();
 
-        String title = TextUtils.getSectionTitle((String) sectionStrChunk.get(0));
+        String title = TextUtils.getType3SubSectionTitle((String) sectionStrChunk.get(0));
         System.out.println("\tSub-Section Title: " + title);
         s.setTitle(title);
 
