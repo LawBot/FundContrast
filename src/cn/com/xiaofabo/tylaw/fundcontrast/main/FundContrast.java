@@ -7,6 +7,7 @@ package cn.com.xiaofabo.tylaw.fundcontrast.main;
 
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.ChapterIncorrectException;
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.SectionIncorrectException;
+import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.IndexTypeProcessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.StockTypeProcessor;
 
 import java.io.IOException;
@@ -59,9 +60,15 @@ public class FundContrast {
         //error String inputPath = "data/Sample/华夏基金/货币/华夏行业龙头混合型证券投资基金基金合同-发.docx";
         //String inputPath = "data/Sample/华夏基金/货币/华夏快线交易型货币市场基金基金合同v6_20161025.doc";
         //String inputPath = "data/Sample/华夏基金/货币/华夏普金宝货币市场基金基金合同（草案）.docx";
-
-        StockTypeProcessor proc = new StockTypeProcessor();
-        proc.readText(inputPath);
-        proc.process();
+        
+        String idxInputPath = "（2012-12-17）证券投资基金基金合同填报指引第2号——指数型证券投资基金基金合同填报指引（试行）.doc";
+        IndexTypeProcessor idx = new IndexTypeProcessor();
+        idx.readText(inputPath);
+        idx.process();
+        System.out.println("Done");
+//
+//        StockTypeProcessor proc = new StockTypeProcessor();
+//        proc.readText(inputPath);
+//        proc.process();
     }
 }

@@ -37,15 +37,45 @@ public class TextUtils {
         int idx = zhNum2Int(idxStr);
         return idx;
     }
-    
-    public static String getChapterTitle(String titleLine){
+
+    public static String getChapterTitle(String titleLine) {
         int start = titleLine.indexOf("部分") + "部分".length();
-        if(start == 0){
+        if (start == 0) {
             return null;
         }
-        
+
         String title = titleLine.substring(start).trim();
 //        System.out.println(title);
+        return title;
+    }
+
+    public static String getSectionTitle(String titleLine) {
+        int start = titleLine.indexOf("、") + "、".length();
+        if (start == 0) {
+            return null;
+        }
+
+        String title = titleLine.substring(start).trim();
+        return title;
+    }
+
+    public static String getSubSectionTitle(String titleLine) {
+        int start = titleLine.indexOf("、") + "、".length();
+        if (start == 0) {
+            return null;
+        }
+
+        String title = titleLine.substring(start).trim();
+        return title;
+    }
+
+    public static String getSubSubSectionTitle(String titleLine) {
+        int start = titleLine.indexOf("）") + "）".length();
+        if (start == 0) {
+            return null;
+        }
+
+        String title = titleLine.substring(start).trim();
         return title;
     }
 
@@ -55,12 +85,12 @@ public class TextUtils {
         int i = x.indexOf(s.charAt(l - 1));
         int j = x.indexOf(s.charAt(0));
         int q = j * 100;
-        return l < 2 ? 
-                i : l < 3 ? 
-                i == 10 ? 
-                j * 10 : i > 10 ? 
-                q : 10 + i : l < 4 ? 
-                j * 10 + i : l < 5 ? 
-                q + i : q + i + x.indexOf(s.charAt(2)) * 10;
+        return l < 2
+                ? i : l < 3
+                        ? i == 10
+                                ? j * 10 : i > 10
+                                        ? q : 10 + i : l < 4
+                                ? j * 10 + i : l < 5
+                                        ? q + i : q + i + x.indexOf(s.charAt(2)) * 10;
     }
 }
