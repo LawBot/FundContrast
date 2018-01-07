@@ -12,6 +12,7 @@ import cn.com.xiaofabo.tylaw.fundcontrast.entity.SubSection;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.SubSubSection;
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.ChapterIncorrectException;
 import cn.com.xiaofabo.tylaw.fundcontrast.util.TextUtils;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,12 +20,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
  * @author 陈光曦
  */
 public class IndexTypeProcessor extends TextProcessor {
 
-    FundDoc fundDoc = new FundDoc("（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）");
+    FundDoc fundDoc = new FundDoc("（2012-12-17）证券投资基金基金合同填报指引第2号——指数型证券投资基金基金合同填报指引（试行）.doc");
 
     public IndexTypeProcessor() {
 

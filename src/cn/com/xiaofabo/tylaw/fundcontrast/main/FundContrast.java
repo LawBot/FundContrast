@@ -7,7 +7,9 @@ package cn.com.xiaofabo.tylaw.fundcontrast.main;
 
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.ChapterIncorrectException;
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.SectionIncorrectException;
+import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.BondTypeProcessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.IndexTypeProcessor;
+import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.MonetaryTypeProcessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.StockTypeProcessor;
 
 import java.io.IOException;
@@ -21,10 +23,10 @@ public class FundContrast {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException, ChapterIncorrectException, SectionIncorrectException {
-        String inputPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）.doc";
-        //String inputPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第2号——指数型证券投资基金基金合同填报指引（试行）.doc";
-        //String inputPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第3号——债券型证券投资基金基金合同填报指引（试行）.doc";
-        // String inputPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第4号——货币市场基金基金合同填报指引（试行）.doc";
+        String inputPath1 = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）.doc";
+        String inputPath2 = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第2号——指数型证券投资基金基金合同填报指引（试行）.doc";
+        String inputPath3 = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第3号——债券型证券投资基金基金合同填报指引（试行）.doc";
+        String inputPath4 = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第4号——货币市场基金基金合同填报指引（试行）.doc";
 
         // 工银瑞信
         //String inputPath = "data/Sample/工银瑞信/20161223工银瑞信新动力混合型/工银瑞信新动力灵活配置混合型证券投资基金基金合同（草案）－定稿20161220.docx";
@@ -60,15 +62,27 @@ public class FundContrast {
         //error String inputPath = "data/Sample/华夏基金/货币/华夏行业龙头混合型证券投资基金基金合同-发.docx";
         //String inputPath = "data/Sample/华夏基金/货币/华夏快线交易型货币市场基金基金合同v6_20161025.doc";
         //String inputPath = "data/Sample/华夏基金/货币/华夏普金宝货币市场基金基金合同（草案）.docx";
-        
+
         String idxInputPath = "（2012-12-17）证券投资基金基金合同填报指引第2号——指数型证券投资基金基金合同填报指引（试行）.doc";
         IndexTypeProcessor idx = new IndexTypeProcessor();
-        idx.readText(inputPath);
+        idx.readText(inputPath2);
         idx.process();
         System.out.println("Done");
 //
 //        StockTypeProcessor proc = new StockTypeProcessor();
-//        proc.readText(inputPath);
+//        proc.readText(inputPath1);
 //        proc.process();
+//        System.out.println("Done");
+//
+//
+//        BondTypeProcessor bond = new BondTypeProcessor();
+//        bond.readText(inputPath3);
+//        (bond).process();
+//        System.out.println("Bond Done");
+//
+//        MonetaryTypeProcessor mon = new MonetaryTypeProcessor();
+//        mon.readText(inputPath4);
+//        mon.process();
+//        System.out.println("mon Done");
     }
 }

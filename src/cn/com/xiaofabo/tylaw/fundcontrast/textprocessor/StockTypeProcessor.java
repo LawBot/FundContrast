@@ -8,6 +8,7 @@ package cn.com.xiaofabo.tylaw.fundcontrast.textprocessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.*;
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.ChapterIncorrectException;
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.SectionIncorrectException;
+import cn.com.xiaofabo.tylaw.fundcontrast.util.TextUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -20,135 +21,17 @@ import java.util.regex.Pattern;
  */
 public class StockTypeProcessor extends TextProcessor {
     FundDoc fundDoc = new FundDoc("（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）");
-    Pattern chinese = Pattern.compile("[\\u4e00-\\u9fa5]、");
-    Pattern chineseBraces = Pattern.compile("（[\\u4e00-\\u9fa5]）");
-    Pattern arabNumbers = Pattern.compile("^[1-9]\\d*、");
-    Pattern arabNumberBraces = Pattern.compile("（[1-9]\\d*）");
 
-    private List<String> sectionTitles = new ArrayList<String>();
-
-    private List<String> subSectionTitles = new ArrayList<String>();
-
-    private List<String> subSubSectionTitles = new ArrayList<String>();
-
-    private List<String> textPointTitles = new ArrayList<String>();
-
-
-    /**
-     * Constructor
-     */
     public StockTypeProcessor() {
-        this.sectionTitles.add("一、");
-        this.sectionTitles.add("二、");
-        this.sectionTitles.add("三、");
-        this.sectionTitles.add("四、");
-        this.sectionTitles.add("五、");
-        this.sectionTitles.add("六、");
-        this.sectionTitles.add("七、");
-        this.sectionTitles.add("八、");
 
-        this.subSectionTitles.add("（一）");
-        this.subSectionTitles.add("（二）");
-        this.subSectionTitles.add("（三）");
-        this.subSectionTitles.add("（四）");
-        this.subSectionTitles.add("（五）");
-        this.subSectionTitles.add("（六）");
-        this.subSectionTitles.add("（七）");
-        this.subSectionTitles.add("（八）");
-        this.subSectionTitles.add("（九）");
-        this.subSectionTitles.add("（十）");
-
-        this.subSubSectionTitles.add("1、");
-        this.subSubSectionTitles.add("2、");
-        this.subSubSectionTitles.add("3、");
-        this.subSubSectionTitles.add("4、");
-        this.subSubSectionTitles.add("5、");
-        this.subSubSectionTitles.add("6、");
-        this.subSubSectionTitles.add("7、");
-        this.subSubSectionTitles.add("8、");
-        this.subSubSectionTitles.add("9、");
-        this.subSubSectionTitles.add("10、");
-        this.subSubSectionTitles.add("11、");
-        this.subSubSectionTitles.add("12、");
-        this.subSubSectionTitles.add("13、");
-        this.subSubSectionTitles.add("14、");
-        this.subSubSectionTitles.add("15、");
-        this.subSubSectionTitles.add("16、");
-        this.subSubSectionTitles.add("17、");
-        this.subSubSectionTitles.add("18、");
-        this.subSubSectionTitles.add("19、");
-        this.subSubSectionTitles.add("20、");
-        this.subSubSectionTitles.add("21、");
-        this.subSubSectionTitles.add("22、");
-        this.subSubSectionTitles.add("23、");
-        this.subSubSectionTitles.add("24、");
-        this.subSubSectionTitles.add("25、");
-        this.subSubSectionTitles.add("26、");
-        this.subSubSectionTitles.add("27、");
-        this.subSubSectionTitles.add("28、");
-        this.subSubSectionTitles.add("29、");
-        this.subSubSectionTitles.add("30、");
-        this.subSubSectionTitles.add("31、");
-        this.subSubSectionTitles.add("32、");
-        this.subSubSectionTitles.add("33、");
-        this.subSubSectionTitles.add("34、");
-        this.subSubSectionTitles.add("35、");
-        this.subSubSectionTitles.add("36、");
-        this.subSubSectionTitles.add("37、");
-        this.subSubSectionTitles.add("38、");
-        this.subSubSectionTitles.add("39、");
-        this.subSubSectionTitles.add("40、");
-        this.subSubSectionTitles.add("41、");
-        this.subSubSectionTitles.add("42、");
-        this.subSubSectionTitles.add("43、");
-        this.subSubSectionTitles.add("44、");
-        this.subSubSectionTitles.add("45、");
-        this.subSubSectionTitles.add("46、");
-        this.subSubSectionTitles.add("47、");
-        this.subSubSectionTitles.add("48、");
-        this.subSubSectionTitles.add("49、");
-        this.subSubSectionTitles.add("50、");
-        this.subSubSectionTitles.add("51、");
-        this.subSubSectionTitles.add("52、");
-
-        this.textPointTitles.add("（1）");
-        this.textPointTitles.add("（2）");
-        this.textPointTitles.add("（3）");
-        this.textPointTitles.add("（4）");
-        this.textPointTitles.add("（5）");
-        this.textPointTitles.add("（6）");
-        this.textPointTitles.add("（7）");
-        this.textPointTitles.add("（8）");
-        this.textPointTitles.add("（9）");
-        this.textPointTitles.add("（10）");
-        this.textPointTitles.add("（11）");
-        this.textPointTitles.add("（12）");
-        this.textPointTitles.add("（13）");
-        this.textPointTitles.add("（14）");
-        this.textPointTitles.add("（15）");
-        this.textPointTitles.add("（16）");
-        this.textPointTitles.add("（17）");
-        this.textPointTitles.add("（18）");
-        this.textPointTitles.add("（19）");
-        this.textPointTitles.add("（20）");
-        this.textPointTitles.add("（21）");
-        this.textPointTitles.add("（22）");
-        this.textPointTitles.add("（23）");
-        this.textPointTitles.add("（24）");
-        this.textPointTitles.add("（25）");
-        this.textPointTitles.add("（26）");
-        this.textPointTitles.add("（27）");
     }
 
-    /**
-     * @return FundDoc entity
-     */
-    public FundDoc process() throws SectionIncorrectException {
+    public FundDoc process() {
         List textList = super.getLines();
         List textChunkList = new LinkedList<>();
         int startIdx = 0;
         List chunk;
-        List<Chapter> chapters = new ArrayList<>();
+        List<Chapter> chapters = new LinkedList<>();
         int index = 0;
 
         for (int i = 0; i < textList.size(); ++i) {
@@ -165,7 +48,7 @@ public class StockTypeProcessor extends TextProcessor {
                 }
             }
         }
-        chunk = textList.subList(startIdx, textList.size() - 1);
+        chunk = textList.subList(startIdx, textList.size());
         textChunkList.add(chunk);
 
         // process chapter
@@ -178,317 +61,266 @@ public class StockTypeProcessor extends TextProcessor {
             }
         }
         fundDoc.setChapters(chapters);
-
-        //printout current structured fundDoc
-        System.out.println("FundDoc: " + fundDoc.getTitle());
-        for (Chapter c : fundDoc.getChapters()) {
-            System.out.println("Chapter: " + c.getTitle() + "\nText: " + c.getText());
-            for (Section s : c.getSections()) {
-                System.out.println("Section: " + s.getText());
-//                for (SubSection x : s.getSubSections()) {
-//                    System.out.println("SubSection: " + x.getText());
-//                    for (SubSubSection y : x.getSubSubSections()) {
-//                        System.out.println("SubSubSection: " + y.getText());
-//                        for (TextPoint p : y.getTextPoints()) {
-//                            System.out.println("TextPoint: " + p.getText());
-//                        }
-//                    }
-//                }
-            }
-            System.out.println("------------End-------------");
-        }
         return fundDoc;
     }
 
-    /**
-     * @param chunk
-     * @return Chapter entity
-     * @throws ChapterIncorrectException
-     */
-    private Chapter processChapter(List chunk) throws ChapterIncorrectException, SectionIncorrectException {
-        String title = "";
-        String text = "";
-        Chapter newChapter = new Chapter(title);
-        List<Section> secList = new ArrayList<>();
-        Matcher matcher;
+    private Chapter processChapter(List chunk) throws ChapterIncorrectException {
+        List chapterStrChunk = TextUtils.removeAllEmptyLines(chunk);
+        String firstLine = (String) chapterStrChunk.get(0);
 
-        String currentLine = "";
-        int StartSectionId = 0;
+        int chapterIdx = TextUtils.getChapterIndex(firstLine);
 
-        for (int i = 0, j = 0; i < chunk.size(); i++) {
-            currentLine = ((String) chunk.get(i)).trim();
-            if (currentLine == "" || currentLine == null) {
-                continue;
+        int type = 0;
+        switch (chapterIdx) {
+            case 2:
+            case 22:
+                type = 2;
+                break;
+            case 7:
+            case 9:
+            case 18:
+                type = 3;
+                break;
+            default:
+                type = 1;
+                break;
+        }
+        return processChapter(chapterStrChunk, type);
+    }
+
+    private Chapter processChapter(List chapterStrChunk, int type) {
+        Chapter c = null;
+        switch (type) {
+            case 1:
+                c = chapterStrType1(chapterStrChunk);
+                break;
+            case 2:
+                // type 2
+                break;
+            case 3:
+                // type 3
+                break;
+            default:
+                c = null;
+                break;
+        }
+        return c;
+    }
+
+    private Chapter chapterStrType1(List chapterStrChunk) {
+        String title = TextUtils.getChapterTitle((String) chapterStrChunk.get(0));
+        Chapter c = new Chapter(title);
+
+        int lineIdx = 1;
+        StringBuilder tmpText = new StringBuilder();
+        while (lineIdx != chapterStrChunk.size()) {
+            String currentLine = ((String) chapterStrChunk.get(lineIdx)).trim();
+            if (!currentLine.startsWith("一、")) {
+                tmpText.append(currentLine);
+                ++lineIdx;
+            } else {
+                break;
             }
-            if (i == 0) {
-                String[] tmp = currentLine.split("\\s+");
-                if (tmp.length >= 2) {
-                    title = tmp[1].trim();
-                    newChapter.setTitle(title);
-                    continue;
+        }
+        String chapterText = tmpText.toString().isEmpty() ? null : tmpText.toString();
+        c.setText(chapterText);
+
+        int chapterIdx = TextUtils.getChapterIndex((String) chapterStrChunk.get(0));
+        System.out.println("Chapter Index: " + chapterIdx);
+        System.out.println("Chapter Title: " + title);
+        System.out.println("Chapter Text: " + chapterText);
+
+        List<String> txtChunk;
+        List<List> sectionStrChunkList = new LinkedList<>();
+        int startIdx = 0;
+        for (int i = lineIdx; i < chapterStrChunk.size(); ++i) {
+//            System.out.println(chapterStrChunk.get(i));
+            Pattern pattern = Pattern.compile("^[一|二|三|四|五|六|七|八|九|十|"
+                    + "十一|十二|十三|十四|十五|十六|十七|十八|十九|二十|"
+                    + "二十一|二十二|二十三|二十四|二十五|二十六|二十七|二十八|二十九|]、");
+            Matcher matcher = pattern.matcher((String) chapterStrChunk.get(i));
+            while (matcher.find()) {
+                if (startIdx == 0) {
+                    startIdx = i;
                 } else {
-                    throw new ChapterIncorrectException();
-                }
-            }
-            if ((!currentLine.startsWith("一、")) && (!currentLine.startsWith("（一）") && (!currentLine.startsWith("1、")))) {
-                text += currentLine.trim();
-                newChapter.setText(text);
-            } else if (currentLine.startsWith("一、")) {
-                StartSectionId = i;
-                List<Integer> sectionIds = countSiblings(chunk, StartSectionId, "一、");
-                for (int id : sectionIds) {
-                    secList.add(processSection(chunk, id, "一、"));
-                }
-                newChapter.setSections(secList);
-                break;
-            } else if (currentLine.startsWith("1、")) {
-                StartSectionId = i;
-                List<Integer> sectionIds = countSiblings(chunk, StartSectionId, "1");
-                for (int id : sectionIds) {
-                    secList.add(processSection(chunk, id, "1、"));
-                }
-                newChapter.setSections(secList);
-                break;
-            } else if (currentLine.startsWith("(一)")) {
-                StartSectionId = i;
-                List<Integer> sectionIds = countSiblings(chunk, StartSectionId, "(一)");
-                for (int id : sectionIds) {
-                    secList.add(processSection(chunk, id, "(一)"));
-                }
-                newChapter.setSections(secList);
-                break;
-            }
-        }
-        return newChapter;
-    }
-
-    private List<Integer> countSiblings(List chunk, int startId, String type) {
-        List<Integer> lineNumberOfSection = new ArrayList();
-        int j = 0;
-        Matcher mC = chinese.matcher(type);
-        Matcher mCB = chineseBraces.matcher(type);
-        Matcher mA = arabNumbers.matcher(type);
-        Matcher mAB = arabNumberBraces.matcher(type);
-
-        if (mC.find()) {
-            for (int k = 0; k < chunk.size() && j < this.sectionTitles.size(); k++) {
-                if (chunk.get(k).toString().trim().contains(this.sectionTitles.get(j))) {
-                    lineNumberOfSection.add(k);
-                    j++;
-                }
-            }
-        } else if (mCB.find()) {
-            for (int k = 0; k < chunk.size() && j < this.subSectionTitles.size(); k++) {
-                if (chunk.get(k).toString().trim().contains(this.subSectionTitles.get(j))) {
-                    lineNumberOfSection.add(k);
-                    j++;
-                }
-            }
-        } else if (mA.find()) {
-            for (int k = 0; k < chunk.size() && j < this.subSubSectionTitles.size(); k++) {
-                if (chunk.get(k).toString().trim().contains(this.subSubSectionTitles.get(j))) {
-                    lineNumberOfSection.add(k);
-                    j++;
-                }
-            }
-        } else if (mAB.find()) {
-            for (int k = 0; k < chunk.size() && j < this.textPointTitles.size(); k++) {
-                if (chunk.get(k).toString().trim().contains(this.textPointTitles.get(j))) {
-                    lineNumberOfSection.add(k);
-                    j++;
+                    txtChunk = chapterStrChunk.subList(startIdx, i);
+                    startIdx = i;
+                    sectionStrChunkList.add(txtChunk);
                 }
             }
         }
-        return lineNumberOfSection;
+        if (startIdx != 0) {
+            txtChunk = chapterStrChunk.subList(startIdx, chapterStrChunk.size());
+            sectionStrChunkList.add(txtChunk);
+        }
+
+        List<Section> sectionList = new LinkedList<>();
+
+        for (int i = 0; i < sectionStrChunkList.size(); ++i) {
+            List sectionStrList = (List) sectionStrChunkList.get(i);
+            Section s = processSection(sectionStrList);
+            sectionList.add(s);
+            /// --------------------------------------------------------------------
+//            for (int j = 0; j < sectionStrList.size(); ++j) {
+//                System.out.println((String) sectionStrList.get(j));
+//            }
+            /// --------------------------------------------------------------------
+            System.out.println("\t-------------------------------------------------");
+
+        }
+
+        c.setSections(sectionList);
+        System.out.println("===================================================");
+        return c;
     }
 
-    /**
-     * @param chunk
-     * @return Section entity
-     * @throws SectionIncorrectException
-     */
-    private Section processSection(List chunk, int secStartId, String signalOfSection) throws SectionIncorrectException {
-        String currentLine;
-        String text = "";
-        Section newSection = new Section();
-        String sectionType = signalOfSection;
-        int StartSubSectionId = 0;
-        List<SubSection> subSecList = new ArrayList<>();
+    private Section processSection(List sectionStrChunk) {
+        Section s = new Section();
 
-        Matcher mChinese = chinese.matcher(sectionType);
-        Matcher mChineseBraces = chineseBraces.matcher(sectionType);
-        Matcher mArabNumbers = arabNumbers.matcher(sectionType);
+        String title = TextUtils.getSectionTitle((String) sectionStrChunk.get(0));
+        System.out.println("\tSection Title: " + title);
+        s.setTitle(title);
 
-        for (int i = secStartId; i < chunk.size(); i++) {
-            currentLine = ((String) chunk.get(i)).trim();
-            if (currentLine == "" || currentLine == null) {
-                continue;
+        int lineIdx = 1;
+        StringBuilder tmpText = new StringBuilder();
+        while (lineIdx != sectionStrChunk.size()) {
+            String currentLine = ((String) sectionStrChunk.get(lineIdx)).trim();
+            if (!currentLine.startsWith("1、")) {
+                tmpText.append(currentLine);
+                ++lineIdx;
+            } else {
+                break;
             }
-            //　中文数字ｓｅｃｔｉｏｎ处理
-            if (mChinese.find()) {
-                if (i == secStartId) {
-                    text = currentLine.split("[\\u4e00-\\u9fa5]、")[1];
-                    newSection.setText(text);
-                } else if ((!currentLine.startsWith("1、")) && (!currentLine.startsWith("(一)")) && (currentLine.split("[\u4e00-\u9fa5]、").length != 2)) {
-                    text += currentLine;
-                    newSection.setText(text);
-                } else if (currentLine.startsWith("1、")) {
-                    StartSubSectionId = i;
-                    List<Integer> sectionIds = countSiblings(chunk, StartSubSectionId, "1、");
-                    for (int id : sectionIds) {
-                        subSecList.add(processSubSection(chunk, id, "一、"));
-                    }
-                    newSection.setSubSections(subSecList);
-                } else if (currentLine.startsWith("(一)")) {
-                    StartSubSectionId = i;
-                    List<Integer> sectionIds = countSiblings(chunk, StartSubSectionId, "(一)");
-                    for (int id : sectionIds) {
-                        subSecList.add(processSubSection(chunk, id, "(一)"));
-                    }
-                    newSection.setSubSections(subSecList);
-                }
-            }
-            //TODO
-            if (mChineseBraces.find()) {
-                if ((!currentLine.startsWith("(一)"))) {
-                    text += currentLine;
-                }
-            }
-            //TODO
-            if (mArabNumbers.find()) {
-                if ((!currentLine.startsWith("1、"))) {
-                    text += currentLine;
+        }
+        String sectionText = tmpText.toString().isEmpty() ? null : tmpText.toString();
+        s.setText(sectionText);
+        System.out.println("\tSection Text: " + sectionText);
+
+        List<String> txtChunk;
+        List<List> subsecStrChunkList = new LinkedList();
+
+        int startIdx = 0;
+        for (int i = lineIdx; i < sectionStrChunk.size(); ++i) {
+//            System.out.println(chapterStrChunk.get(i));
+            Pattern pattern = Pattern.compile("^\\d+、");
+            Matcher matcher = pattern.matcher((String) sectionStrChunk.get(i));
+            while (matcher.find()) {
+                if (startIdx == 0) {
+                    startIdx = i;
+                } else {
+                    txtChunk = sectionStrChunk.subList(startIdx, i);
+                    startIdx = i;
+                    subsecStrChunkList.add(txtChunk);
                 }
             }
         }
-        return newSection;
+        if (startIdx != 0) {
+            txtChunk = sectionStrChunk.subList(startIdx, sectionStrChunk.size());
+            subsecStrChunkList.add(txtChunk);
+        }
+
+        List<SubSection> subsecList = new LinkedList<>();
+
+        for (int i = 0; i < subsecStrChunkList.size(); ++i) {
+            List subsecStrList = (List) subsecStrChunkList.get(i);
+            SubSection ss = processSubSection(subsecStrList);
+            subsecList.add(ss);
+            /// --------------------------------------------------------------------
+//            for (int j = 0; j < subsecStrList.size(); ++j) {
+//                System.out.println((String) subsecStrList.get(j));
+//            }
+//            System.out.println("\t\t***********************************************");
+            /// --------------------------------------------------------------------
+        }
+        s.setSubSections(subsecList);
+        return s;
     }
 
-//    private List<Section> processSectionSibling(List chunk, int startId, String titleOfSibling) {
-//        String text = "";
-//        String siblingStartStr = titleOfSibling;
-//        List currentChunk = chunk;
-//        Section[] newSection = new Section[50];
-//        int start = startId;
-//        String currentLine = "";
-//        List<Section> siblingSections = new ArrayList<>();
-//        List<Integer> siblingsIndex = countSiblings();
-//        int index = 0;
-//        int j = 0;
-//        for (int i = start; i < siblingsIndex.size(); i++, j++) {
-//            index = siblingsIndex.get(i);
-//            currentLine = ((String) chunk.get(index)).trim();
-//            text = currentLine.split("")[1];
-//            newSection[j].setText(text);
+    private SubSection processSubSection(List subsecStrList) {
+        SubSection ss = new SubSection();
+
+//        System.out.println("\t\tSub-Section Text:");
+//        for(int i = 0; i < subsecStrList.size(); ++i){
+//            System.out.println("\t\t" + subsecStrList.get(i));
 //        }
-//        for (int i = 0; i < j; i++) {
-//            siblingSections.add(newSection[i]);
-//        }
-//        return siblingSections;
-//    }
+        String title = TextUtils.getSubSectionTitle((String) subsecStrList.get(0));
+        System.out.println("\t\tSub-Section Title: " + title);
+        ss.setTitle(title);
 
-    /**
-     * TODO
-     *
-     * @param chunk
-     * @param startSubSectionId
-     * @param type
-     * @return
-     */
-    private SubSection processSubSection(List chunk, int startSubSectionId, String type) {
-        SubSection newSubSection = new SubSection();
-        String currentLine;
-        String text = "";
-        String subSectionType = type;
-        int start = startSubSectionId;
-        List<SubSubSection> subSubSectionList = new ArrayList<>();
-        int StartSubSubSectionId = 0;
-
-
-        Matcher mChineseBraces = chineseBraces.matcher(subSectionType);
-        Matcher mArabNumbers = arabNumbers.matcher(subSectionType);
-
-        for (int i = start; i < chunk.size(); i++) {
-            currentLine = ((String) chunk.get(i)).trim();
-            if (currentLine == "" || currentLine == null) {
-                continue;
+        int lineIdx = 1;
+        StringBuilder tmpText = new StringBuilder();
+        while (lineIdx != subsecStrList.size()) {
+            String currentLine = ((String) subsecStrList.get(lineIdx)).trim();
+            if (!currentLine.startsWith("（1）")) {
+                tmpText.append(currentLine);
+                ++lineIdx;
+            } else {
+                break;
             }
-            if (mChineseBraces.find()) {
-                if ((!currentLine.startsWith("1、")) && (currentLine.split("（[\u4e00-\u9fa5]）").length == 2)) {
-                    text += currentLine;
-                    newSubSection.setText(text);
-                } else if (currentLine.startsWith("1、")) {
-                    StartSubSubSectionId = i;
-                    List<Integer> sectionIds = countSiblings(chunk, StartSubSubSectionId, "1、");
-                    for (int id : sectionIds) {
-                        subSubSectionList.add(processSubSubSection(chunk, id, "1、"));
-                    }
-                    newSubSection.setSubSubSections(subSubSectionList);
-                }
-            }
-            //TODO
-            else if (mArabNumbers.find()) {
-                if ((!currentLine.startsWith("（1）"))) {
-                    text += currentLine;
+        }
+        String subsecText = tmpText.toString().isEmpty() ? null : tmpText.toString();
+        ss.setText(subsecText);
+        System.out.println("\t\tSub-Section Text: " + subsecText);
+
+        List<String> txtChunk;
+        List<List> subsubsecStrChunkList = new LinkedList();
+
+        int startIdx = 0;
+        for (int i = lineIdx; i < subsecStrList.size(); ++i) {
+//            System.out.println(chapterStrChunk.get(i));
+            Pattern pattern = Pattern.compile("^（\\d+）");
+            Matcher matcher = pattern.matcher((String) subsecStrList.get(i));
+            while (matcher.find()) {
+                if (startIdx == 0) {
+                    startIdx = i;
+                } else {
+                    txtChunk = subsecStrList.subList(startIdx, i);
+                    startIdx = i;
+                    subsubsecStrChunkList.add(txtChunk);
                 }
             }
         }
-        return newSubSection;
+        if (startIdx != 0) {
+            txtChunk = subsecStrList.subList(startIdx, subsecStrList.size());
+            subsubsecStrChunkList.add(txtChunk);
+        }
+
+        List<SubSubSection> subsubsecList = new LinkedList<>();
+
+        for (int i = 0; i < subsubsecStrChunkList.size(); ++i) {
+            List subsubsecStrList = (List) subsubsecStrChunkList.get(i);
+            SubSubSection sss = processSubSubSection(subsubsecStrList);
+            subsubsecList.add(sss);
+            /// --------------------------------------------------------------------
+//            for (int j = 0; j < subsubsecStrList.size(); ++j) {
+//                System.out.println((String) subsubsecStrList.get(j));
+//            }
+//            System.out.println("\t\t\t***********************************************");
+            /// --------------------------------------------------------------------
+        }
+        ss.setSubSubSections(subsubsecList);
+        return ss;
     }
 
-    private SubSubSection processSubSubSection(List chunk, int subSubSectionStartId, String type) {
-        SubSubSection newSubSubSection = new SubSubSection();
-        String text = "";
-        int start = subSubSectionStartId;
-        String currentLine;
-        List<TextPoint> textPointList = new ArrayList<>();
-        int textPointStartId = 0;
+    private SubSubSection processSubSubSection(List subsubsecStrList) {
+        StringBuilder tmpText = new StringBuilder();
 
-        Matcher mArabNumbers = arabNumbers.matcher(type);
-        Matcher mArabNumberBraces = arabNumberBraces.matcher(type);
+        SubSubSection sss = new SubSubSection();
+        String firstLine = (String) subsubsecStrList.get(0);
+        int start = firstLine.indexOf("）");
+        String tmpLine = firstLine.substring(start + 1).trim();
+//        System.out.println(tmpLine);
+        tmpText.append(tmpLine);
 
-        for (int i = start; i < chunk.size(); i++) {
-            currentLine = ((String) chunk.get(i)).trim();
-            if (currentLine == "" || currentLine == null) {
-                continue;
-            }
-            if (mArabNumbers.find()) {
-                if ((!currentLine.startsWith("1、")) && (currentLine.split("（[\u4e00-\u9fa5]）").length == 2)) {
-                    text += currentLine;
-                    newSubSubSection.setText(text);
-                } else if (currentLine.startsWith("（1）")) {
-                    textPointStartId = i;
-                    List<Integer> sectionIds = countSiblings(chunk, textPointStartId, "（1）");
-                    for (int id : sectionIds) {
-                        textPointList.add(processTextPoint(chunk, id));
-                    }
-                    newSubSubSection.setTextPoints(textPointList);
-                }
-
-            } else if (mArabNumberBraces.find()) {
-                //TODO
-            }
+        int lineIdx = 1;
+        while (lineIdx != subsubsecStrList.size()) {
+            String currentLine = ((String) subsubsecStrList.get(lineIdx)).trim();
+            tmpText.append(currentLine);
+            ++lineIdx;
         }
-        return newSubSubSection;
-    }
-
-    private TextPoint processTextPoint(List chunk, int textPointStartId) {
-        TextPoint newText = new TextPoint();
-        String text = "";
-        int start = textPointStartId;
-        String currentLine = "";
-        for (int i = start; i < chunk.size(); i++) {
-            currentLine = ((String) chunk.get(i)).trim();
-            if (currentLine == "" || currentLine == null) {
-                continue;
-            }
-            if (currentLine.split("[\u4e00-\u9fa5]、").length != 2) {
-                text += currentLine;
-                newText.setText(text);
-            } else if (currentLine.split("[\u4e00-\u9fa5]、").length == 2) {
-                processTextPoint(chunk, i);
-            }
-        }
-        return newText;
+        String subsecText = tmpText.toString().isEmpty() ? null : tmpText.toString();
+        sss.setText(subsecText);
+        System.out.println("\t\t\tSub-Sub-Section Text: " + subsecText);
+        return sss;
     }
 }
