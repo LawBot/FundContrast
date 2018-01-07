@@ -5,6 +5,7 @@
  */
 package cn.com.xiaofabo.tylaw.fundcontrast.main;
 
+import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.ChapterIncorrectException;
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.SectionIncorrectException;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.IndexTypeProcessor;
@@ -64,8 +65,12 @@ public class FundContrast {
         String idxInputPath = "（2012-12-17）证券投资基金基金合同填报指引第2号——指数型证券投资基金基金合同填报指引（试行）.doc";
         IndexTypeProcessor idx = new IndexTypeProcessor();
         idx.readText(inputPath);
-        idx.process();
-        System.out.println("Done");
+        FundDoc fd = idx.process();
+        
+        System.out.println("***************************************************");
+        System.out.println("***************************************************");
+        System.out.println("***************************************************");
+        System.out.println(fd.toString());
 //
 //        StockTypeProcessor proc = new StockTypeProcessor();
 //        proc.readText(inputPath);
