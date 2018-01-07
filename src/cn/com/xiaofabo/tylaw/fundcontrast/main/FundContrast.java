@@ -66,16 +66,14 @@ public class FundContrast {
 
         String idxInputPath = "（2012-12-17）证券投资基金基金合同填报指引第2号——指数型证券投资基金基金合同填报指引（试行）.doc";
         IndexTypeProcessor idx = new IndexTypeProcessor();
-        idx.readText(idxInputPath);
+        idx.readText(inputPath2);
         FundDoc fd = idx.process();
         
         System.out.println("***************************************************");
         System.out.println("***************************************************");
         System.out.println("***************************************************");
         System.out.println(fd.toString());
-        idx.readText(inputPath2);
-        idx.process();
-        System.out.println("Done");
+        System.out.println("Finished!");
 //
 //        StockTypeProcessor proc = new StockTypeProcessor();
 //        proc.readText(inputPath1);

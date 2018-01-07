@@ -138,10 +138,10 @@ public class IndexTypeProcessor extends TextProcessor {
         List<List> sectionStrChunkList = new LinkedList<>();
         int startIdx = 0;
         for (int i = lineIdx; i < chapterStrChunk.size(); ++i) {
-//            System.out.println(chapterStrChunk.get(i));
-            Pattern pattern = Pattern.compile("^[一|二|三|四|五|六|七|八|九|十|"
-                    + "十一|十二|十三|十四|十五|十六|十七|十八|十九|二十|"
-                    + "二十一|二十二|二十三|二十四|二十五|二十六|二十七|二十八|二十九|]、");
+            System.out.println(chapterStrChunk.get(i));
+            Pattern pattern = Pattern.compile("^[一、|二、|三、|四、|五、|六、|七、|八、|九、|十、|"
+                    + "十一、|十二、|十三、|十四、|十五、|十六、|十七、|十八、|十九、|二十、|"
+                    + "二十一、|二十二、|二十三、|二十四、|二十五、|二十六、|二十七、|二十八、|二十九、]");
             Matcher matcher = pattern.matcher((String) chapterStrChunk.get(i));
             while (matcher.find()) {
                 if (startIdx == 0) {
