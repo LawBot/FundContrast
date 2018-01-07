@@ -99,7 +99,7 @@ public class IndexTypeProcessor extends TextProcessor {
                 c = chapterStrType1(chapterStrChunk);
                 break;
             case 2:
-                // type 2
+                c = chapterStrType2(chapterStrChunk);
                 break;
             case 3:
                 // type 3
@@ -176,6 +176,76 @@ public class IndexTypeProcessor extends TextProcessor {
         c.setSections(sectionList);
         System.out.println("===================================================");
         return c;
+    }
+
+    private Chapter chapterStrType2(List chapterStrChunk) {
+        String title = TextUtils.getChapterTitle((String) chapterStrChunk.get(0));
+        Chapter c = new Chapter(title);
+
+        int lineIdx = 1;
+        StringBuilder tmpText = new StringBuilder();
+        while (lineIdx != chapterStrChunk.size()) {
+            String currentLine = ((String) chapterStrChunk.get(lineIdx)).trim();
+            if (!currentLine.startsWith("1、")) {
+                tmpText.append(currentLine);
+                ++lineIdx;
+            } else {
+                break;
+            }
+        }
+        String chapterText = tmpText.toString().isEmpty() ? null : tmpText.toString();
+        c.setText(chapterText);
+
+        List<Section> secList = new ArrayList<>();
+        List<List> secChunkList = new ArrayList<>();
+
+        Section sec = new Section();
+        String currentLine = "";
+        int startIdx = 0;
+        List<String> txtChunk;
+        for (int i = lineIdx; i < chapterStrChunk.size(); ++i) {
+            Pattern pattern = Pattern.compile("^\\d+、");
+            Matcher matcher = pattern.matcher((String) chapterStrChunk.get(i));
+            while (matcher.find()) {
+                if (startIdx == 0) {
+                    startIdx = i;
+                } else {
+                    txtChunk = chapterStrChunk.subList(startIdx, i);
+                    startIdx = i;
+                    secChunkList.add(txtChunk);
+                }
+            }
+        }
+        for (List<String> s : secChunkList) {
+            secList.add(processType2Section(s));
+        }
+        c.setSections(secList);
+
+        System.out.println("Chapter Title: " + c.getTitle());
+        System.out.println("Chapter Text: " + c.getText());
+        for (Section s : c.getSections())
+            System.out.println("Section title = " + s.getTitle() + " and text is:" + s.getText());
+
+        System.out.println("===================================================");
+        return c;
+    }
+
+    private Section processType2Section(List<String> secChunk) {
+        String tmpTitle = "";
+        String currentLine = "";
+        String tmpText = "";
+        Section secS = new Section();
+        for (int m = 0; m < secChunk.size(); m++) {
+            currentLine = secChunk.get(m).trim();
+            if (m == 0) {
+                tmpTitle = currentLine.split("^\\d+、")[1];
+                secS.setTitle(tmpTitle);
+            } else {
+                tmpText += currentLine;
+            }
+        }
+        secS.setText(tmpText);
+        return secS;
     }
 
     private Section processSection(List sectionStrChunk) {

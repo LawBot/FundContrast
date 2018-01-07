@@ -68,13 +68,13 @@ public class FundContrast {
         IndexTypeProcessor idx = new IndexTypeProcessor();
         idx.readText(inputPath2);
         FundDoc fd = idx.process();
-        
+
         System.out.println("***************************************************");
         System.out.println("***************************************************");
         System.out.println("***************************************************");
         System.out.println(fd.toString());
         System.out.println("Finished!");
-//
+
 //        StockTypeProcessor proc = new StockTypeProcessor();
 //        proc.readText(inputPath1);
 //        proc.process();
