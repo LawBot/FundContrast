@@ -77,7 +77,8 @@ public class FundContrast {
 
         StockTypeProcessor proc = new StockTypeProcessor();
         proc.readText(inputPath1);
-        proc.process();
+        FundDoc fd = proc.process();
+        System.out.println(fd.toString());
         System.out.println("Done");
 //
 //

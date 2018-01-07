@@ -95,10 +95,10 @@ public class StockTypeProcessor extends TextProcessor {
         Chapter c = null;
         switch (type) {
             case 1:
-                // c = chapterStrType1(chapterStrChunk);
+                c = chapterStrType1(chapterStrChunk);
                 break;
             case 2:
-                //c = chapterStrType2(chapterStrChunk);
+                c = chapterStrType2(chapterStrChunk);
                 break;
             case 3:
                 c = chapterStrType3(chapterStrChunk);
@@ -130,9 +130,9 @@ public class StockTypeProcessor extends TextProcessor {
         c.setText(chapterText);
 
         int chapterIdx = TextUtils.getChapterIndex((String) chapterStrChunk.get(0));
-        System.out.println("Chapter Index: " + chapterIdx);
-        System.out.println("Chapter Title: " + title);
-        System.out.println("Chapter Text: " + chapterText);
+//        System.out.println("Chapter Index: " + chapterIdx);
+//        System.out.println("Chapter Title: " + title);
+//        System.out.println("Chapter Text: " + chapterText);
 
         List<String> txtChunk;
         List<List> sectionStrChunkList = new LinkedList<>();
@@ -169,12 +169,12 @@ public class StockTypeProcessor extends TextProcessor {
 //                System.out.println((String) sectionStrList.get(j));
 //            }
             /// --------------------------------------------------------------------
-            System.out.println("\t-------------------------------------------------");
+//            System.out.println("\t-------------------------------------------------");
 
         }
 
         c.setSections(sectionList);
-        System.out.println("===================================================");
+//        System.out.println("===================================================");
         return c;
     }
 
@@ -221,12 +221,12 @@ public class StockTypeProcessor extends TextProcessor {
         }
         c.setSections(secList);
 
-        System.out.println("Chapter Title: " + c.getTitle());
-        System.out.println("Chapter Text: " + c.getText());
-        for (Section s : c.getSections())
-            System.out.println("Section title = " + s.getTitle() + " and text is:" + s.getText());
-
-        System.out.println("===================================================");
+//        System.out.println("Chapter Title: " + c.getTitle());
+//        System.out.println("Chapter Text: " + c.getText());
+//        for (Section s : c.getSections())
+//            System.out.println("Section title = " + s.getTitle() + " and text is:" + s.getText());
+//
+//        System.out.println("===================================================");
         return c;
     }
 
@@ -248,10 +248,10 @@ public class StockTypeProcessor extends TextProcessor {
         String chapterText = tmpText.toString().isEmpty() ? null : tmpText.toString();
         c.setText(chapterText);
 
-        int chapterIdx = TextUtils.getChapterIndex((String) chapterStrChunk.get(0));
-        System.out.println("Chapter Index: " + chapterIdx);
-        System.out.println("Chapter Title: " + title);
-        System.out.println("Chapter Text: " + chapterText);
+//        int chapterIdx = TextUtils.getChapterIndex((String) chapterStrChunk.get(0));
+//        System.out.println("Chapter Index: " + chapterIdx);
+//        System.out.println("Chapter Title: " + title);
+//        System.out.println("Chapter Text: " + chapterText);
 
         List<String> txtChunk;
         List<List> sectionStrChunkList = new LinkedList<>();
@@ -285,12 +285,12 @@ public class StockTypeProcessor extends TextProcessor {
             // process sections seperately
             Section s = processType3Section(sectionStrList);
             sectionList.add(s);
-            System.out.println("\t-------------------------------------------------");
+//            System.out.println("\t-------------------------------------------------");
 
         }
 
         c.setSections(sectionList);
-        System.out.println("===================================================");
+//        System.out.println("===================================================");
         return c;
     }
 
@@ -299,7 +299,7 @@ public class StockTypeProcessor extends TextProcessor {
         Section s = new Section();
 
         String title = TextUtils.getSectionTitle((String) sectionStrChunk.get(0));
-        System.out.println("\tSection Title: " + title);
+//        System.out.println("\tSection Title: " + title);
         s.setTitle(title);
 
         int lineIdx = 1;
@@ -315,7 +315,7 @@ public class StockTypeProcessor extends TextProcessor {
         }
         String sectionText = tmpText.toString().isEmpty() ? null : tmpText.toString();
         s.setText(sectionText);
-        System.out.println("\tSection Text: " + sectionText);
+//        System.out.println("\tSection Text: " + sectionText);
 
         List<String> txtChunk;
         List<List> subsecStrChunkList = new LinkedList();
@@ -378,7 +378,7 @@ public class StockTypeProcessor extends TextProcessor {
     private Section processType3Section(List<String> sectionStrChunk) {
         Section s = new Section();
         String title = TextUtils.getSectionTitle((String) sectionStrChunk.get(0));
-        System.out.println("\tSection Title: " + title);
+//        System.out.println("\tSection Title: " + title);
         s.setTitle(title);
 
         int lineIdx = 1;
@@ -394,7 +394,7 @@ public class StockTypeProcessor extends TextProcessor {
         }
         String sectionText = tmpText.toString().isEmpty() ? null : tmpText.toString();
         s.setText(sectionText);
-        System.out.println("\tSection Text: " + sectionText);
+//        System.out.println("\tSection Text: " + sectionText);
 
         List<String> txtChunk;
         List<List> subsecStrChunkList = new LinkedList();
@@ -438,7 +438,7 @@ public class StockTypeProcessor extends TextProcessor {
 //            System.out.println("\t\t" + subsecStrList.get(i));
 //        }
         String title = TextUtils.getSubSectionTitle((String) subsecStrList.get(0));
-        System.out.println("\t\tSub-Section Title: " + title);
+//        System.out.println("\t\tSub-Section Title: " + title);
         ss.setTitle(title);
 
         int lineIdx = 1;
@@ -454,7 +454,7 @@ public class StockTypeProcessor extends TextProcessor {
         }
         String subsecText = tmpText.toString().isEmpty() ? null : tmpText.toString();
         ss.setText(subsecText);
-        System.out.println("\t\tSub-Section Text: " + subsecText);
+//        System.out.println("\t\tSub-Section Text: " + subsecText);
 
         List<String> txtChunk;
         List<List> subsubsecStrChunkList = new LinkedList();
@@ -500,7 +500,7 @@ public class StockTypeProcessor extends TextProcessor {
         SubSection s = new SubSection();
 
         String title = TextUtils.getType3SubSectionTitle((String) sectionStrChunk.get(0));
-        System.out.println("\tSub-Section Title: " + title);
+//        System.out.println("\tSub-Section Title: " + title);
         s.setTitle(title);
 
         int lineIdx = 1;
@@ -516,7 +516,7 @@ public class StockTypeProcessor extends TextProcessor {
         }
         String sectionText = tmpText.toString().isEmpty() ? null : tmpText.toString();
         s.setText(sectionText);
-        System.out.println("\tSub-Section Text: " + sectionText);
+//        System.out.println("\tSub-Section Text: " + sectionText);
 
         List<String> txtChunk;
         List<List> subsecStrChunkList = new LinkedList();
@@ -576,7 +576,7 @@ public class StockTypeProcessor extends TextProcessor {
         }
         String subsecText = tmpText.toString().isEmpty() ? null : tmpText.toString();
         sss.setText(subsecText);
-        System.out.println("\t\t\tSub-Sub-Section Text: " + subsecText);
+//        System.out.println("\t\t\tSub-Sub-Section Text: " + subsecText);
         return sss;
     }
 
@@ -584,7 +584,7 @@ public class StockTypeProcessor extends TextProcessor {
         SubSubSection ss = new SubSubSection();
 
         String title = TextUtils.getSubSectionTitle((String) subsecStrList.get(0));
-        System.out.println("\t\tSub-Sub-Section Title: " + title);
+//        System.out.println("\t\tSub-Sub-Section Title: " + title);
         ss.setTitle(title);
 
         int lineIdx = 1;
@@ -600,7 +600,7 @@ public class StockTypeProcessor extends TextProcessor {
         }
         String subsecText = tmpText.toString().isEmpty() ? null : tmpText.toString();
         ss.setText(subsecText);
-        System.out.println("\t\tSub-Sub-Section Text: " + subsecText);
+//        System.out.println("\t\tSub-Sub-Section Text: " + subsecText);
 
         List<String> txtChunk;
         List<List> subsubsecStrChunkList = new LinkedList();
@@ -661,7 +661,7 @@ public class StockTypeProcessor extends TextProcessor {
         }
         String subsecText = tmpText.toString().isEmpty() ? null : tmpText.toString();
         sss.setText(subsecText);
-        System.out.println("\t\t\tTextPoint Text: " + subsecText);
+//        System.out.println("\t\t\tTextPoint Text: " + subsecText);
         return sss;
     }
 }
