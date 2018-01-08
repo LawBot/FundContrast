@@ -95,10 +95,10 @@ public class StockTypeProcessor extends TextProcessor {
         Chapter c = null;
         switch (type) {
             case 1:
-                //c = chapterStrType1(chapterStrChunk);
+                c = chapterStrType1(chapterStrChunk);
                 break;
             case 2:
-                // c = chapterStrType2(chapterStrChunk);
+                c = chapterStrType2(chapterStrChunk);
                 break;
             case 3:
                 c = chapterStrType3(chapterStrChunk);

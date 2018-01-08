@@ -98,7 +98,7 @@ public class IndexTypeProcessor extends TextProcessor {
                 c = chapterStrType1(chapterStrChunk);
                 break;
             case 2:
-                 c = chapterStrType2(chapterStrChunk);
+                c = chapterStrType2(chapterStrChunk);
                 break;
             case 3:
                 c = chapterStrType3(chapterStrChunk);

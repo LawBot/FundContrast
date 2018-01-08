@@ -75,17 +75,18 @@ public class FundContrast {
 //        System.out.println(fd.toString());
 //        System.out.println("Finished!");
 
-        StockTypeProcessor proc = new StockTypeProcessor();
-        proc.readText(inputPath1);
-        FundDoc fd = proc.process();
+//        StockTypeProcessor proc = new StockTypeProcessor();
+//        proc.readText(inputPath1);
+//        FundDoc fd = proc.process();
+//        System.out.println(fd.toString());
+//        System.out.println("Done");
+//
+//
+        BondTypeProcessor bond = new BondTypeProcessor();
+        bond.readText(inputPath3);
+        FundDoc fd = bond.process();
         System.out.println(fd.toString());
-        System.out.println("Done");
-//
-//
-//        BondTypeProcessor bond = new BondTypeProcessor();
-//        bond.readText(inputPath3);
-//        (bond).process();
-//        System.out.println("Bond Done");
+        System.out.println("Bond Done");
 //
 //        MonetaryTypeProcessor mon = new MonetaryTypeProcessor();
 //        mon.readText(inputPath4);
