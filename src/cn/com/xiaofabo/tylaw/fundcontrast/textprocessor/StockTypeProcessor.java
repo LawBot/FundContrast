@@ -95,10 +95,10 @@ public class StockTypeProcessor extends TextProcessor {
         Chapter c = null;
         switch (type) {
             case 1:
-                c = chapterStrType1(chapterStrChunk);
+                //c = chapterStrType1(chapterStrChunk);
                 break;
             case 2:
-                c = chapterStrType2(chapterStrChunk);
+                // c = chapterStrType2(chapterStrChunk);
                 break;
             case 3:
                 c = chapterStrType3(chapterStrChunk);
@@ -109,7 +109,6 @@ public class StockTypeProcessor extends TextProcessor {
         }
         return c;
     }
-
 
     private Chapter chapterStrType1(List chapterStrChunk) {
         String title = TextUtils.getChapterTitle((String) chapterStrChunk.get(0));
@@ -278,19 +277,15 @@ public class StockTypeProcessor extends TextProcessor {
             txtChunk = chapterStrChunk.subList(startIdx, chapterStrChunk.size());
             sectionStrChunkList.add(txtChunk);
         }
-
         List<Section> sectionList = new LinkedList<>();
         for (int i = 0; i < sectionStrChunkList.size(); ++i) {
             List sectionStrList = (List) sectionStrChunkList.get(i);
             // process sections seperately
             Section s = processType3Section(sectionStrList);
             sectionList.add(s);
-//            System.out.println("\t-------------------------------------------------");
-
         }
 
         c.setSections(sectionList);
-//        System.out.println("===================================================");
         return c;
     }
 
@@ -404,6 +399,7 @@ public class StockTypeProcessor extends TextProcessor {
 //            System.out.println(chapterStrChunk.get(i));
             Pattern pattern = Pattern.compile("^（[一|二|三|四|五|六|七|八|九|十|]）");
             Matcher matcher = pattern.matcher((String) sectionStrChunk.get(i));
+
             while (matcher.find()) {
                 if (startIdx == 0) {
                     startIdx = i;
@@ -418,7 +414,6 @@ public class StockTypeProcessor extends TextProcessor {
             txtChunk = sectionStrChunk.subList(startIdx, sectionStrChunk.size());
             subsecStrChunkList.add(txtChunk);
         }
-
         List<SubSection> subsecList = new LinkedList<>();
 
         for (int i = 0; i < subsecStrChunkList.size(); ++i) {
