@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *
  * @author 陈光曦
  */
 public class FundDoc {
@@ -70,7 +69,17 @@ public class FundDoc {
                                     if (subSubSections != null) {
                                         for (int sssIdx = 0; sssIdx < subSubSections.size(); ++sssIdx) {
                                             SubSubSection sss = (SubSubSection) subSubSections.get(sssIdx);
+                                            toReturn.append("\t\t\tSub-Sub-Section Title: ").append(sss.getTitle()).append("\n");
                                             toReturn.append("\t\t\tSub-Sub-Section Text: ").append(sss.getText()).append("\n");
+
+
+                                            List textPoints = sss.getTextPoints();
+                                            if (textPoints != null) {
+                                                for (int txIdx = 0; txIdx < textPoints.size(); ++txIdx) {
+                                                    TextPoint txp = (TextPoint) textPoints.get(txIdx);
+                                                    toReturn.append("\t\t\t\tText-Point Text: ").append(txp.getText()).append("\n");
+                                                }
+                                            }
                                         }
                                     }
                                 }
