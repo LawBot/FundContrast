@@ -61,36 +61,48 @@ public class FundContrast {
         //String inputPath = "data/Sample/华夏基金/股票混合/华夏行业龙头混合型证券投资基金基金合同-发.docx";
         //华夏基金:货币
         //error String inputPath = "data/Sample/华夏基金/货币/华夏行业龙头混合型证券投资基金基金合同-发.docx";
-        //String inputPath = "data/Sample/华夏基金/货币/华夏快线交易型货币市场基金基金合同v6_20161025.doc";
-        //String inputPath = "data/Sample/华夏基金/货币/华夏普金宝货币市场基金基金合同（草案）.docx";
-//
+        String inputPathType4a = "data/Sample/华夏基金/货币/华夏快线交易型货币市场基金基金合同v6_20161025.doc";
+        String inputPathType4b = "data/Sample/华夏基金/货币/华夏普金宝货币市场基金基金合同（草案）.docx";
+
 //        String idxInputPath = "（2012-12-17）证券投资基金基金合同填报指引第2号——指数型证券投资基金基金合同填报指引（试行）.doc";
 //        IndexTypeProcessor idx = new IndexTypeProcessor();
 //        idx.readText(inputPath2);
 //        FundDoc fd = idx.process();
-//
-//        System.out.println("***************************************************");
-//        System.out.println("***************************************************");
-//        System.out.println("***************************************************");
 //        System.out.println(fd.toString());
-//        System.out.println("Finished!");
+//        System.out.println("Index Finished!");
+
 
 //        StockTypeProcessor proc = new StockTypeProcessor();
 //        proc.readText(inputPath1);
 //        FundDoc fd = proc.process();
 //        System.out.println(fd.toString());
-//        System.out.println("Done");
+//        System.out.println("Stock Done");
 //
 //
-        BondTypeProcessor bond = new BondTypeProcessor();
-        bond.readText(inputPath3);
-        FundDoc fd = bond.process();
+//        BondTypeProcessor bond = new BondTypeProcessor();
+//        bond.readText(inputPath3);
+//        FundDoc fd = bond.process();
+//        System.out.println(fd.toString());
+//        System.out.println("Bond Done");
+//
+        MonetaryTypeProcessor mon = new MonetaryTypeProcessor(inputPath4);
+        System.out.println("****************START*********M*******************");
+
+        mon.readText(inputPath4);
+        FundDoc fd = mon.process();
         System.out.println(fd.toString());
-        System.out.println("Bond Done");
-//
-//        MonetaryTypeProcessor mon = new MonetaryTypeProcessor();
-//        mon.readText(inputPath4);
-//        mon.process();
-//        System.out.println("mon Done");
+        System.out.println("Monetary Done");
+        System.out.println("***************************************************");
+
+
+        MonetaryTypeProcessor mon1 = new MonetaryTypeProcessor(inputPathType4a);
+        System.out.println("************START Real contract********************");
+        mon1.readText(inputPathType4a);
+        FundDoc fdR = mon1.process();
+        System.out.println(fdR.toString());
+
+
+        System.out.println("*************EDN Real contract*********************");
+        System.out.println("***************************************************");
     }
 }
