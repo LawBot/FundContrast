@@ -20,10 +20,10 @@ import java.util.regex.Pattern;
  * @author 陈光曦
  */
 public class StockTypeProcessor extends TextProcessor {
-    FundDoc fundDoc = new FundDoc("（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）");
+    FundDoc fundDoc;
 
-    public StockTypeProcessor() {
-
+    public StockTypeProcessor(String docName) {
+        this.fundDoc = new FundDoc(docName);
     }
 
     public FundDoc process() {

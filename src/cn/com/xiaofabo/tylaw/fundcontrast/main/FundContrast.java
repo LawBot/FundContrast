@@ -57,7 +57,7 @@ public class FundContrast {
         //华夏基金:股票混合
         //String inputPath = "data/Sample/华夏基金/股票混合/华夏新锦帆灵活配置混合型证券投资基金基金合同V2.docx";
         //String inputPath = "data/Sample/华夏基金/股票混合/华夏新锦远灵活配置混合型证券投资基金基金合同-干净版.docx";
-        // String inputPath = "data/Sample/华夏基金/股票混合/华夏节能环保股票型证券投资基金基金合同20161114-clean.doc";
+        String inputPathType1a = "data/Sample/华夏基金/股票混合/华夏节能环保股票型证券投资基金基金合同20161114-clean.doc";
         //String inputPath = "data/Sample/华夏基金/股票混合/华夏行业龙头混合型证券投资基金基金合同-发.docx";
         //华夏基金:货币
         //error String inputPath = "data/Sample/华夏基金/货币/华夏行业龙头混合型证券投资基金基金合同-发.docx";
@@ -71,12 +71,20 @@ public class FundContrast {
 //        System.out.println(fd.toString());
 //        System.out.println("Index Finished!");
 
-
-//        StockTypeProcessor proc = new StockTypeProcessor();
+//
+//        StockTypeProcessor proc = new StockTypeProcessor(inputPath1);
 //        proc.readText(inputPath1);
 //        FundDoc fd = proc.process();
 //        System.out.println(fd.toString());
-//        System.out.println("Stock Done");
+//        System.out.println("Stock Template Done");
+//        System.out.println("***************************************************");
+//
+//
+//        StockTypeProcessor procR = new StockTypeProcessor(inputPathType1a);
+//        procR.readText(inputPathType1a);
+//        FundDoc fdR = proc.process();
+//        System.out.println(fdR.toString());
+//        System.out.println("Stock Contract Done");
 //
 //
 //        BondTypeProcessor bond = new BondTypeProcessor();
@@ -84,7 +92,7 @@ public class FundContrast {
 //        FundDoc fd = bond.process();
 //        System.out.println(fd.toString());
 //        System.out.println("Bond Done");
-//
+
         MonetaryTypeProcessor mon = new MonetaryTypeProcessor(inputPath4);
         System.out.println("****************START*********M*******************");
 
