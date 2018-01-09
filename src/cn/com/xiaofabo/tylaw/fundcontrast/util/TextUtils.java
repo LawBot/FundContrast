@@ -7,6 +7,8 @@ package cn.com.xiaofabo.tylaw.fundcontrast.util;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author 陈光曦
@@ -87,6 +89,32 @@ public class TextUtils {
         return title;
     }
 
+    public static String getPartTitle(String titleLine) {
+        String title = null;
+        List partIdentifiers = new LinkedList();
+        partIdentifiers.add("^第.*?部分");
+        partIdentifiers.add("^[一、|二、|三、|四、|五、|六、|七、|八、|九、|十、|"
+                + "十一、|十二、|十三、|十四、|十五、|十六、|十七、|十八、|十九、|二十、|"
+                + "二十一、|二十二、|二十三、|二十四、|二十五、|二十六、|二十七、|二十八、|二十九、]、");
+        partIdentifiers.add("^（[一|二|三|四|五|六|七|八|九|十|]）");
+        partIdentifiers.add("^\\d+、");
+        partIdentifiers.add("^（\\d+）");
+
+        int identifierLevel = -1;
+        for (int i = 0; i < partIdentifiers.size(); ++i) {
+            String identifierStr = (String) partIdentifiers.get(i);
+            Pattern pattern = Pattern.compile(identifierStr);
+            Matcher matcher = pattern.matcher(titleLine);
+            if (matcher.find()) {
+                int start = matcher.start();
+                int end = matcher.end();
+                title = titleLine.substring(end).trim();
+                break;
+            }
+        }
+        return title;
+    }
+
     private static int zhNum2Int(String s) {
         String x = " 一二三四五六七八九十百";
         int l = s.length();
@@ -95,10 +123,10 @@ public class TextUtils {
         int q = j * 100;
         return l < 2
                 ? i : l < 3
-                ? i == 10
-                ? j * 10 : i > 10
-                ? q : 10 + i : l < 4
-                ? j * 10 + i : l < 5
-                ? q + i : q + i + x.indexOf(s.charAt(2)) * 10;
+                        ? i == 10
+                                ? j * 10 : i > 10
+                                        ? q : 10 + i : l < 4
+                                ? j * 10 + i : l < 5
+                                        ? q + i : q + i + x.indexOf(s.charAt(2)) * 10;
     }
 }

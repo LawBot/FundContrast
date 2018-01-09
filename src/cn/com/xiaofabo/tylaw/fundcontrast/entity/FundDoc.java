@@ -15,6 +15,7 @@ public class FundDoc {
 
     private String title;
     private List<Chapter> chapters;
+    private List<DocPart> parts;
 
     public FundDoc(String title) {
         this.title = title;
@@ -35,6 +36,21 @@ public class FundDoc {
 
     public void setChapters(List<Chapter> chapters) {
         this.chapters = chapters;
+    }
+
+    public List<DocPart> getParts() {
+        return parts;
+    }
+
+    public void setParts(List<DocPart> parts) {
+        this.parts = parts;
+    }
+
+    public boolean addPart(DocPart part) {
+        if (parts == null) {
+            parts = new LinkedList();
+        }
+        return parts.add(part);
     }
 
     @Override
@@ -72,7 +88,6 @@ public class FundDoc {
                                             toReturn.append("\t\t\tSub-Sub-Section Title: ").append(sss.getTitle()).append("\n");
                                             toReturn.append("\t\t\tSub-Sub-Section Text: ").append(sss.getText()).append("\n");
 
-
                                             List textPoints = sss.getTextPoints();
                                             if (textPoints != null) {
                                                 for (int txIdx = 0; txIdx < textPoints.size(); ++txIdx) {
@@ -89,6 +104,17 @@ public class FundDoc {
                     }
                     toReturn.append("====================================================").append("\n");
                 }
+            }
+        }
+        return toReturn.toString();
+    }
+    
+    public String print(){
+        StringBuilder toReturn = new StringBuilder();
+        toReturn.append("Document Title: ").append(title).append("\n");
+        if(parts != null){
+            for(int i = 0; i < parts.size(); ++i){
+                toReturn.append(parts.get(i).toString());
             }
         }
         return toReturn.toString();

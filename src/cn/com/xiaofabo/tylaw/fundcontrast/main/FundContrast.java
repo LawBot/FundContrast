@@ -9,6 +9,7 @@ import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.ChapterIncorrectException;
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.SectionIncorrectException;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.BondTypeProcessor;
+import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.IndexTypeProcessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.MonetaryTypeProcessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.StockTypeProcessor;
@@ -93,24 +94,29 @@ public class FundContrast {
 //        System.out.println(fd.toString());
 //        System.out.println("Bond Done");
 
-        MonetaryTypeProcessor mon = new MonetaryTypeProcessor(inputPath4);
-        System.out.println("****************START*********M*******************");
-
-        mon.readText(inputPath4);
-        FundDoc fd = mon.process();
-        System.out.println(fd.toString());
-        System.out.println("Monetary Done");
-        System.out.println("***************************************************");
-
-
-        MonetaryTypeProcessor mon1 = new MonetaryTypeProcessor(inputPathType4a);
-        System.out.println("************START Real contract********************");
-        mon1.readText(inputPathType4a);
-        FundDoc fdR = mon1.process();
-        System.out.println(fdR.toString());
-
-
-        System.out.println("*************EDN Real contract*********************");
-        System.out.println("***************************************************");
+//        MonetaryTypeProcessor mon = new MonetaryTypeProcessor(inputPath4);
+//        System.out.println("****************START*********M*******************");
+//
+//        mon.readText(inputPath4);
+//        FundDoc fd = mon.process();
+//        System.out.println(fd.toString());
+//        System.out.println("Monetary Done");
+//        System.out.println("***************************************************");
+//
+//
+//        MonetaryTypeProcessor mon1 = new MonetaryTypeProcessor(inputPathType4a);
+//        System.out.println("************START Real contract********************");
+//        mon1.readText(inputPathType4a);
+//        FundDoc fdR = mon1.process();
+//        System.out.println(fdR.toString());
+//
+//
+//        System.out.println("*************EDN Real contract*********************");
+//        System.out.println("***************************************************");
+            
+        DocProcessor dp = new DocProcessor(inputPath1);
+        dp.readText(inputPath1);
+        FundDoc fd = dp.process();
+        System.out.println(fd.print());
     }
 }
