@@ -26,12 +26,10 @@ public class DocProcessor extends TextProcessor {
         this.fundDoc = new FundDoc(docName);
         partIdentifiers = new LinkedList();
         partIdentifiers.add("^第.*?部分.*?[^0-9]$");
-        partIdentifiers.add("^[一、|二、|三、|四、|五、|六、|七、|八、|九、|十、|"
-                + "十一、|十二、|十三、|十四、|十五、|十六、|十七、|十八、|十九、|二十、|"
-                + "二十一、|二十二、|二十三、|二十四、|二十五、|二十六、|二十七、|二十八、|二十九、]、");
-        partIdentifiers.add("^（[一|二|三|四|五|六|七|八|九|十|]）");
-        partIdentifiers.add("^\\d+、");
-        partIdentifiers.add("^（\\d+）");
+        partIdentifiers.add("^[一|二|三|四|五|六|七|八|九|十].*、");
+        partIdentifiers.add("^[（|(][一|二|三|四|五|六|七|八|九|十].*[）|)]");
+        partIdentifiers.add("^\\d+[、|\\.]");
+        partIdentifiers.add("^[（|(]\\d+[）|)]");
     }
 
     public FundDoc process() {
@@ -82,13 +80,13 @@ public class DocProcessor extends TextProcessor {
                 partText.append(currentLine);
             } else {
                 if (lastPartLevel < currentPartLevel) {
-                    currentPart = new DocPart();
-                    String title = TextUtils.getPartTitle(currentLine);
-                    currentPart.setTitle(title);
                     if (!partText.toString().isEmpty()) {
                         currentPart.setText(partText.toString());
                         partText = new StringBuilder();
                     }
+                    currentPart = new DocPart();
+                    String title = TextUtils.getPartTitle(currentLine);
+                    currentPart.setTitle(title);
                     tmpPartList.add(currentPart);
                     ++currentLevel;
                 } else if (lastPartLevel > currentPartLevel) {
