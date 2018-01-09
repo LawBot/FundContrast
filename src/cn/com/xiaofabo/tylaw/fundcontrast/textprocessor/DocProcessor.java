@@ -45,7 +45,7 @@ public class DocProcessor extends TextProcessor {
         DocPart currentPart = new DocPart();
         boolean foundFirstIdentifier = false;
         while (lineIdx < textList.size()) {
-            String currentLine = (String) textList.get(lineIdx);
+            String currentLine = ((String) textList.get(lineIdx)).trim();
 //            System.out.println("Processing line number: " + lineIdx);
 //            System.out.println(currentLine);
             int currentPartLevel = -1;
