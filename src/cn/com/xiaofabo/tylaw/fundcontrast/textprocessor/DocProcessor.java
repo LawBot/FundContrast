@@ -26,8 +26,8 @@ public class DocProcessor extends TextProcessor {
         this.fundDoc = new FundDoc(docName);
         partIdentifiers = new LinkedList();
         partIdentifiers.add("^第.*?部分.*?[^0-9]$");
-        partIdentifiers.add("^[一|二|三|四|五|六|七|八|九|十].*、");
-        partIdentifiers.add("^[（|(][一|二|三|四|五|六|七|八|九|十].*[）|)]");
+        partIdentifiers.add("^[一|二|三|四|五|六|七|八|九|十].*?、");
+        partIdentifiers.add("^[（|(][一|二|三|四|五|六|七|八|九|十].*?[）|)]");
         partIdentifiers.add("^\\d+[、|\\.|．]");
         partIdentifiers.add("^[（|(]\\d+[）|)]");
     }

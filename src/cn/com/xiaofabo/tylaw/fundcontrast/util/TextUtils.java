@@ -93,7 +93,7 @@ public class TextUtils {
         String title = null;
         List partIdentifiers = new LinkedList();
         partIdentifiers.add("^第.*?部分");
-        partIdentifiers.add("^[一|二|三|四|五|六|七|八|九|十].*、");
+        partIdentifiers.add("^[一|二|三|四|五|六|七|八|九|十].*?、");
         partIdentifiers.add("^[（|(][一|二|三|四|五|六|七|八|九|十].*[）|)]");
         partIdentifiers.add("^\\d+[、|\\.|．]");
         partIdentifiers.add("^[（|(]\\d+[）|)]");
