@@ -116,7 +116,7 @@ public class FundContrast {
 //        System.out.println("***************************************************");
             
         DocProcessor dp = new DocProcessor(inputPathType3c);
-        dp.readText(inputPathType3c);
+        dp.readText(inputPathType3b);
         FundDoc fd = dp.process();
         System.out.println(fd.print());
     }

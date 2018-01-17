@@ -52,6 +52,16 @@ public class DocPart {
         this.childPart = childPart;
     }
 
+    public boolean hasPart() {
+        if (childPart == null) {
+            return false;
+        }
+        if (childPart.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
     @Override
     public String toString() {
         StringBuilder toReturn = new StringBuilder();
