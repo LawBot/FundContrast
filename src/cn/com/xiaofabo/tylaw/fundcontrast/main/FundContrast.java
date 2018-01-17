@@ -8,11 +8,7 @@ package cn.com.xiaofabo.tylaw.fundcontrast.main;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.ChapterIncorrectException;
 import cn.com.xiaofabo.tylaw.fundcontrast.exceptionhandler.SectionIncorrectException;
-import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.BondTypeProcessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
-import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.IndexTypeProcessor;
-import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.MonetaryTypeProcessor;
-import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.StockTypeProcessor;
 
 import java.io.IOException;
 
@@ -118,6 +114,6 @@ public class FundContrast {
         DocProcessor dp = new DocProcessor(inputPathType3c);
         dp.readText(inputPathType3b);
         FundDoc fd = dp.process();
-        System.out.println(fd.print());
+        System.out.println(fd.toString());
     }
 }
