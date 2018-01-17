@@ -25,11 +25,11 @@ public class DocProcessor extends TextProcessor {
     public DocProcessor(String docName) {
         this.fundDoc = new FundDoc(docName);
         partIdentifiers = new LinkedList();
-        partIdentifiers.add("^第.*?部分.*?[^0-9]$");
-        partIdentifiers.add("^[一|二|三|四|五|六|七|八|九|十].*?、");
-        partIdentifiers.add("^[（|(][一|二|三|四|五|六|七|八|九|十].*?[）|)]");
-        partIdentifiers.add("^\\d+[、|\\.|．]");
-        partIdentifiers.add("^[（|(]\\d+[）|)]");
+        partIdentifiers.add(TextUtils.REGEX_IDENTIFIER_LEVEL_0_TP);
+        partIdentifiers.add(TextUtils.REGEX_IDENTIFIER_LEVEL_1);
+        partIdentifiers.add(TextUtils.REGEX_IDENTIFIER_LEVEL_2);
+        partIdentifiers.add(TextUtils.REGEX_IDENTIFIER_LEVEL_3);
+        partIdentifiers.add(TextUtils.REGEX_IDENTIFIER_LEVEL_4);
     }
 
     public FundDoc process() {

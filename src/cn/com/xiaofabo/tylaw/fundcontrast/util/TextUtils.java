@@ -14,6 +14,14 @@ import java.util.regex.Pattern;
  * @author 陈光曦
  */
 public class TextUtils {
+    
+    public static String REGEX_IDENTIFIER_LEVEL_0 = "^第.*?部分";
+    public static String REGEX_IDENTIFIER_LEVEL_0_TP = "^第.*?部分.*?[^0-9]$";
+    public static String REGEX_IDENTIFIER_LEVEL_1 = "^[一|二|三|四|五|六|七|八|九|十].*?、";
+    public static String REGEX_IDENTIFIER_LEVEL_2 = "^[（|(][一|二|三|四|五|六|七|八|九|十].*[）|)]";
+    public static String REGEX_IDENTIFIER_LEVEL_3 = "^\\d+[、|\\.|．]";
+    public static String REGEX_IDENTIFIER_LEVEL_4 = "^[（|(]\\d+[）|)]";
+    
 
     public static List removeAllEmptyLines(List strList) {
         List toReturn = new LinkedList();
@@ -92,11 +100,11 @@ public class TextUtils {
     public static String getPartTitle(String titleLine) {
         String title = null;
         List partIdentifiers = new LinkedList();
-        partIdentifiers.add("^第.*?部分");
-        partIdentifiers.add("^[一|二|三|四|五|六|七|八|九|十].*?、");
-        partIdentifiers.add("^[（|(][一|二|三|四|五|六|七|八|九|十].*[）|)]");
-        partIdentifiers.add("^\\d+[、|\\.|．]");
-        partIdentifiers.add("^[（|(]\\d+[）|)]");
+        partIdentifiers.add(REGEX_IDENTIFIER_LEVEL_0);
+        partIdentifiers.add(REGEX_IDENTIFIER_LEVEL_1);
+        partIdentifiers.add(REGEX_IDENTIFIER_LEVEL_2);
+        partIdentifiers.add(REGEX_IDENTIFIER_LEVEL_3);
+        partIdentifiers.add(REGEX_IDENTIFIER_LEVEL_4);
 
         int identifierLevel = -1;
         for (int i = 0; i < partIdentifiers.size(); ++i) {
