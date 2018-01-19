@@ -9,7 +9,7 @@ public class PatchDto {
 	private int subsubSectionIndex;
 	private int subsubsubSectionIndex;
 	private RevisedDto revisedDto;
-	private String indexType;//(代表原文序号为“orginal”,代表新条文序号为"revised")
+	private String indexType;//(代表原文的序号则为“orginal”,代表新条文的序号则为"revised"，当新增加原文没有的条文，则类型为"revised")
 	
 	public String getOrignalText() {
 		return orignalText;
