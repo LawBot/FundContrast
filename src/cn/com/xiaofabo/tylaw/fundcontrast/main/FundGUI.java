@@ -1,6 +1,7 @@
 package cn.com.xiaofabo.tylaw.fundcontrast.main;
 
-import org.apache.logging.log4j.Logger;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import javax.swing.JPanel;
 import javax.swing.UIManager;
@@ -27,12 +28,14 @@ import java.io.File;
  * email ddl-15 at outlook.com
  **/
 public class FundGUI {
-    Logger log;
+    private static Logger logger = Logger.getLogger(FundGUI.class.getName());
 
     public FundGUI() {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
+                PropertyConfigurator.configure("log.properties");
+                logger.info("Inside FundGUI run()");
                 try {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                     UIManager.put("FileChooser.readOnly", Boolean.TRUE);
@@ -42,7 +45,7 @@ public class FundGUI {
 
                 JFrame frame = new JFrame("生成条文");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.add(new TestPane());
+                frame.add(new MyPane());
                 frame.pack();
                 frame.setLocationRelativeTo(null);
                 frame.setSize(1000, 500);
@@ -55,7 +58,7 @@ public class FundGUI {
         new FundGUI();
     }
 
-    public class TestPane extends JPanel {
+    public class MyPane extends JPanel {
 
         private JLabel lblCom;
         private JLabel lblType;
@@ -68,9 +71,10 @@ public class FundGUI {
         private DefaultComboBoxModel productType = new DefaultComboBoxModel();
         private JFileChooser chooser;
 
-        public TestPane() {
+        public MyPane() {
+            logger.info("Inside MyPane, setting flowlayout");
             setLayout(new FlowLayout());
-
+            logger.info("Inside FundGUI run()");
             lblCom = new JLabel("公司");
             add(lblCom);
             companyNames.addElement("工银瑞信");
@@ -97,6 +101,8 @@ public class FundGUI {
             btnInput.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    logger.info("Inside action performer, set input doc path");
+
                     if (chooser == null) {
                         chooser = new JFileChooser();
                         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -114,9 +120,9 @@ public class FundGUI {
                         });
                     }
 
-                    switch (chooser.showOpenDialog(FundGUI.TestPane.this)) {
+                    switch (chooser.showOpenDialog(MyPane.this)) {
                         case JFileChooser.APPROVE_OPTION:
-                            System.out.println("Input: " + chooser.getSelectedFile().getAbsolutePath());
+                            logger.info("Input file path: " + chooser.getSelectedFile().getAbsolutePath());
                             inputPath.setText(chooser.getSelectedFile().getAbsolutePath());
                             break;
                     }
@@ -130,6 +136,8 @@ public class FundGUI {
             btnOutput.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    logger.info("Inside action performer, set output doc path");
+
                     if (chooser == null) {
                         chooser = new JFileChooser();
                         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -147,9 +155,9 @@ public class FundGUI {
                         });
                     }
 
-                    switch (chooser.showOpenDialog(FundGUI.TestPane.this)) {
+                    switch (chooser.showOpenDialog(MyPane.this)) {
                         case JFileChooser.APPROVE_OPTION:
-                            System.out.println("Output: " + chooser.getSelectedFile().getAbsolutePath());
+                            logger.info("Output file path: " + chooser.getSelectedFile().getAbsolutePath());
                             outputPath.setText(chooser.getSelectedFile().getAbsolutePath());
                             break;
                     }
@@ -161,6 +169,8 @@ public class FundGUI {
             btnSubmit.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    logger.info("Inside action performer, generating target doc...");
+
                     //TODO
                 }
             });
