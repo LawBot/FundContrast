@@ -1,5 +1,7 @@
 package cn.com.xiaofabo.tylaw.fundcontrast.main;
 
+import org.apache.logging.log4j.Logger;
+
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.JButton;
@@ -25,12 +27,15 @@ import java.io.File;
  * email ddl-15 at outlook.com
  **/
 public class FundGUI {
+    Logger log;
+
     public FundGUI() {
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
                 try {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                    UIManager.put("FileChooser.readOnly", Boolean.TRUE);
                 } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
                     ex.printStackTrace();
                 }
@@ -54,13 +59,13 @@ public class FundGUI {
 
         private JLabel lblCom;
         private JLabel lblType;
-        private JButton lblInput;
-        private JButton lblOutput;
+        private JButton btnInput;
+        private JButton btnOutput;
         private JButton btnSubmit;
         private JTextField inputPath;
         private JTextField outputPath;
-        private DefaultComboBoxModel companies = new DefaultComboBoxModel();
-        private DefaultComboBoxModel type = new DefaultComboBoxModel();
+        private DefaultComboBoxModel companyNames = new DefaultComboBoxModel();
+        private DefaultComboBoxModel productType = new DefaultComboBoxModel();
         private JFileChooser chooser;
 
         public TestPane() {
@@ -68,29 +73,28 @@ public class FundGUI {
 
             lblCom = new JLabel("公司");
             add(lblCom);
-
-            companies.addElement("工行");
-            companies.addElement("久泰");
-            companies.addElement("华夏");
-            final JComboBox companyCombo = new JComboBox(companies);
+            companyNames.addElement("工银瑞信");
+            companyNames.addElement("华夏基金");
+            companyNames.addElement("九泰基金");
+            final JComboBox companyCombo = new JComboBox(companyNames);
             companyCombo.setSelectedIndex(0);
             add(companyCombo);
 
             lblType = new JLabel("类型");
             add(lblType);
-            type.addElement("债券");
-            type.addElement("混合");
-            type.addElement("混合");
-            type.addElement("混合");
-            final JComboBox typeCombo = new JComboBox(type);
+            productType.addElement("股票混合型");
+            productType.addElement("指数型");
+            productType.addElement("债券型");
+            productType.addElement("货币型");
+            final JComboBox typeCombo = new JComboBox(productType);
             typeCombo.setSelectedIndex(0);
             add(typeCombo);
 
             inputPath = new JTextField("path...");
             add(inputPath);
-            lblInput = new JButton("选择文件");
-            add(lblInput);
-            lblInput.addActionListener(new ActionListener() {
+            btnInput = new JButton("选择文件");
+            add(btnInput);
+            btnInput.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (chooser == null) {
@@ -112,7 +116,7 @@ public class FundGUI {
 
                     switch (chooser.showOpenDialog(FundGUI.TestPane.this)) {
                         case JFileChooser.APPROVE_OPTION:
-//                            System.out.println("Input: " + chooser.getSelectedFile().getAbsolutePath());
+                            System.out.println("Input: " + chooser.getSelectedFile().getAbsolutePath());
                             inputPath.setText(chooser.getSelectedFile().getAbsolutePath());
                             break;
                     }
@@ -121,9 +125,9 @@ public class FundGUI {
 
             outputPath = new JTextField("path...");
             add(outputPath);
-            lblOutput = new JButton("输出路径");
-            add(lblOutput);
-            lblOutput.addActionListener(new ActionListener() {
+            btnOutput = new JButton("输出路径");
+            add(btnOutput);
+            btnOutput.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (chooser == null) {
@@ -145,7 +149,7 @@ public class FundGUI {
 
                     switch (chooser.showOpenDialog(FundGUI.TestPane.this)) {
                         case JFileChooser.APPROVE_OPTION:
-//                            System.out.println("Output: " + chooser.getSelectedFile().getAbsolutePath());
+                            System.out.println("Output: " + chooser.getSelectedFile().getAbsolutePath());
                             outputPath.setText(chooser.getSelectedFile().getAbsolutePath());
                             break;
                     }
