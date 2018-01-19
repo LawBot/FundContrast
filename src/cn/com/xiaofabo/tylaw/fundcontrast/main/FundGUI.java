@@ -1,12 +1,21 @@
 package cn.com.xiaofabo.tylaw.fundcontrast.main;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+import javax.swing.JFrame;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
 
-
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.io.File;
 
 /**
@@ -15,11 +24,7 @@ import java.io.File;
  * @author 杨敏
  * email ddl-15 at outlook.com
  **/
-
-// An AWT program inherits from the top-level container java.awt.Frame
 public class FundGUI {
-
-
     public FundGUI() {
         EventQueue.invokeLater(new Runnable() {
             @Override
@@ -40,7 +45,6 @@ public class FundGUI {
             }
         });
     }
-
 
     public static void main(String[] args) {
         new FundGUI();
@@ -158,5 +162,4 @@ public class FundGUI {
             });
         }
     }
-
 }
