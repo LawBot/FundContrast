@@ -47,17 +47,19 @@ public class GenerateCompareDoc {
         GenerateCompareDoc test = new GenerateCompareDoc();
         String title = "《九泰天辰量化新动力混合型证券投资基金基金合同（草案）》\n";
         String txt = "九泰天辰量化新动力混合型证券投资基金募集申请材料之《九泰天辰量化新动力混合型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基金监管部发布的《证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引(试行)》（以下简称“《指引》”）撰写。根据基金托管人和律师事务所的意见，我公司在撰写《基金合同》时对《指引》部分条款进行了增加、删除或修改，现将具体情况详细说明如下。";
-        test.generate(title, txt, patchDtoList);
+        test.generate(title, txt, patchDtoList, "data");
     }
 
-    private void generate(String title, String text, List<PatchDto> resultDto) throws IOException {
+    public void generate(String title, String text, List<PatchDto> resultDto, String outputPath) throws IOException {
         PropertyConfigurator.configure("log.properties");
         log.info("Create an empty document");
         String tit = title;
         String txt = text;
         int row = resultDto.size() + 1;
         XWPFDocument document = new XWPFDocument();
-        FileOutputStream out = new FileOutputStream(new File("条文对照表.docx"));
+        FileOutputStream out = new FileOutputStream(new File(outputPath + "/条文对照表.docx"));
+//        FileOutputStream out = new FileOutputStream(new File(outputPath));
+
         CTDocument1 doc = document.getDocument();
         CTBody body = doc.getBody();
         if (!body.isSetSectPr()) {

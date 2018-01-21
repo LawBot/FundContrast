@@ -1,5 +1,10 @@
 package cn.com.xiaofabo.tylaw.fundcontrast.main;
 
+import cn.com.xiaofabo.tylaw.fundcontrast.entity.CompareDto;
+import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
+import cn.com.xiaofabo.tylaw.fundcontrast.entity.PatchDto;
+import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
+import cn.com.xiaofabo.tylaw.fundcontrast.util.CompareUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -19,6 +24,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Created on @ 18.01.18
@@ -28,6 +35,10 @@ import java.io.File;
  **/
 public class FundGUI extends JFrame {
     private static Logger logger = Logger.getLogger(FundGUI.class.getName());
+    String inputPath1 = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）.doc";
+    String inputPath2 = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第2号——指数型证券投资基金基金合同填报指引（试行）.doc";
+    String inputPath3 = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第3号——证券投资基金基金合同填报指引（试行）.doc";
+    String inputPath4 = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第4号——货币市场基金基金合同填报指引（试行）.doc";
 
     public FundGUI() {
         EventQueue.invokeLater(new Runnable() {
@@ -44,10 +55,14 @@ public class FundGUI extends JFrame {
 
                 JFrame frame = new JFrame("生成条文");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.add(new MyPane());
+                try {
+                    frame.add(new MyPane());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 frame.pack();
                 frame.setLocationRelativeTo(null);
-                frame.setSize(800, 200);
+                frame.setSize(1000, 400);
                 frame.setVisible(true);
             }
         });
@@ -70,7 +85,7 @@ public class FundGUI extends JFrame {
         private DefaultComboBoxModel productType = new DefaultComboBoxModel();
         private JFileChooser chooser;
 
-        public MyPane() {
+        public MyPane() throws IOException {
             logger.info("Inside MyPane, setting flowlayout");
             setLayout(new GridLayout(0, 2, 1, 3));
 
@@ -94,7 +109,7 @@ public class FundGUI extends JFrame {
             typeCombo.setSelectedIndex(0);
             add(typeCombo);
 
-            inputPath = new JTextField("path...");
+            inputPath = new JTextField("file...");
             add(inputPath);
             btnInput = new JButton("选择文件");
             add(btnInput);
@@ -129,6 +144,7 @@ public class FundGUI extends JFrame {
                 }
             });
 
+            // TODO
             outputPath = new JTextField("path...");
             add(outputPath);
             btnOutput = new JButton("输出路径");
@@ -140,7 +156,7 @@ public class FundGUI extends JFrame {
 
                     if (chooser == null) {
                         chooser = new JFileChooser();
-                        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
                         chooser.setAcceptAllFileFilterUsed(false);
                         chooser.addChoosableFileFilter(new FileFilter() {
                             @Override
@@ -154,11 +170,10 @@ public class FundGUI extends JFrame {
                             }
                         });
                     }
-
                     switch (chooser.showOpenDialog(MyPane.this)) {
                         case JFileChooser.APPROVE_OPTION:
-                            logger.info("Output file path: " + chooser.getSelectedFile().getAbsolutePath());
-                            outputPath.setText(chooser.getSelectedFile().getAbsolutePath());
+                            logger.info("Output file path: " + chooser.getCurrentDirectory());
+                            outputPath.setText(String.valueOf(chooser.getCurrentDirectory()));
                             break;
                     }
                 }
@@ -172,7 +187,63 @@ public class FundGUI extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     logger.info("Inside action performer, generating target doc...");
 
-                    //TODO
+//                    String testPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第4号——货币市场基金基金合同填报指引（试行）.doc";
+//                    String testPath2 = "data/Sample/华夏基金/货币/华夏兴金宝货币市场基金基金合同（草案） 1026.docx";
+                    String templateDoc = inputPath.getText();
+                    try {
+                        switch (String.valueOf(typeCombo.getSelectedItem())) {
+                            case "股票混合型":
+                                templateDoc = inputPath1;
+                                break;
+                            case "指数型":
+                                templateDoc = inputPath2;
+                                break;
+                            case "债券型":
+                                templateDoc = inputPath3;
+                                break;
+                            default:
+                                templateDoc = inputPath4;
+                        }
+                    } catch (Exception ee) {
+                        ee.printStackTrace();
+                    }
+
+                    String contractPath = inputPath.getText();
+
+                    DocProcessor dp = new DocProcessor(templateDoc);
+                    try {
+                        dp.readText(templateDoc);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    FundDoc fd = dp.process();
+                    java.util.List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
+
+                    DocProcessor dp2 = new DocProcessor(contractPath);
+                    try {
+                        dp2.readText(contractPath);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    FundDoc fd2 = dp2.process();
+                    java.util.List<CompareDto> revisedCompareDtoList = fd2.getFundDoc();
+                    List<PatchDto> patchDtoList = null;
+                    try {
+                        patchDtoList = CompareUtils.doCompare(orignalCompareDtoList, revisedCompareDtoList);
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+
+                    GenerateCompareDoc test = new GenerateCompareDoc();
+                    String title = "《九泰天辰量化新动力混合型证券投资基金基金合同（草案）》\n";
+                    String txt = "九泰天辰量化新动力混合型证券投资基金募集申请材料之《九泰天辰量化新动力混合型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基金监管部发布的《证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引(试行)》（以下简称“《指引》”）撰写。根据基金托管人和律师事务所的意见，我公司在撰写《基金合同》时对《指引》部分条款进行了增加、删除或修改，现将具体情况详细说明如下。";
+                    try {
+                        String genDocPath = outputPath.getText();
+                        test.generate(title, txt, patchDtoList, genDocPath);
+                        System.out.println("finished");
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             });
         }
