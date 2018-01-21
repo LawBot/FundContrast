@@ -16,8 +16,16 @@ import cn.com.xiaofabo.tylaw.fundcontrast.entity.RevisedDto;
 
 public class CompareUtils {
 	
-	public static List<PatchDto> doCompare(List<CompareDto> orignalCompareDtoList, List<CompareDto> revisedCompareDtoList, List<String> originalList,List<String> revisedList) throws Exception{
+	public static List<PatchDto> doCompare(List<CompareDto> orignalCompareDtoList, List<CompareDto> revisedCompareDtoList) throws Exception{
 		try {
+			List<String> originalList = new ArrayList<String>();
+			for (CompareDto compareDto : orignalCompareDtoList) {
+				originalList.add(compareDto.getText());
+			}
+		    List<String> revisedList = new ArrayList<String>();
+		    for (CompareDto compareDto : revisedCompareDtoList) {
+				revisedList.add(compareDto.getText());
+			}
 			List<PatchDto> patchList = new ArrayList<PatchDto>();
 			Patch<String> patch = DiffUtils.diff(originalList,revisedList);
 			for (Delta<String> delta : patch.getDeltas()) {

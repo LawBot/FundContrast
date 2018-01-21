@@ -35,22 +35,13 @@ public class CompareTest {
 	        dp.readText(testPath);
 	        FundDoc fd = dp.process();
 	        List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
-	        List<String> originalList = new ArrayList<String>();
-	        
-	        for (CompareDto compareDto : orignalCompareDtoList) {
-				originalList.add(compareDto.getText());
-			}
 	        
 	        DocProcessor dp2 = new DocProcessor(testPath2);
 	        dp2.readText(testPath2);
 	        FundDoc fd2 = dp2.process();
-	        List<String> revisedList = new ArrayList<String>();
 	        List<CompareDto> revisedCompareDtoList = fd2.getFundDoc();
-	        for (CompareDto compareDto : revisedCompareDtoList) {
-				revisedList.add(compareDto.getText());
-			}
 	        try {
-	        	List<PatchDto> patchDtoList = CompareUtils.doCompare(orignalCompareDtoList, revisedCompareDtoList, originalList, revisedList);
+	        	List<PatchDto> patchDtoList = CompareUtils.doCompare(orignalCompareDtoList, revisedCompareDtoList);
 	        	System.out.println(patchDtoList);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
