@@ -85,7 +85,8 @@ public class DocProcessor extends TextProcessor {
                         partText = new StringBuilder();
                     }
                     currentPart = new DocPart();
-                    String title = TextUtils.getPartTitle(currentLine);
+//                    String title = TextUtils.getPartTitle(currentLine);
+                    String title = currentLine;
                     currentPart.setTitle(title);
                     tmpPartList.add(currentPart);
                     ++currentLevel;
@@ -111,7 +112,8 @@ public class DocProcessor extends TextProcessor {
                         tmpPartList = new LinkedList();
                     }
                     currentPart = new DocPart();
-                    String title = TextUtils.getPartTitle(currentLine);
+//                    String title = TextUtils.getPartTitle(currentLine);
+                    String title = currentLine;
                     currentPart.setTitle(title);
                     tmpPartList.add(currentPart);
                     currentLevel = actualLevel;
@@ -128,7 +130,8 @@ public class DocProcessor extends TextProcessor {
                         parentDp.addPart(currentPart);
                     }
                     currentPart = new DocPart();
-                    String title = TextUtils.getPartTitle(currentLine);
+//                    String title = TextUtils.getPartTitle(currentLine);
+                    String title = currentLine;
                     currentPart.setTitle(title);
                     if (currentPartLevel == 0) {
                         tmpPartList.add(currentPart);
