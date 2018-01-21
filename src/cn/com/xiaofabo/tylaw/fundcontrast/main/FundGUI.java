@@ -62,7 +62,7 @@ public class FundGUI extends JFrame {
                 }
                 frame.pack();
                 frame.setLocationRelativeTo(null);
-                frame.setSize(1000, 400);
+                frame.setSize(800, 200);
                 frame.setVisible(true);
             }
         });
