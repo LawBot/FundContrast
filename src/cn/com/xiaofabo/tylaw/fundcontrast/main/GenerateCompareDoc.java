@@ -113,40 +113,36 @@ public class GenerateCompareDoc {
             String column2;
 
             XWPFParagraph par = document.createParagraph();
-            try{
-            if (p.getRevisedDto().getDeleteData()==null) {
-               // System.out.println(p.getRevisedDto());
-                ///Set set = p.getRevisedDto().getDeleteData().keySet();
-//                for (int j = 0; j < p.getOrignalText().length(); j++) {
-//                    XWPFRun runForEachLetter = par.createRun();
-//                    String currentLetter = Character.toString(p.getOrignalText().charAt(j));
-//                    if (set.contains(j)) {
-//                        runForEachLetter.setStrike(true);
+            if (p.getRevisedDto() != null && p.getRevisedDto().getDeleteData() != null) {
+                Set set = p.getRevisedDto().getDeleteData().keySet();
+                for (int j = 0; j < p.getOrignalText().length(); j++) {
+                    XWPFRun runForEachLetter = par.createRun();
+                    String currentLetter = Character.toString(p.getOrignalText().charAt(j));
+                    if (set.contains(j)) {
+                        runForEachLetter.setStrike(true);
+                        runForEachLetter.setText(currentLetter);
+                    } else {
+                        runForEachLetter.setText(currentLetter);
+                    }
+                }
+                s.getCell(1).setParagraph(par);
+            }
+
+//            XWPFParagraph par1 = document.createParagraph();
+//            if (p.getRevisedDto() != null && p.getRevisedDto().getAddData() != null) {
+//                Set set1 = p.getRevisedDto().getAddData().keySet();
+//                for (int k = 0; k < p.getOrignalText().length(); k++) {
+//                    XWPFRun runForEachLetter = par1.createRun();
+//                    String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(k));
+//                    if (set1.contains(k)) {
+//                        runForEachLetter.setBold(true);
 //                        runForEachLetter.setText(currentLetter);
 //                    } else {
 //                        runForEachLetter.setText(currentLetter);
 //                    }
 //                }
-//                s.getCell(1).setParagraph(par);
-            }}catch(NullPointerException e){
-                e.printStackTrace();
-            }
-
-
-//            Set set1 = p.getRevisedDto().getAddData().keySet();
-//            XWPFParagraph par1 = document.createParagraph();
-//            for (int k = 0; k < p.getOrignalText().length(); k++) {
-//                XWPFRun runForEachLetter = par1.createRun();
-//                String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(k));
-//                if (set1.contains(k)) {
-//                    runForEachLetter.setBold(true);
-//                    runForEachLetter.setText(currentLetter);
-//                } else {
-//                    runForEachLetter.setText(currentLetter);
-//                }
+//                s.getCell(2).setParagraph(par1);
 //            }
-//            s.getCell(2).setParagraph(par1);
-
         }
 
         // add header, footer
