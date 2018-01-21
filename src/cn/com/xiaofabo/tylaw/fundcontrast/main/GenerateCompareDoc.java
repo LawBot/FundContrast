@@ -3,7 +3,6 @@ package cn.com.xiaofabo.tylaw.fundcontrast.main;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.CompareDto;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.PatchDto;
-import cn.com.xiaofabo.tylaw.fundcontrast.entity.RevisedDto;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.util.CompareUtils;
 import org.apache.log4j.PropertyConfigurator;
@@ -19,6 +18,7 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created on @ 17.01.18
@@ -31,39 +31,31 @@ public class GenerateCompareDoc {
     private static Logger log = Logger.getLogger(GenerateCompareDoc.class.getName());
 
     public static void main(String[] args) throws Exception {
-        String testPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）.doc";
-        String testPath2 = "data/Sample/华夏基金/债券/华夏鼎康六个月定期开放债券型发起式证券投资基金基金合同20171101-托管行反馈 P18.docx";
-        String path3 = "data/Sample/九泰基金/20170419九泰天泽混合型/九泰天泽灵活配置混合型证券投资基金基金合同（草案）-申请用印版0419-修改为灵配混合0505.doc";
-
+        String testPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第4号——货币市场基金基金合同填报指引（试行）.doc";
+        String testPath2 = "data/Sample/华夏基金/货币/华夏兴金宝货币市场基金基金合同（草案） 1026.docx";
         DocProcessor dp = new DocProcessor(testPath);
         dp.readText(testPath);
         FundDoc fd = dp.process();
         List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
-        List<String> originalList = new ArrayList<String>();
-        List<String> revisedList = new ArrayList<String>();
-        DocProcessor dp2 = new DocProcessor(testPath2);
-        FundDoc fd2 = dp2.process();
 
+        DocProcessor dp2 = new DocProcessor(testPath2);
+        dp2.readText(testPath2);
+        FundDoc fd2 = dp2.process();
         List<CompareDto> revisedCompareDtoList = fd2.getFundDoc();
-        for (CompareDto compareDto : revisedCompareDtoList) {
-            revisedList.add(compareDto.getText());
-        }
-        List<PatchDto> patchDtoList = CompareUtils.doCompare(orignalCompareDtoList, revisedCompareDtoList, originalList, revisedList);
+        List<PatchDto> patchDtoList = CompareUtils.doCompare(orignalCompareDtoList, revisedCompareDtoList);
+
         GenerateCompareDoc test = new GenerateCompareDoc();
-        test.generate(patchDtoList);
+        String title = "《九泰天辰量化新动力混合型证券投资基金基金合同（草案）》\n";
+        String txt = "九泰天辰量化新动力混合型证券投资基金募集申请材料之《九泰天辰量化新动力混合型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基金监管部发布的《证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引(试行)》（以下简称“《指引》”）撰写。根据基金托管人和律师事务所的意见，我公司在撰写《基金合同》时对《指引》部分条款进行了增加、删除或修改，现将具体情况详细说明如下。";
+        test.generate(title, txt, patchDtoList);
     }
 
-    private void generate(List<PatchDto> resultDto) throws IOException {
+    private void generate(String title, String text, List<PatchDto> resultDto) throws IOException {
         PropertyConfigurator.configure("log.properties");
-        for (PatchDto p : resultDto) {
-            log.info("MINMIN" + p.getIndexType());
-            log.info("MINMIN" + p.getOrignalText());
-            log.info("MINMIN" + p.getRevisedDto());
-            log.info("MINMIN" + p.getChapterIndex());
-            log.info("MINMIN" + p.getSectionIndex());
-
-        }
         log.info("Create an empty document");
+        String tit = title;
+        String txt = text;
+        int row = resultDto.size() + 1;
         XWPFDocument document = new XWPFDocument();
         FileOutputStream out = new FileOutputStream(new File("条文对照表.docx"));
         CTDocument1 doc = document.getDocument();
@@ -84,8 +76,7 @@ public class GenerateCompareDoc {
         XWPFRun run = paragraph.createRun();
         run.setFontSize(12);
         run.setBold(true);
-        run.setText("《九泰安鑫纯债债券型证券投资基金基金合同（草案）》\n" +
-                "修改对照表");
+        run.setText(tit + "修改对照表");
         run.addBreak();
         run.addBreak();
         run.addBreak();
@@ -93,10 +84,11 @@ public class GenerateCompareDoc {
         XWPFRun runText = paragraphText.createRun();
         //　宋体　１１号
         runText.setFontSize(11);
-        runText.setText("”募集申证监会基九泰安鑫纯债债券型证券投资基金募集申请材料之《九泰安鑫纯债债券型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基九泰安鑫纯债债券型证券投资基金募集申请材料之《九泰安鑫纯债债券型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基九泰安鑫纯债债券型证券投资基金募集申请材料之《九泰安鑫纯债债券型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基九泰安鑫纯债债券型证券投资基金募集申请材料之《九泰安鑫纯债债券型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基九泰安鑫纯债债券型证券投资基金募集申请材料之《九泰安鑫纯债债券型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基九泰安鑫纯债债券型证券投资基金募集申请材料之《九泰安鑫纯债债券型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基九泰安鑫纯债债券型证券投资基金募集申请材料之《九泰安鑫纯债债券型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基九泰安鑫纯债债券型证券投资基金募集申请材料之《九泰安鑫纯债债券型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基九泰安鑫纯债债券型证券投资基金募集申请材料之《九泰安鑫纯债债券型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基九泰安鑫纯债债券型证券投资基金募集申请材料之《九泰安鑫纯债债券型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基九泰安鑫纯债债券型证券投资基金募集申请材料之《九泰安鑫纯债债券型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基九泰安鑫纯债债券型证券投资基金募集申请材料之《九泰安鑫纯债债券型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基九泰安鑫纯债债券型证券投资基金募集申请材料之《九泰安鑫纯债债券型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基九泰安鑫纯债债券型证券投资基金募集申请材料之《九泰安鑫纯债债券型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基九泰安鑫纯债债券型证券投资基金募集申请材料之《九泰安鑫纯债债券型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基九泰安鑫纯债债券型证券投资基金募集申请材料之《九泰安鑫纯债债券型证券");
+        runText.setText(txt);
         runText.addBreak();
         runText.addBreak();
-        XWPFTable table = document.createTable(25, 4);
+
+        XWPFTable table = document.createTable(row, 4);
         CTTblWidth width = table.getCTTbl().addNewTblPr().addNewTblW();
         width.setType(STTblWidth.DXA);
         width.setW(BigInteger.valueOf(11000));
@@ -106,41 +98,60 @@ public class GenerateCompareDoc {
         tableRowOne.getTableCells().get(1).getCTTc().addNewTcPr().addNewShd().setFill("808080");
         tableRowOne.getTableCells().get(2).getCTTc().addNewTcPr().addNewShd().setFill("808080");
         tableRowOne.getTableCells().get(3).getCTTc().addNewTcPr().addNewShd().setFill("808080");
-        tableRowOne.getCell(0).setText("章节章节");
-        tableRowOne.getCell(1).setText("指引条款");
-        tableRowOne.getCell(2).setText("基金合同条款");
+        tableRowOne.getCell(0).setText("章节");
+        tableRowOne.getCell(1).setText("《指引》条款\n");
+        tableRowOne.getCell(2).setText("《基金合同》条款");
         tableRowOne.getCell(3).setText("修改理由");
-//        tableRowOne.getCell(0).setParagraph(getBoldRowContent(document, "章节"));
-//        tableRowOne.getCell(1).setParagraph(getBoldRowContent(document, "指引条款"));
-//        tableRowOne.getCell(2).setParagraph(getBoldRowContent(document, "基金合同条款"));
-//        tableRowOne.getCell(3).setParagraph(getBoldRowContent(document, "修改理由"));
 
-        XWPFTableRow rowTwo = table.getRow(1);
-        rowTwo.getCell(0).setText("章节章节");
-        rowTwo.getCell(1).setText("指引条款");
-        rowTwo.getCell(2).setText("基金合同条款");
-        rowTwo.getCell(3).setText("修改理由");
+        for (int i = 0; i < resultDto.size(); i++) {
+            PatchDto p = resultDto.get(i);
+            XWPFTableRow s = table.getRow(1 + i);
+            //章节
+            String column0 = p.getChapterIndex() + "";
+            s.getCell(0).setText(column0);
+            String column1;
+            String column2;
 
-        XWPFTableRow rowThree = table.getRow(2);
-        rowThree.getCell(0).setText("章节章节章节");
-        rowThree.getCell(1).setText("指引条款");
-        rowThree.getCell(2).setText("基金合同条款");
-        rowThree.getCell(3).setText("修改理由");
+            XWPFParagraph par = document.createParagraph();
+            try{
+            if (p.getRevisedDto().getDeleteData()==null) {
+               // System.out.println(p.getRevisedDto());
+                ///Set set = p.getRevisedDto().getDeleteData().keySet();
+//                for (int j = 0; j < p.getOrignalText().length(); j++) {
+//                    XWPFRun runForEachLetter = par.createRun();
+//                    String currentLetter = Character.toString(p.getOrignalText().charAt(j));
+//                    if (set.contains(j)) {
+//                        runForEachLetter.setStrike(true);
+//                        runForEachLetter.setText(currentLetter);
+//                    } else {
+//                        runForEachLetter.setText(currentLetter);
+//                    }
+//                }
+//                s.getCell(1).setParagraph(par);
+            }}catch(NullPointerException e){
+                e.printStackTrace();
+            }
 
-        XWPFTableRow rowThe = table.getRow(3);
-        rowThe.getCell(0).setText("章节章节章节章节");
-        rowThe.getCell(1).setText("指引条款");
-        rowThe.getCell(2).setText("基金合同条款");
-        rowThe.getCell(3).setText("修改理由");
 
-        XWPFTableRow rowFour = table.getRow(4);
-        rowFour.getCell(0).setText("章节章节章节章节章节");
-        rowFour.getCell(1).setText("指引条款");
-        rowFour.getCell(2).setText("基金合同条款");
-        rowFour.getCell(3).setText("修改理由");
+//            Set set1 = p.getRevisedDto().getAddData().keySet();
+//            XWPFParagraph par1 = document.createParagraph();
+//            for (int k = 0; k < p.getOrignalText().length(); k++) {
+//                XWPFRun runForEachLetter = par1.createRun();
+//                String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(k));
+//                if (set1.contains(k)) {
+//                    runForEachLetter.setBold(true);
+//                    runForEachLetter.setText(currentLetter);
+//                } else {
+//                    runForEachLetter.setText(currentLetter);
+//                }
+//            }
+//            s.getCell(2).setParagraph(par1);
+
+        }
+
+        // add header, footer
         String headerContent = "条文对照表测试文本";
         createHeader(document, headerContent);
-        // add footer
         createFooter(document);
         document.write(out);
         out.close();
