@@ -2,9 +2,7 @@ package cn.com.xiaofabo.tylaw.fundcontrast.main;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.Logger;
-import org.apache.poi.ss.usermodel.HeaderFooter;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
-import org.apache.poi.wp.usermodel.Paragraph;
 import org.apache.poi.xwpf.model.XWPFHeaderFooterPolicy;
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.*;
@@ -103,13 +101,17 @@ public class GenerateCompareDoc {
         rowFour.getCell(1).setText("指引条款");
         rowFour.getCell(2).setText("基金合同条款");
         rowFour.getCell(3).setText("修改理由");
+        String headerContent = "条文对照表测试文本";
+        createHeader(document, headerContent);
         // add footer
         createFooter(document);
         document.write(out);
         out.close();
     }
 
-    // TODO
+    /**
+     * @param doc
+     */
     private void createFooter(XWPFDocument doc) {
         XWPFParagraph paragraph = doc.createParagraph();
         XWPFRun run = paragraph.createRun();
@@ -142,7 +144,25 @@ public class GenerateCompareDoc {
         }
     }
 
+    /**
+     * @param doc
+     * @param headerContent
+     */
+    private void createHeader(XWPFDocument doc, String headerContent) {
+        XWPFHeader header = doc.createHeader(HeaderFooterType.DEFAULT);
+        XWPFParagraph paragraph = doc.createParagraph();
+        XWPFRun run = paragraph.createRun();
 
+        paragraph = header.createParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        run.setText(headerContent);
+    }
+
+    /**
+     * @param document
+     * @param content
+     * @return
+     */
     private XWPFParagraph getBoldRowContent(XWPFDocument document, String content) {
         XWPFParagraph pForRowOneC1 = document.createParagraph();
         XWPFRun run = pForRowOneC1.createRun();
