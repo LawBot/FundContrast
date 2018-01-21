@@ -15,10 +15,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.io.File;
 
 /**
@@ -27,7 +26,7 @@ import java.io.File;
  * @author 杨敏
  * email ddl-15 at outlook.com
  **/
-public class FundGUI {
+public class FundGUI extends JFrame {
     private static Logger logger = Logger.getLogger(FundGUI.class.getName());
 
     public FundGUI() {
@@ -48,7 +47,7 @@ public class FundGUI {
                 frame.add(new MyPane());
                 frame.pack();
                 frame.setLocationRelativeTo(null);
-                frame.setSize(1000, 500);
+                frame.setSize(800, 200);
                 frame.setVisible(true);
             }
         });
@@ -73,7 +72,8 @@ public class FundGUI {
 
         public MyPane() {
             logger.info("Inside MyPane, setting flowlayout");
-            setLayout(new FlowLayout());
+            setLayout(new GridLayout(0, 2, 1, 3));
+
             logger.info("Inside FundGUI run()");
             lblCom = new JLabel("公司");
             add(lblCom);
@@ -163,7 +163,8 @@ public class FundGUI {
                     }
                 }
             });
-
+            JLabel label = new JLabel();
+            add(label);
             btnSubmit = new JButton("生成条文");
             add(btnSubmit);
             btnSubmit.addActionListener(new ActionListener() {

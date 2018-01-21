@@ -1,9 +1,11 @@
 package cn.com.xiaofabo.tylaw.fundcontrast.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.github.difflib.DiffUtils;
 import com.github.difflib.algorithm.DiffException;
@@ -160,14 +162,24 @@ public class CompareUtils {
 		if (original.length()>=revised.length()) {
 //			System.out.println("revised增加了："+compareStrshort(revised, original, "blue"));
 //			System.out.println("revised减少了："+compareStrLong(revised, original, "blue"));
-			revisedDto.setAddData(compareStrshort(revised, original, "blue"));
-			revisedDto.setDeleteData(compareStrLong(revised, original, "blue"));
+//			revisedDto.setAddData(compareStrshort(revised, original, "blue"));
+//			revisedDto.setDeleteData(compareStrLong(revised, original, "blue"));
+			//按Key进行排序
+			Map<Integer, Character> addDataMap = sortMapByKey(compareStrshort(revised, original, "blue"));    
+			Map<Integer, Character> deleteDataMap = sortMapByKey(compareStrLong(revised, original, "blue"));
+			revisedDto.setAddData(addDataMap);
+			revisedDto.setDeleteData(deleteDataMap);
 			 
 		}else if(original.length()<revised.length()){
 //			System.out.println("revised增加了："+compareStrLong(revised, original, "blue"));
 //			System.out.println("revised减少了："+compareStrshort(revised, original, "blue"));
-			revisedDto.setAddData(compareStrLong(revised, original, "blue"));
-			revisedDto.setDeleteData(compareStrshort(revised, original, "blue"));
+//			revisedDto.setAddData(compareStrLong(revised, original, "blue"));
+//			revisedDto.setDeleteData(compareStrshort(revised, original, "blue"));
+			//按Key进行排序
+			Map<Integer, Character> addDataMap = sortMapByKey(compareStrLong(revised, original, "blue"));    
+			Map<Integer, Character> deleteDataMap = sortMapByKey(compareStrshort(revised, original, "blue"));
+			revisedDto.setAddData(addDataMap);
+			revisedDto.setDeleteData(deleteDataMap);
 			
 		}
 		
@@ -406,4 +418,32 @@ public class CompareUtils {
 		return map1;
 	}
 
+	 /**
+     * 使用 Map按key进行排序
+     * @param map
+     * @return
+     */
+	 public static Map<Integer, Character> sortMapByKey(Map<Integer, Character> map) {
+	        if (map == null || map.isEmpty()) {
+	            return null;
+	        }
+
+	        Map<Integer, Character> sortMap = new TreeMap<Integer, Character>(new MapKeyComparator());
+
+	        sortMap.putAll(map);
+
+	        return sortMap;
+	    }
+    
+// @Override            
+// public int compare(Map<String, Object> lhs, Map<String, Object> rhs) {         
+//	 Double d5 = ((Double) rhs.get(OpenPrice));        
+//	 Double d6 = (Double) lhs.get(OpenPrice);           
+//	 if (d5 != null && d6 != null) {                     
+//		 return d5.compareTo(d6);       
+//		 } else {            
+//			 return flag;        
+//			 }                        // return d1.compareTo(d2);}
+//	 }
+// }
 }

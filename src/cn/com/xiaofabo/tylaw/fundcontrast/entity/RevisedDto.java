@@ -4,8 +4,8 @@ import java.util.Map;
 
 public class RevisedDto {
 	private String revisedText;
-	private Map<Integer, String> addData;
-	private Map<Integer, String> deleteData;
+	private Map<Integer, Character> addData;
+	private Map<Integer, Character> deleteData;
 	
 	public String getRevisedText() {
 		return revisedText;
@@ -13,16 +13,16 @@ public class RevisedDto {
 	public void setRevisedText(String revisedText) {
 		this.revisedText = revisedText;
 	}
-	public Map<Integer, String> getAddData() {
+	public Map<Integer, Character> getAddData() {
 		return addData;
 	}
-	public void setAddData(Map<Integer, String> addData) {
+	public void setAddData(Map<Integer, Character> addData) {
 		this.addData = addData;
 	}
-	public Map<Integer, String> getDeleteData() {
+	public Map<Integer, Character> getDeleteData() {
 		return deleteData;
 	}
-	public void setDeleteData(Map<Integer, String> deleteData) {
+	public void setDeleteData(Map<Integer, Character> deleteData) {
 		this.deleteData = deleteData;
 	}
 	
