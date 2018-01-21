@@ -98,10 +98,10 @@ public class GenerateCompareDoc {
         tableRowOne.getTableCells().get(1).getCTTc().addNewTcPr().addNewShd().setFill("808080");
         tableRowOne.getTableCells().get(2).getCTTc().addNewTcPr().addNewShd().setFill("808080");
         tableRowOne.getTableCells().get(3).getCTTc().addNewTcPr().addNewShd().setFill("808080");
-        tableRowOne.getCell(0).setText("章节");
+        tableRowOne.getCell(0).setText("章节\n");
         tableRowOne.getCell(1).setText("《指引》条款\n");
-        tableRowOne.getCell(2).setText("《基金合同》条款");
-        tableRowOne.getCell(3).setText("修改理由");
+        tableRowOne.getCell(2).setText("《基金合同》条款\n");
+        tableRowOne.getCell(3).setText("修改理由\n");
 
         for (int i = 0; i < resultDto.size(); i++) {
             PatchDto p = resultDto.get(i);
@@ -205,11 +205,11 @@ public class GenerateCompareDoc {
      * @param content
      * @return
      */
-//    private XWPFParagraph getBoldRowContent(XWPFDocument document, String content) {
-//        XWPFParagraph pForRowOneC1 = document.createParagraph();
-//        XWPFRun run = pForRowOneC1.createRun();
-//        run.setBold(true);
-//        run.setText(content);
-//        return pForRowOneC1;
-//    }
+    private XWPFParagraph getBoldRowContent(XWPFDocument document, String content) {
+        XWPFParagraph pForRowOneC1 = document.createParagraph();
+        XWPFRun run = pForRowOneC1.createRun();
+        run.setBold(true);
+        run.setText(content);
+        return pForRowOneC1;
+    }
 }
