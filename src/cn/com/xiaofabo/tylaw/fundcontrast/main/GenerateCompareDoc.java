@@ -1,5 +1,11 @@
 package cn.com.xiaofabo.tylaw.fundcontrast.main;
 
+import cn.com.xiaofabo.tylaw.fundcontrast.entity.CompareDto;
+import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
+import cn.com.xiaofabo.tylaw.fundcontrast.entity.PatchDto;
+import cn.com.xiaofabo.tylaw.fundcontrast.entity.RevisedDto;
+import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
+import cn.com.xiaofabo.tylaw.fundcontrast.util.CompareUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
@@ -11,6 +17,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created on @ 17.01.18
@@ -23,12 +31,38 @@ public class GenerateCompareDoc {
     private static Logger log = Logger.getLogger(GenerateCompareDoc.class.getName());
 
     public static void main(String[] args) throws Exception {
+        String testPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）.doc";
+        String testPath2 = "data/Sample/华夏基金/债券/华夏鼎康六个月定期开放债券型发起式证券投资基金基金合同20171101-托管行反馈 P18.docx";
+        String path3 = "data/Sample/九泰基金/20170419九泰天泽混合型/九泰天泽灵活配置混合型证券投资基金基金合同（草案）-申请用印版0419-修改为灵配混合0505.doc";
+
+        DocProcessor dp = new DocProcessor(testPath);
+        dp.readText(testPath);
+        FundDoc fd = dp.process();
+        List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
+        List<String> originalList = new ArrayList<String>();
+        List<String> revisedList = new ArrayList<String>();
+        DocProcessor dp2 = new DocProcessor(testPath2);
+        FundDoc fd2 = dp2.process();
+
+        List<CompareDto> revisedCompareDtoList = fd2.getFundDoc();
+        for (CompareDto compareDto : revisedCompareDtoList) {
+            revisedList.add(compareDto.getText());
+        }
+        List<PatchDto> patchDtoList = CompareUtils.doCompare(orignalCompareDtoList, revisedCompareDtoList, originalList, revisedList);
         GenerateCompareDoc test = new GenerateCompareDoc();
-        test.generate();
+        test.generate(patchDtoList);
     }
 
-    private void generate() throws IOException {
+    private void generate(List<PatchDto> resultDto) throws IOException {
         PropertyConfigurator.configure("log.properties");
+        for (PatchDto p : resultDto) {
+            log.info("MINMIN" + p.getIndexType());
+            log.info("MINMIN" + p.getOrignalText());
+            log.info("MINMIN" + p.getRevisedDto());
+            log.info("MINMIN" + p.getChapterIndex());
+            log.info("MINMIN" + p.getSectionIndex());
+
+        }
         log.info("Create an empty document");
         XWPFDocument document = new XWPFDocument();
         FileOutputStream out = new FileOutputStream(new File("条文对照表.docx"));
