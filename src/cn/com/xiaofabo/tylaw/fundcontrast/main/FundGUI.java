@@ -48,7 +48,7 @@ public class FundGUI {
                 frame.add(new MyPane());
                 frame.pack();
                 frame.setLocationRelativeTo(null);
-                frame.setSize(1000, 500);
+                frame.setSize(800, 200);
                 frame.setVisible(true);
             }
         });
