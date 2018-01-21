@@ -67,16 +67,19 @@ public class GenerateCompareDoc {
         width.setType(STTblWidth.DXA);
         width.setW(BigInteger.valueOf(11000));
         XWPFTableRow tableRowOne = table.getRow(0);
-        //tableRowOne.isRepeatHeader();
+        tableRowOne.setRepeatHeader(true);
         tableRowOne.getTableCells().get(0).getCTTc().addNewTcPr().addNewShd().setFill("808080");
         tableRowOne.getTableCells().get(1).getCTTc().addNewTcPr().addNewShd().setFill("808080");
         tableRowOne.getTableCells().get(2).getCTTc().addNewTcPr().addNewShd().setFill("808080");
         tableRowOne.getTableCells().get(3).getCTTc().addNewTcPr().addNewShd().setFill("808080");
-        tableRowOne.getCell(0).setParagraph(getBoldRowContent(document, "章节"));
-        tableRowOne.getCell(1).setParagraph(getBoldRowContent(document, "指引条款"));
-
-        tableRowOne.getCell(2).setParagraph(getBoldRowContent(document, "基金合同条款"));
-        tableRowOne.getCell(3).setParagraph(getBoldRowContent(document, "修改理由"));
+        tableRowOne.getCell(0).setText("章节章节");
+        tableRowOne.getCell(1).setText("指引条款");
+        tableRowOne.getCell(2).setText("基金合同条款");
+        tableRowOne.getCell(3).setText("修改理由");
+//        tableRowOne.getCell(0).setParagraph(getBoldRowContent(document, "章节"));
+//        tableRowOne.getCell(1).setParagraph(getBoldRowContent(document, "指引条款"));
+//        tableRowOne.getCell(2).setParagraph(getBoldRowContent(document, "基金合同条款"));
+//        tableRowOne.getCell(3).setParagraph(getBoldRowContent(document, "修改理由"));
 
         XWPFTableRow rowTwo = table.getRow(1);
         rowTwo.getCell(0).setText("章节章节");
@@ -150,10 +153,8 @@ public class GenerateCompareDoc {
      */
     private void createHeader(XWPFDocument doc, String headerContent) {
         XWPFHeader header = doc.createHeader(HeaderFooterType.DEFAULT);
-        XWPFParagraph paragraph = doc.createParagraph();
+        XWPFParagraph paragraph = header.createParagraph();
         XWPFRun run = paragraph.createRun();
-
-        paragraph = header.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         run.setText(headerContent);
     }
@@ -163,11 +164,11 @@ public class GenerateCompareDoc {
      * @param content
      * @return
      */
-    private XWPFParagraph getBoldRowContent(XWPFDocument document, String content) {
-        XWPFParagraph pForRowOneC1 = document.createParagraph();
-        XWPFRun run = pForRowOneC1.createRun();
-        run.setBold(true);
-        run.setText(content);
-        return pForRowOneC1;
-    }
+//    private XWPFParagraph getBoldRowContent(XWPFDocument document, String content) {
+//        XWPFParagraph pForRowOneC1 = document.createParagraph();
+//        XWPFRun run = pForRowOneC1.createRun();
+//        run.setBold(true);
+//        run.setText(content);
+//        return pForRowOneC1;
+//    }
 }
