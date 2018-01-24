@@ -5,6 +5,7 @@ import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.PatchDto;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.util.CompareUtils;
+import cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
@@ -31,15 +32,15 @@ public class GenerateCompareDoc {
     private static Logger log = Logger.getLogger(GenerateCompareDoc.class.getName());
 
     public static void main(String[] args) throws Exception {
-        String testPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第4号——货币市场基金基金合同填报指引（试行）.doc";
-        String testPath2 = "data/Sample/华夏基金/货币/华夏兴金宝货币市场基金基金合同（草案） 1026.docx";
-        DocProcessor dp = new DocProcessor(testPath);
-        dp.readText(testPath);
+        String standardPath = DataUtils.STANDARD_TYPE_STOCK;
+        String samplePath = DataUtils.SAMPLE_GYRX_STOCK_1;
+        DocProcessor dp = new DocProcessor(standardPath);
+        dp.readText(standardPath);
         FundDoc fd = dp.process();
         List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
 
-        DocProcessor dp2 = new DocProcessor(testPath2);
-        dp2.readText(testPath2);
+        DocProcessor dp2 = new DocProcessor(samplePath);
+        dp2.readText(samplePath);
         FundDoc fd2 = dp2.process();
         List<CompareDto> revisedCompareDtoList = fd2.getFundDoc();
         List<PatchDto> patchDtoList = CompareUtils.doCompare(orignalCompareDtoList, revisedCompareDtoList);
@@ -109,7 +110,7 @@ public class GenerateCompareDoc {
             PatchDto p = resultDto.get(i);
             XWPFTableRow s = table.getRow(1 + i);
             //章节
-            String column0 = p.getChapterIndex() + "";
+            String column0 = "第" + p.getChapterIndex() + "章";
             s.getCell(0).setText(column0);
             String column1;
             String column2;
