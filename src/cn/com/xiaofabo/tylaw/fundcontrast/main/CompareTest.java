@@ -1,57 +1,67 @@
 package cn.com.xiaofabo.tylaw.fundcontrast.main;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import com.github.difflib.DiffUtils;
-import com.github.difflib.algorithm.DiffException;
-import com.github.difflib.patch.Delta;
-import com.github.difflib.patch.Patch;
 
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.CompareDto;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.DocPart;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.PatchDto;
-import cn.com.xiaofabo.tylaw.fundcontrast.entity.RevisedDto;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.util.CompareUtils;
-
+import cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils;
+import cn.com.xiaofabo.tylaw.fundcontrast.util.StringSimUtils;
+import com.github.difflib.algorithm.DiffException;
+import java.util.LinkedList;
 
 public class CompareTest {
 
-	public static void main(String[] args) throws IOException {
-			String testPath = "data/Sample/华夏基金/债券/华夏鼎沛债券型证券投资基金基金合同.docx";
-	        String testPath2 = "data\\StandardDoc\\（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）.doc";
-	        String path3="data/Sample/九泰基金/20170419九泰天泽混合型/九泰天泽灵活配置混合型证券投资基金基金合同（草案）-申请用印版0419-修改为灵配混合0505.doc";
-	        
-	        DocProcessor dp = new DocProcessor(testPath);
-	        dp.readText(testPath);
-	        FundDoc fd = dp.process();
-	        List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
-	        
-	        DocProcessor dp2 = new DocProcessor(testPath2);
-	        dp2.readText(testPath2);
-	        FundDoc fd2 = dp2.process();
-	        List<CompareDto> revisedCompareDtoList = fd2.getFundDoc();
-	        try {
-	        	List<PatchDto> patchDtoList = CompareUtils.doCompare(orignalCompareDtoList, revisedCompareDtoList);
-	        	System.out.println(patchDtoList);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	        
-		
-	}
-	
-	
+    public static void main(String[] args) throws IOException, DiffException {
+        String testPath = DataUtils.STANDARD_TYPE_STOCK_C;
+        String testPath2 = DataUtils.SAMPLE_GYRX_STOCK_1;
 
+        DocProcessor dp = new DocProcessor(testPath);
+        dp.readText(testPath);
+        FundDoc fd = dp.process();
+        List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
+
+        DocProcessor dp2 = new DocProcessor(testPath2);
+        dp2.readText(testPath2);
+        FundDoc fd2 = dp2.process();
+        List<CompareDto> revisedCompareDtoList = fd2.getFundDoc();
+        
+        List<String> s1 = new LinkedList<>();
+        List<DocPart> pList = fd.getParts().get(0).getChildPart();
+        for(int i = 0; i < pList.size(); ++i){
+            DocPart dPart = pList.get(i);
+            s1.add(dPart.getTitle());
+        }
+        List<String> s2 = new LinkedList();
+        List<DocPart> pList2 = fd2.getParts().get(0).getChildPart();
+        for(int i = 0; i < pList2.size(); ++i){
+            DocPart dPart = pList2.get(i);
+            s2.add(dPart.getTitle());
+        }
+        
+        for(int i = 0; i < s1.size(); ++i){
+            String str1 = s1.get(i);
+            for(int j = 0; j < s2.size(); ++j){
+                String str2 = s2.get(j);
+                double sim = StringSimUtils.getSimilarityRatio(str1, str2);
+                System.out.println(i + "-" + j + ": " + sim);
+            }
+        }
+        
+        CompareUtils.compare(s1, s2);
+        
+        try {
+            List<PatchDto> patchDtoList = CompareUtils.doCompare(orignalCompareDtoList, revisedCompareDtoList);
+            System.out.println(patchDtoList);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
 
 }
