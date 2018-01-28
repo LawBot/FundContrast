@@ -6,6 +6,8 @@
 package cn.com.xiaofabo.tylaw.fundcontrast.util;
 
 import java.text.NumberFormat;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -174,5 +176,37 @@ public class StringSimUtils {
      * */
     public static String similarityResult(double resule) {
         return NumberFormat.getPercentInstance(new Locale("en ", "US ")).format(resule);
+    }
+
+    public static List findBestMatch(List<String> s1, List<String> s2) {
+        List<Integer> matchList = new LinkedList<>();
+
+        for (int i = 0; i < s1.size(); ++i) {
+            int bestMatch = -1;
+            double bestRatio = 0.0;
+            String sampleStr = null;
+            String str1 = s1.get(i);
+            for (int j = 0; j < s2.size(); ++j) {
+                String str2 = s2.get(j);
+                double r = getSimilarityRatio(str1, str2);
+                if (r > bestRatio) {
+                    bestRatio = r;
+                    bestMatch = j;
+                    sampleStr = str2;
+                }
+            }
+            if (bestMatch != i && bestRatio < 0.5) {
+                bestMatch = -1;
+            }
+            System.out.println(i + " -- " + bestMatch);
+            if (bestMatch != i) {
+                System.out.println("MATCH RATIO: " + bestRatio);
+                System.out.println("ORIGINAL STR: " + str1);
+                System.out.println("SAMPLE STR: " + sampleStr);
+            }
+
+            matchList.add(bestMatch);
+        }
+        return matchList;
     }
 }

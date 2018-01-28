@@ -29,39 +29,44 @@ public class CompareTest {
         dp2.readText(testPath2);
         FundDoc fd2 = dp2.process();
         List<CompareDto> revisedCompareDtoList = fd2.getFundDoc();
-        
-        List<String> s1 = new LinkedList<>();
-        List<DocPart> pList = fd.getParts().get(0).getChildPart();
-        for(int i = 0; i < pList.size(); ++i){
-            DocPart dPart = pList.get(i);
-            s1.add(dPart.getTitle());
-        }
-        List<String> s2 = new LinkedList();
-        List<DocPart> pList2 = fd2.getParts().get(0).getChildPart();
-        for(int i = 0; i < pList2.size(); ++i){
-            DocPart dPart = pList2.get(i);
-            s2.add(dPart.getTitle());
-        }
-        
-        for(int i = 0; i < s1.size(); ++i){
-            String str1 = s1.get(i);
-            for(int j = 0; j < s2.size(); ++j){
-                String str2 = s2.get(j);
-                double sim = StringSimUtils.getSimilarityRatio(str1, str2);
-                System.out.println(i + "-" + j + ": " + sim);
-            }
-        }
-        
-        CompareUtils.compare(s1, s2);
-        
-        try {
-            List<PatchDto> patchDtoList = CompareUtils.doCompare(orignalCompareDtoList, revisedCompareDtoList);
-            System.out.println(patchDtoList);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
 
+        for (int c = 0; c < 22; ++c) {
+            if (!fd.getParts().get(c).hasPart()) {
+                continue;
+            }
+            System.out.println("Chapter " + (c + 1) + "=======================");
+            List<String> s1 = new LinkedList<>();
+            List<DocPart> pList = fd.getParts().get(c).getChildPart();
+            for (int i = 0; i < pList.size(); ++i) {
+                DocPart dPart = pList.get(i);
+                s1.add(dPart.getTitle());
+            }
+            List<String> s2 = new LinkedList();
+            List<DocPart> pList2 = fd2.getParts().get(c).getChildPart();
+            for (int i = 0; i < pList2.size(); ++i) {
+                DocPart dPart = pList2.get(i);
+                s2.add(dPart.getTitle());
+            }
+
+            List matchList = StringSimUtils.findBestMatch(s1, s2);
+        }
+//        for (int i = 0; i < matchList.size(); ++i) {
+//            System.out.print(i + " = " + matchList.get(i));
+//            if (i != (int)matchList.get(i)) {
+//                System.out.println("  <===");
+//            }else{
+//                System.out.println("");
+//            }
+//        }
+
+//        
+//        try {
+//            List<PatchDto> patchDtoList = CompareUtils.doCompare(orignalCompareDtoList, revisedCompareDtoList);
+//            System.out.println(patchDtoList);
+//        } catch (Exception e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
     }
 
 }
