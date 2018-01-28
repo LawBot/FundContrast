@@ -35,10 +35,16 @@ import java.util.List;
  **/
 public class FundGUI extends JFrame {
     private static Logger logger = Logger.getLogger(FundGUI.class.getName());
+
     String inputPath1 = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）.doc";
     String inputPath2 = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第2号——指数型证券投资基金基金合同填报指引（试行）.doc";
     String inputPath3 = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第3号——证券投资基金基金合同填报指引（试行）.doc";
     String inputPath4 = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第4号——货币市场基金基金合同填报指引（试行）.doc";
+
+    String type1 = "（以下简称“《基金合同》”）系按照中国证监会基金监管部发布的《证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）》（以下简称“《指引》”）撰写。根据基金托管人和律师事务所的意见，我公司在撰写《基金合同》时对《指引》部分条款进行了增加、删除或修改，现将具体情况详细说明如下。";
+    String type2 = "（以下简称“《基金合同》”）系按照中国证监会基金监管部发布的《证券投资基金基金合同填报指引第2号——指数型证券投资基金基金合同填报指引（试行）》（以下简称“《指引》”）撰写。根据基金托管人和律师事务所的意见，我公司在撰写《基金合同》时对《指引》部分条款进行了增加、删除或修改，现将具体情况详细说明如下。";
+    String type3 = "（以下简称“《基金合同》”）系按照中国证监会基金监管部发布的《证券投资基金基金合同填报指引第3号——证券投资基金基金合同填报指引（试行）》（以下简称“《指引》”）撰写。根据基金托管人和律师事务所的意见，我公司在撰写《基金合同》时对《指引》部分条款进行了增加、删除或修改，现将具体情况详细说明如下。";
+    String type4 = "（以下简称“《基金合同》”）系按照中国证监会基金监管部发布的《证券投资基金基金合同填报指引第4号——货币市场基金基金合同填报指引（试行）》（以下简称“《指引》”）撰写。根据基金托管人和律师事务所的意见，我公司在撰写《基金合同》时对《指引》部分条款进行了增加、删除或修改，现将具体情况详细说明如下。";
 
     public FundGUI() {
         EventQueue.invokeLater(new Runnable() {
@@ -144,7 +150,6 @@ public class FundGUI extends JFrame {
                 }
             });
 
-            // TODO
             outputPath = new JTextField("path...");
             add(outputPath);
             btnOutput = new JButton("输出路径");
@@ -157,18 +162,7 @@ public class FundGUI extends JFrame {
                     if (chooser == null) {
                         chooser = new JFileChooser();
                         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                        chooser.setAcceptAllFileFilterUsed(false);
-                        chooser.addChoosableFileFilter(new FileFilter() {
-                            @Override
-                            public boolean accept(File f) {
-                                return f.isDirectory() || f.getName().toLowerCase().endsWith(".docx") || f.getName().toLowerCase().endsWith(".doc");
-                            }
-
-                            @Override
-                            public String getDescription() {
-                                return "Document (*.docx, *.doc)";
-                            }
-                        });
+                        chooser.setAcceptAllFileFilterUsed(true);
                     }
                     switch (chooser.showOpenDialog(MyPane.this)) {
                         case JFileChooser.APPROVE_OPTION:
@@ -178,6 +172,7 @@ public class FundGUI extends JFrame {
                     }
                 }
             });
+
             JLabel label = new JLabel();
             add(label);
             btnSubmit = new JButton("生成条文");
@@ -187,8 +182,6 @@ public class FundGUI extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     logger.info("Inside action performer, generating target doc...");
 
-//                    String testPath = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第4号——货币市场基金基金合同填报指引（试行）.doc";
-//                    String testPath2 = "data/Sample/华夏基金/货币/华夏兴金宝货币市场基金基金合同（草案） 1026.docx";
                     String templateDoc = inputPath.getText();
                     try {
                         switch (String.valueOf(typeCombo.getSelectedItem())) {
@@ -210,6 +203,7 @@ public class FundGUI extends JFrame {
 
                     String contractPath = inputPath.getText();
 
+
                     DocProcessor dp = new DocProcessor(templateDoc);
                     try {
                         dp.readText(templateDoc);
@@ -217,6 +211,28 @@ public class FundGUI extends JFrame {
                         e1.printStackTrace();
                     }
                     FundDoc fd = dp.process();
+                    String title = "《" + dp.titleOfGenDoc + "》";
+                    String txt = dp.getTextForGenDoc() + "募集申请材料之" + title;
+                    try {
+                        switch (String.valueOf(typeCombo.getSelectedItem())) {
+                            case "股票混合型":
+                                txt += type1;
+                                break;
+                            case "指数型":
+                                txt += type2;
+                                break;
+                            case "债券型":
+                                txt += type3;
+                                break;
+                            default:
+                                txt += type4;
+                        }
+                    } catch (Exception ee) {
+                        ee.printStackTrace();
+                    }
+
+                    System.out.println("Title is: " + title);
+                    System.out.println("Text is: " + txt);
                     java.util.List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
 
                     DocProcessor dp2 = new DocProcessor(contractPath);
@@ -233,10 +249,8 @@ public class FundGUI extends JFrame {
                     } catch (Exception e1) {
                         e1.printStackTrace();
                     }
-
                     GenerateCompareDoc test = new GenerateCompareDoc();
-                    String title = "《九泰天辰量化新动力混合型证券投资基金基金合同（草案）》\n";
-                    String txt = "九泰天辰量化新动力混合型证券投资基金募集申请材料之《九泰天辰量化新动力混合型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基金监管部发布的《证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引(试行)》（以下简称“《指引》”）撰写。根据基金托管人和律师事务所的意见，我公司在撰写《基金合同》时对《指引》部分条款进行了增加、删除或修改，现将具体情况详细说明如下。";
+
                     try {
                         String genDocPath = outputPath.getText();
                         test.generate(title, txt, patchDtoList, genDocPath);

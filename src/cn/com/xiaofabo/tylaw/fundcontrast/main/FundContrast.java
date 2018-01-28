@@ -105,7 +105,7 @@ public class FundContrast {
 //
 //        System.out.println("*************EDN Real contract*********************");
 //        System.out.println("***************************************************");
-        DocProcessor dp = new DocProcessor(inputPathType3c);
+        DocProcessor dp = new DocProcessor(inputPathType3b);
         dp.readText(inputPathType3b);
         FundDoc fd = dp.process();
         System.out.println(fd.toString());

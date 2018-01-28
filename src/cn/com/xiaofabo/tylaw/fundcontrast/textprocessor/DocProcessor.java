@@ -8,18 +8,20 @@ package cn.com.xiaofabo.tylaw.fundcontrast.textprocessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.DocPart;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
 import cn.com.xiaofabo.tylaw.fundcontrast.util.TextUtils;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
  * @author 陈光曦
  */
 public class DocProcessor extends TextProcessor {
 
     public FundDoc fundDoc;
+    public String titleOfGenDoc = "";
+    public String textOfGenDoc = "";
     private List partIdentifiers;
 
     public DocProcessor(String docName) {
@@ -30,6 +32,15 @@ public class DocProcessor extends TextProcessor {
         partIdentifiers.add(TextUtils.REGEX_IDENTIFIER_LEVEL_2);
         partIdentifiers.add(TextUtils.REGEX_IDENTIFIER_LEVEL_3);
         partIdentifiers.add(TextUtils.REGEX_IDENTIFIER_LEVEL_4);
+    }
+
+    // 0--3
+    public String getNameForGenDoc() {
+        return this.titleOfGenDoc;
+    }
+
+    public String getTextForGenDoc() {
+        return this.textOfGenDoc;
     }
 
     public FundDoc process() {
@@ -46,6 +57,12 @@ public class DocProcessor extends TextProcessor {
             String currentLine = ((String) textList.get(lineIdx)).trim();
 //            System.out.println("Processing line number: " + lineIdx);
 //            System.out.println(currentLine);
+            if (lineIdx < 4) {
+                this.titleOfGenDoc += currentLine;
+            }
+            if (lineIdx < 2) {
+                this.textOfGenDoc += currentLine;
+            }
             int currentPartLevel = -1;
             boolean foundIdentifier = false;
             for (int i = 0; i < partIdentifiers.size(); ++i) {
@@ -59,12 +76,10 @@ public class DocProcessor extends TextProcessor {
                     break;
                 }
             }
-
             if (!foundFirstIdentifier) {
                 ++lineIdx;
                 continue;
             }
-
             if (currentPartLevel == 0) {
                 /// Every time a new chapter starts, set a new matching scheme
                 levelMatchList = new LinkedList();
@@ -141,7 +156,6 @@ public class DocProcessor extends TextProcessor {
                 }
                 lastPartLevel = currentPartLevel;
             }
-
             if (lineIdx == textList.size() - 1) {
                 if (!partText.toString().isEmpty()) {
                     currentPart.setText(partText.toString());
