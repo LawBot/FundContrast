@@ -193,6 +193,17 @@ public class StringSimUtils {
                     bestRatio = r;
                     bestMatch = j;
                     sampleStr = str2;
+                    if (i != j) {
+                        if (i < s2.size()) {
+                            String str3 = s2.get(i);
+                            double tr = getSimilarityRatio(str1, str3);
+                            if (Math.abs(r - tr) < 0.05) {
+                                bestRatio = tr;
+                                bestMatch = i;
+                                sampleStr = str3;
+                            }
+                        }
+                    }
                 }
             }
             if (bestMatch != i && bestRatio < 0.5) {
