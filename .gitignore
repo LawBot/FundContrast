@@ -8,3 +8,4 @@ dist
 .settings
 .project
 .class
+data/*.doc*

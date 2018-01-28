@@ -32,6 +32,10 @@ public class DocPart {
     public String getText() {
         return text;
     }
+    
+    public String getPoint(){
+        return title + "\n" + text;
+    }
 
     public void setText(String text) {
         this.text = text;
