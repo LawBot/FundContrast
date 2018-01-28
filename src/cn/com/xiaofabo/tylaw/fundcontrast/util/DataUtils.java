@@ -12,6 +12,8 @@ package cn.com.xiaofabo.tylaw.fundcontrast.util;
 public class DataUtils {
     public static String STANDARD_TYPE_STOCK = 
             "data\\StandardDoc\\（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）.doc";
+    public static String STANDARD_TYPE_STOCK_C = 
+            "data\\StandardDoc\\（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行） (copy).doc";
     public static String STANDARD_TYPE_INDEX =
             "data\\StandardDoc\\（2012-12-17）证券投资基金基金合同填报指引第2号——指数型证券投资基金基金合同填报指引（试行）.doc";
     public static String STANDARD_TYPE_BOND =
