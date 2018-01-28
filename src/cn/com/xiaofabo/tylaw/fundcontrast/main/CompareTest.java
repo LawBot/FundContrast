@@ -11,6 +11,7 @@ import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.util.CompareUtils;
 import cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils;
 import cn.com.xiaofabo.tylaw.fundcontrast.util.StringSimUtils;
+import cn.com.xiaofabo.tylaw.fundcontrast.util.TextUtils;
 import com.github.difflib.algorithm.DiffException;
 import java.util.LinkedList;
 
@@ -39,13 +40,13 @@ public class CompareTest {
             List<DocPart> pList = fd.getParts().get(c).getChildPart();
             for (int i = 0; i < pList.size(); ++i) {
                 DocPart dPart = pList.get(i);
-                s1.add(dPart.getTitle());
+                s1.add(TextUtils.getPartTitle(dPart.getTitle()));
             }
             List<String> s2 = new LinkedList();
             List<DocPart> pList2 = fd2.getParts().get(c).getChildPart();
             for (int i = 0; i < pList2.size(); ++i) {
                 DocPart dPart = pList2.get(i);
-                s2.add(dPart.getTitle());
+                s2.add(TextUtils.getPartTitle(dPart.getTitle()));
             }
 
             List matchList = StringSimUtils.findBestMatch(s1, s2);
