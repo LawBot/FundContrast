@@ -162,7 +162,6 @@ public class FundGUI extends javax.swing.JFrame {
         jTextField2.setText("path...");
         jButton3.setText("生成条文");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 String templateDoc = jTextField1.getText();
@@ -192,8 +191,19 @@ public class FundGUI extends javax.swing.JFrame {
                     e1.printStackTrace();
                 }
                 FundDoc fd = dp.process();
-                String title = "《" + dp.titleOfGenDoc + "》";
-                String txt = dp.getTextForGenDoc() + "募集申请材料之" + title;
+
+
+                java.util.List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
+
+                DocProcessor dp2 = new DocProcessor(contractPath);
+                try {
+                    dp2.readText(contractPath);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                FundDoc fd2 = dp2.process();
+                String title = "《" + dp2.getNameForGenDoc() + "》";
+                String txt = dp2.getTextForGenDoc() + "募集申请材料之" + title;
                 try {
                     switch (String.valueOf(jComboBox2.getSelectedItem())) {
                         case "股票混合型":
@@ -211,19 +221,6 @@ public class FundGUI extends javax.swing.JFrame {
                 } catch (Exception ee) {
                     ee.printStackTrace();
                 }
-
-                System.out.println("Title is: " + title);
-                System.out.println("Text is: " + txt);
-
-                java.util.List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
-
-                DocProcessor dp2 = new DocProcessor(contractPath);
-                try {
-                    dp2.readText(contractPath);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
-                }
-                FundDoc fd2 = dp2.process();
                 java.util.List<CompareDto> revisedCompareDtoList = fd2.getFundDoc();
                 List<PatchDto> patchDtoList = null;
                 try {
@@ -243,10 +240,8 @@ public class FundGUI extends javax.swing.JFrame {
             }
         });
 
-
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"工银瑞信", "华夏基金", "九泰基金"}));
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"股票混合型", "指数型", "债券型", "货币型"}));
-
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
