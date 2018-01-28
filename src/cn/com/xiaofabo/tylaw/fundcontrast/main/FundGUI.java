@@ -1,31 +1,23 @@
-package cn.com.xiaofabo.tylaw.fundcontrast.main;
+package cn.com.xiaofabo.tylaw.fundcontrast.main;/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.CompareDto;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.PatchDto;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.util.CompareUtils;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 
-import javax.swing.JPanel;
-import javax.swing.UIManager;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import javax.swing.JFrame;
+import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-
-import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.*;
 
 /**
  * Created on @ 18.01.18
@@ -33,233 +25,277 @@ import java.util.List;
  * @author 杨敏
  * email ddl-15 at outlook.com
  **/
-public class FundGUI extends JFrame {
-    private static Logger logger = Logger.getLogger(FundGUI.class.getName());
+public class FundGUI extends javax.swing.JFrame {
 
-    String inputPath1 = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）.doc";
-    String inputPath2 = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第2号——指数型证券投资基金基金合同填报指引（试行）.doc";
-    String inputPath3 = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第3号——证券投资基金基金合同填报指引（试行）.doc";
-    String inputPath4 = "data/StandardDoc/（2012-12-17）证券投资基金基金合同填报指引第4号——货币市场基金基金合同填报指引（试行）.doc";
+    // Variables declaration - do not modify
 
     String type1 = "（以下简称“《基金合同》”）系按照中国证监会基金监管部发布的《证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引（试行）》（以下简称“《指引》”）撰写。根据基金托管人和律师事务所的意见，我公司在撰写《基金合同》时对《指引》部分条款进行了增加、删除或修改，现将具体情况详细说明如下。";
     String type2 = "（以下简称“《基金合同》”）系按照中国证监会基金监管部发布的《证券投资基金基金合同填报指引第2号——指数型证券投资基金基金合同填报指引（试行）》（以下简称“《指引》”）撰写。根据基金托管人和律师事务所的意见，我公司在撰写《基金合同》时对《指引》部分条款进行了增加、删除或修改，现将具体情况详细说明如下。";
     String type3 = "（以下简称“《基金合同》”）系按照中国证监会基金监管部发布的《证券投资基金基金合同填报指引第3号——证券投资基金基金合同填报指引（试行）》（以下简称“《指引》”）撰写。根据基金托管人和律师事务所的意见，我公司在撰写《基金合同》时对《指引》部分条款进行了增加、删除或修改，现将具体情况详细说明如下。";
     String type4 = "（以下简称“《基金合同》”）系按照中国证监会基金监管部发布的《证券投资基金基金合同填报指引第4号——货币市场基金基金合同填报指引（试行）》（以下简称“《指引》”）撰写。根据基金托管人和律师事务所的意见，我公司在撰写《基金合同》时对《指引》部分条款进行了增加、删除或修改，现将具体情况详细说明如下。";
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private JFileChooser chooser;
 
+    /**
+     * Creates new form FundGUI
+     */
     public FundGUI() {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                PropertyConfigurator.configure("log.properties");
-                logger.info("Inside FundGUI run()");
-                try {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                    UIManager.put("FileChooser.readOnly", Boolean.TRUE);
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-                    ex.printStackTrace();
-                }
+        initComponents();
+    }
 
-                JFrame frame = new JFrame("生成条文");
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                try {
-                    frame.add(new MyPane());
-                } catch (IOException e) {
-                    e.printStackTrace();
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
                 }
-                frame.pack();
-                frame.setLocationRelativeTo(null);
-                frame.setSize(800, 200);
-                frame.setVisible(true);
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(FundGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(FundGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(FundGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(FundGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new FundGUI().setVisible(true);
             }
         });
     }
 
-    public static void main(String[] args) {
-        new FundGUI();
-    }
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
+    private void initComponents() {
 
-    public class MyPane extends JPanel {
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<String>();
+        jComboBox2 = new javax.swing.JComboBox<String>();
 
-        private JLabel lblCom;
-        private JLabel lblType;
-        private JButton btnInput;
-        private JButton btnOutput;
-        private JButton btnSubmit;
-        private JTextField inputPath;
-        private JTextField outputPath;
-        private DefaultComboBoxModel companyNames = new DefaultComboBoxModel();
-        private DefaultComboBoxModel productType = new DefaultComboBoxModel();
-        private JFileChooser chooser;
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        public MyPane() throws IOException {
-            logger.info("Inside MyPane, setting flowlayout");
-            setLayout(new GridLayout(0, 2, 1, 3));
+        jLabel1.setText("公司");
 
-            logger.info("Inside FundGUI run()");
-            lblCom = new JLabel("公司");
-            add(lblCom);
-            companyNames.addElement("工银瑞信");
-            companyNames.addElement("华夏基金");
-            companyNames.addElement("九泰基金");
-            final JComboBox companyCombo = new JComboBox(companyNames);
-            companyCombo.setSelectedIndex(0);
-            add(companyCombo);
+        jLabel2.setText("类型");
 
-            lblType = new JLabel("类型");
-            add(lblType);
-            productType.addElement("股票混合型");
-            productType.addElement("指数型");
-            productType.addElement("债券型");
-            productType.addElement("货币型");
-            final JComboBox typeCombo = new JComboBox(productType);
-            typeCombo.setSelectedIndex(0);
-            add(typeCombo);
+        jTextField1.setText("file...");
 
-            inputPath = new JTextField("file...");
-            add(inputPath);
-            btnInput = new JButton("选择文件");
-            add(btnInput);
-            btnInput.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    logger.info("Inside action performer, set input doc path");
-
-                    if (chooser == null) {
-                        chooser = new JFileChooser();
-                        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                        chooser.setAcceptAllFileFilterUsed(false);
-                        chooser.addChoosableFileFilter(new FileFilter() {
-                            @Override
-                            public boolean accept(File f) {
-                                return f.isDirectory() || f.getName().toLowerCase().endsWith(".docx") || f.getName().toLowerCase().endsWith(".doc");
-                            }
-
-                            @Override
-                            public String getDescription() {
-                                return "Document (*.docx, *.doc)";
-                            }
-                        });
-                    }
-
-                    switch (chooser.showOpenDialog(MyPane.this)) {
-                        case JFileChooser.APPROVE_OPTION:
-                            logger.info("Input file path: " + chooser.getSelectedFile().getAbsolutePath());
-                            inputPath.setText(chooser.getSelectedFile().getAbsolutePath());
-                            break;
-                    }
-                }
-            });
-
-            outputPath = new JTextField("path...");
-            add(outputPath);
-            btnOutput = new JButton("输出路径");
-            add(btnOutput);
-            btnOutput.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    logger.info("Inside action performer, set output doc path");
-
-                    if (chooser == null) {
-                        chooser = new JFileChooser();
-                        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-                        chooser.setAcceptAllFileFilterUsed(true);
-                    }
-                    switch (chooser.showOpenDialog(MyPane.this)) {
-                        case JFileChooser.APPROVE_OPTION:
-                            logger.info("Output file path: " + chooser.getCurrentDirectory());
-                            outputPath.setText(String.valueOf(chooser.getCurrentDirectory()));
-                            break;
-                    }
-                }
-            });
-
-            JLabel label = new JLabel();
-            add(label);
-            btnSubmit = new JButton("生成条文");
-            add(btnSubmit);
-            btnSubmit.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    logger.info("Inside action performer, generating target doc...");
-
-                    String templateDoc = inputPath.getText();
-                    try {
-                        switch (String.valueOf(typeCombo.getSelectedItem())) {
-                            case "股票混合型":
-                                templateDoc = inputPath1;
-                                break;
-                            case "指数型":
-                                templateDoc = inputPath2;
-                                break;
-                            case "债券型":
-                                templateDoc = inputPath3;
-                                break;
-                            default:
-                                templateDoc = inputPath4;
+        jButton1.setText("选择文件");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (chooser == null) {
+                    chooser = new JFileChooser();
+                    chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                    chooser.setAcceptAllFileFilterUsed(false);
+                    chooser.addChoosableFileFilter(new FileFilter() {
+                        @Override
+                        public boolean accept(File f) {
+                            return f.isDirectory() || f.getName().toLowerCase().endsWith(".docx") || f.getName().toLowerCase().endsWith(".doc");
                         }
-                    } catch (Exception ee) {
-                        ee.printStackTrace();
-                    }
 
-                    String contractPath = inputPath.getText();
-
-
-                    DocProcessor dp = new DocProcessor(templateDoc);
-                    try {
-                        dp.readText(templateDoc);
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    FundDoc fd = dp.process();
-                    String title = "《" + dp.titleOfGenDoc + "》";
-                    String txt = dp.getTextForGenDoc() + "募集申请材料之" + title;
-                    try {
-                        switch (String.valueOf(typeCombo.getSelectedItem())) {
-                            case "股票混合型":
-                                txt += type1;
-                                break;
-                            case "指数型":
-                                txt += type2;
-                                break;
-                            case "债券型":
-                                txt += type3;
-                                break;
-                            default:
-                                txt += type4;
+                        @Override
+                        public String getDescription() {
+                            return "Document (*.docx, *.doc)";
                         }
-                    } catch (Exception ee) {
-                        ee.printStackTrace();
-                    }
-
-                    System.out.println("Title is: " + title);
-                    System.out.println("Text is: " + txt);
-                    java.util.List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
-
-                    DocProcessor dp2 = new DocProcessor(contractPath);
-                    try {
-                        dp2.readText(contractPath);
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    FundDoc fd2 = dp2.process();
-                    java.util.List<CompareDto> revisedCompareDtoList = fd2.getFundDoc();
-                    List<PatchDto> patchDtoList = null;
-                    try {
-                        patchDtoList = CompareUtils.doCompare(orignalCompareDtoList, revisedCompareDtoList);
-                    } catch (Exception e1) {
-                        e1.printStackTrace();
-                    }
-                    GenerateCompareDoc test = new GenerateCompareDoc();
-
-                    try {
-                        String genDocPath = outputPath.getText();
-                        test.generate(title, txt, patchDtoList, genDocPath);
-                        System.out.println("finished");
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
+                    });
                 }
-            });
-        }
-    }
+                switch (chooser.showOpenDialog(FundGUI.this)) {
+                    case JFileChooser.APPROVE_OPTION:
+                        jTextField1.setText(chooser.getSelectedFile().getAbsolutePath());
+                        break;
+                }
+            }
+        });
+
+        jButton2.setText("选择路径");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (chooser == null) {
+                    chooser = new JFileChooser();
+                    chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+                    chooser.setAcceptAllFileFilterUsed(true);
+                }
+                switch (chooser.showOpenDialog(FundGUI.this)) {
+                    case JFileChooser.APPROVE_OPTION:
+                        jTextField2.setText(String.valueOf(chooser.getCurrentDirectory()));
+                        break;
+                }
+            }
+        });
+
+        jTextField2.setText("path...");
+        jButton3.setText("生成条文");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String templateDoc = jTextField1.getText();
+                try {
+                    switch (String.valueOf(jComboBox2.getSelectedItem())) {
+                        case "股票混合型":
+                            templateDoc = STANDARD_TYPE_STOCK;
+                            break;
+                        case "指数型":
+                            templateDoc = STANDARD_TYPE_INDEX;
+                            break;
+                        case "债券型":
+                            templateDoc = STANDARD_TYPE_BOND;
+                            break;
+                        default:
+                            templateDoc = STANDARD_TYPE_MONETARY;
+                    }
+                } catch (Exception ee) {
+                    ee.printStackTrace();
+                }
+
+                String contractPath = jTextField1.getText();
+                DocProcessor dp = new DocProcessor(templateDoc);
+                try {
+                    dp.readText(templateDoc);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                FundDoc fd = dp.process();
+                String title = "《" + dp.titleOfGenDoc + "》";
+                String txt = dp.getTextForGenDoc() + "募集申请材料之" + title;
+                try {
+                    switch (String.valueOf(jComboBox2.getSelectedItem())) {
+                        case "股票混合型":
+                            txt += type1;
+                            break;
+                        case "指数型":
+                            txt += type2;
+                            break;
+                        case "债券型":
+                            txt += type3;
+                            break;
+                        default:
+                            txt += type4;
+                    }
+                } catch (Exception ee) {
+                    ee.printStackTrace();
+                }
+
+                System.out.println("Title is: " + title);
+                System.out.println("Text is: " + txt);
+
+                java.util.List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
+
+                DocProcessor dp2 = new DocProcessor(contractPath);
+                try {
+                    dp2.readText(contractPath);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                FundDoc fd2 = dp2.process();
+                java.util.List<CompareDto> revisedCompareDtoList = fd2.getFundDoc();
+                List<PatchDto> patchDtoList = null;
+                try {
+                    patchDtoList = CompareUtils.doCompare(orignalCompareDtoList, revisedCompareDtoList);
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+                GenerateCompareDoc test = new GenerateCompareDoc();
+
+                try {
+                    String genDocPath = jTextField2.getText();
+                    test.generate(title, txt, patchDtoList, genDocPath);
+                    System.out.println("finished");
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"工银瑞信", "华夏基金", "九泰基金"}));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"股票混合型", "指数型", "债券型", "货币型"}));
+
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(74, 74, 74)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jLabel1))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jButton2)
+                                                .addComponent(jButton1))
+                                        .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(114, 114, 114))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton3)
+                                .addGap(154, 154, 154))
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel1)
+                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(27, 27, 27)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jButton1)
+                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(jButton2)
+                                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton3)
+                                .addContainerGap(64, Short.MAX_VALUE))
+        );
+
+        pack();
+    }// </editor-fold>
 }
