@@ -71,19 +71,20 @@ public class GenerateCompareDoc {
             section.addNewPgSz();
         }
         CTPageSz pageSize = section.getPgSz();
-        pageSize.setW(BigInteger.valueOf(15840));
-        pageSize.setH(BigInteger.valueOf(12240));
+        pageSize.setW(BigInteger.valueOf(16840L));
+        pageSize.setH(BigInteger.valueOf(11900L));
         pageSize.setOrient(STPageOrientation.LANDSCAPE);
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         XWPFRun run = paragraph.createRun();
         run.setFontSize(12);
         run.setBold(true);
-        run.setText(tit + "修改对照表");
+        run.setText(tit + "\n修改对照表");
         run.addBreak();
         run.addBreak();
         run.addBreak();
         XWPFParagraph paragraphText = document.createParagraph();
+        paragraphText.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun runText = paragraphText.createRun();
         //　宋体　１１号
         runText.setFontSize(11);
@@ -94,7 +95,7 @@ public class GenerateCompareDoc {
         XWPFTable table = document.createTable(row, 4);
         CTTblWidth width = table.getCTTbl().addNewTblPr().addNewTblW();
         width.setType(STTblWidth.DXA);
-        width.setW(BigInteger.valueOf(11000));
+        width.setW(BigInteger.valueOf(16840L));
         XWPFTableRow tableRowOne = table.getRow(0);
         tableRowOne.setRepeatHeader(true);
         tableRowOne.getTableCells().get(0).getCTTc().addNewTcPr().addNewShd().setFill("808080");
