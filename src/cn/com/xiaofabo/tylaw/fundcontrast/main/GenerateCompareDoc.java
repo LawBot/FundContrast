@@ -28,6 +28,14 @@ import java.util.Set;
  * email ddl-15 at outlook.com
  **/
 public class GenerateCompareDoc {
+    /**
+     * Defined Constants.
+     */
+    public static final BigInteger A4_Width = BigInteger.valueOf(16840L);
+    public static final BigInteger A4_Length = BigInteger.valueOf(11900L);
+    public static final BigInteger Table_Width = BigInteger.valueOf(13040L);
+    public static final String Color_grey = "808080";
+
 
     private static Logger log = Logger.getLogger(GenerateCompareDoc.class.getName());
 
@@ -71,8 +79,8 @@ public class GenerateCompareDoc {
             section.addNewPgSz();
         }
         CTPageSz pageSize = section.getPgSz();
-        pageSize.setW(BigInteger.valueOf(16840L));
-        pageSize.setH(BigInteger.valueOf(11900L));
+        pageSize.setW(A4_Width);
+        pageSize.setH(A4_Length);
         pageSize.setOrient(STPageOrientation.LANDSCAPE);
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
@@ -95,13 +103,13 @@ public class GenerateCompareDoc {
         XWPFTable table = document.createTable(row, 4);
         CTTblWidth width = table.getCTTbl().addNewTblPr().addNewTblW();
         width.setType(STTblWidth.DXA);
-        width.setW(BigInteger.valueOf(13040L));
+        width.setW(Table_Width);
         XWPFTableRow tableRowOne = table.getRow(0);
         tableRowOne.setRepeatHeader(true);
-        tableRowOne.getTableCells().get(0).getCTTc().addNewTcPr().addNewShd().setFill("808080");
-        tableRowOne.getTableCells().get(1).getCTTc().addNewTcPr().addNewShd().setFill("808080");
-        tableRowOne.getTableCells().get(2).getCTTc().addNewTcPr().addNewShd().setFill("808080");
-        tableRowOne.getTableCells().get(3).getCTTc().addNewTcPr().addNewShd().setFill("808080");
+        tableRowOne.getTableCells().get(0).getCTTc().addNewTcPr().addNewShd().setFill(Color_grey);
+        tableRowOne.getTableCells().get(1).getCTTc().addNewTcPr().addNewShd().setFill(Color_grey);
+        tableRowOne.getTableCells().get(2).getCTTc().addNewTcPr().addNewShd().setFill(Color_grey);
+        tableRowOne.getTableCells().get(3).getCTTc().addNewTcPr().addNewShd().setFill(Color_grey);
         tableRowOne.getCell(0).setText("章节\n");
         tableRowOne.getCell(1).setText("《指引》条款\n");
         tableRowOne.getCell(2).setText("《基金合同》条款\n");

@@ -239,7 +239,7 @@ public class FundGUI extends javax.swing.JFrame {
                 try {
                     String genDocPath = jTextField2.getText();
                     test.generate(title, txt, patchDtoList, genDocPath);
-                    JOptionPane.showMessageDialog(null,"成功生成对照表！");
+                    JOptionPane.showMessageDialog(null, "成功生成对照表！");
                     System.out.println("finished");
                 } catch (IOException e1) {
                     e1.printStackTrace();
