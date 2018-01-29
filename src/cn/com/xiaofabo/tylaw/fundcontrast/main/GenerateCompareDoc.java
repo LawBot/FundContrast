@@ -95,7 +95,7 @@ public class GenerateCompareDoc {
         XWPFTable table = document.createTable(row, 4);
         CTTblWidth width = table.getCTTbl().addNewTblPr().addNewTblW();
         width.setType(STTblWidth.DXA);
-        width.setW(BigInteger.valueOf(16840L));
+        width.setW(BigInteger.valueOf(13040L));
         XWPFTableRow tableRowOne = table.getRow(0);
         tableRowOne.setRepeatHeader(true);
         tableRowOne.getTableCells().get(0).getCTTc().addNewTcPr().addNewShd().setFill("808080");
