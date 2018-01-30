@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import cn.com.xiaofabo.tylaw.fundcontrast.entity.MatchDto;
+
 /**
  *
  * @author 陈光曦
@@ -178,8 +180,8 @@ public class StringSimUtils {
         return NumberFormat.getPercentInstance(new Locale("en ", "US ")).format(resule);
     }
 
-    public static List findBestMatch(List<String> s1, List<String> s2) {
-        List<Integer> matchList = new LinkedList<>();
+    public static List<MatchDto> findBestMatch(List<String> s1, List<String> s2, String type) {
+        List<MatchDto> matchList = new LinkedList<>();
 
         for (int i = 0; i < s1.size(); ++i) {
             int bestMatch = -1;
@@ -206,17 +208,32 @@ public class StringSimUtils {
                     }
                 }
             }
-            if (bestMatch != i && bestRatio < 0.5) {
-                bestMatch = -1;
-            }
+            if ("0".equals(type)) {
+            	if (bestMatch != i && bestRatio <1) {
+                    bestMatch = -1;
+                }
+//            	MatchDto matchDto = new MatchDto(i, bestMatch);
+//            	matchList.add(matchDto);
+			}else {
+				if (bestMatch != i && bestRatio < 0.5) {
+	                bestMatch = -1;
+	            }
+				if (bestRatio<1) {
+//					MatchDto matchDto = new MatchDto(i, bestMatch);
+//	            	matchList.add(matchDto);
+				}
+			}
+            
             System.out.println(i + " -- " + bestMatch);
             if (bestMatch != i) {
                 System.out.println("MATCH RATIO: " + bestRatio);
                 System.out.println("ORIGINAL STR: " + str1);
                 System.out.println("SAMPLE STR: " + sampleStr);
             }
-
-            matchList.add(bestMatch);
+            MatchDto matchDto = new MatchDto(i, bestMatch, bestRatio);
+        	matchList.add(matchDto);
+            
+            
         }
         return matchList;
     }
