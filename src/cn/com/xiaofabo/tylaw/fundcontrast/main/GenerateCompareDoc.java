@@ -25,18 +25,24 @@ import java.util.Set;
 /**
  * Created on @ 17.01.18
  *
- * @author 杨敏
- * email ddl-15 at outlook.com
- **/
+ * @author 杨敏 email ddl-15 at outlook.com
+ *
+ */
 public class GenerateCompareDoc {
+
     /**
      * Defined Constants.
      */
-    public static final BigInteger A4_Width = BigInteger.valueOf(16840L);
-    public static final BigInteger A4_Length = BigInteger.valueOf(11900L);
-    public static final BigInteger Table_Width = BigInteger.valueOf(13040L);
+    public static final BigInteger A4_WIDTH = BigInteger.valueOf(16840L);
+    public static final BigInteger A4_LENGTH = BigInteger.valueOf(11900L);
+    public static final BigInteger TABLE_WIDTH = BigInteger.valueOf(13040L);
+    
+    private static final BigInteger TABLE_COLUMN_1_WIDTH = BigInteger.valueOf(1133L);    /// ~2.0cm
+    private static final BigInteger TABLE_COLUMN_2_WIDTH = BigInteger.valueOf(4820L);    /// ~8.5cm
+    private static final BigInteger TABLE_COLUMN_3_WIDTH = BigInteger.valueOf(4253L);    /// ~7.5cm
+    private static final BigInteger TABLE_COLUMN_4_WIDTH = BigInteger.valueOf(2551L);    /// ~4.5cm
+    
     public static final String Color_grey = "808080";
-
 
     private static Logger log = Logger.getLogger(GenerateCompareDoc.class.getName());
 
@@ -60,76 +66,59 @@ public class GenerateCompareDoc {
         test.generate(title, txt, patchDtoList, "data");
     }
 
-    public void generate(String title, String text, List<PatchDto> resultDto, String outputPath) throws IOException {
+    public void generate(String title, String leadingText, List<PatchDto> resultDto, String outputPath) throws IOException {
         PropertyConfigurator.configure("log.properties");
         log.info("Create an empty document");
-        String tit = title;
-        String txt = text;
         int row = resultDto.size() + 1;
         XWPFDocument document = new XWPFDocument();
         FileOutputStream out = new FileOutputStream(new File(outputPath + "/条文对照表.docx"));
 //        FileOutputStream out = new FileOutputStream(new File(outputPath));
 
-        CTDocument1 doc = document.getDocument();
-        CTBody body = doc.getBody();
-        if (!body.isSetSectPr()) {
-            body.addNewSectPr();
-        }
-        CTSectPr section = body.getSectPr();
-        if (!section.isSetPgSz()) {
-            section.addNewPgSz();
-        }
-        CTPageSz pageSize = section.getPgSz();
-        pageSize.setW(A4_Width);
-        pageSize.setH(A4_Length);
-        pageSize.setOrient(STPageOrientation.LANDSCAPE);
-        XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(ParagraphAlignment.CENTER);
-        XWPFRun run = paragraph.createRun();
-        run.setFontSize(12);
-        run.setBold(true);
-        run.setText(tit + "\n修改对照表");
-        run.addBreak();
-        run.addBreak();
-        run.addBreak();
-        XWPFParagraph paragraphText = document.createParagraph();
-        paragraphText.setAlignment(ParagraphAlignment.LEFT);
-        XWPFRun runText = paragraphText.createRun();
-        //　宋体　１１号
-        runText.setFontSize(11);
-        runText.setText(txt);
-        runText.addBreak();
-        runText.addBreak();
+        /// Document page setup
+        pageSetup(document);
+        /// Generate title text
+        generateTitle(document, title);
+        /// Generate leading text
+        generateLeadingText(document, leadingText);
 
+        /// Generate contrast table
         XWPFTable table = document.createTable(row, 4);
         CTTblWidth width = table.getCTTbl().addNewTblPr().addNewTblW();
         width.setType(STTblWidth.DXA);
-        width.setW(Table_Width);
+        width.setW(TABLE_WIDTH);
+        CTTblLayoutType type = table.getCTTbl().getTblPr().addNewTblLayout();
+        type.setType(STTblLayoutType.FIXED);
         XWPFTableRow tableRowOne = table.getRow(0);
         tableRowOne.setRepeatHeader(true);
         tableRowOne.getTableCells().get(0).getCTTc().addNewTcPr().addNewShd().setFill(Color_grey);
         tableRowOne.getTableCells().get(1).getCTTc().addNewTcPr().addNewShd().setFill(Color_grey);
         tableRowOne.getTableCells().get(2).getCTTc().addNewTcPr().addNewShd().setFill(Color_grey);
         tableRowOne.getTableCells().get(3).getCTTc().addNewTcPr().addNewShd().setFill(Color_grey);
+        tableRowOne.getCell(0).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_COLUMN_1_WIDTH);
         tableRowOne.getCell(0).setText("章节\n");
+        tableRowOne.getCell(1).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_COLUMN_2_WIDTH);
         tableRowOne.getCell(1).setText("《指引》条款\n");
+        tableRowOne.getCell(2).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_COLUMN_3_WIDTH);
         tableRowOne.getCell(2).setText("《基金合同》条款\n");
+        tableRowOne.getCell(3).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_COLUMN_4_WIDTH);
         tableRowOne.getCell(3).setText("修改理由\n");
 
         for (int i = 0; i < resultDto.size(); i++) {
             PatchDto p = resultDto.get(i);
-            XWPFTableRow s = table.getRow(1 + i);
+            XWPFTableRow tableRow = table.getRow(1 + i);
             //章节
             String column0 = "第" + p.getChapterIndex() + "章";
-            s.getCell(0).setText(column0);
+            tableRow.getCell(0).setText(column0);
             String column1;
             String column2;
 
-            XWPFParagraph par = document.createParagraph();
             if (p.getRevisedDto() != null && p.getRevisedDto().getDeleteData() != null) {
                 Set set = p.getRevisedDto().getDeleteData().keySet();
+                XWPFTableCell cell = tableRow.getCell(1);
+                cell.removeParagraph(0);
+                XWPFParagraph paragraph = cell.addParagraph();
                 for (int j = 0; j < p.getOrignalText().length(); j++) {
-                    XWPFRun runForEachLetter = par.createRun();
+                    XWPFRun runForEachLetter = paragraph.createRun();
                     String currentLetter = Character.toString(p.getOrignalText().charAt(j));
                     if (set.contains(j)) {
                         runForEachLetter.setStrike(true);
@@ -138,14 +127,15 @@ public class GenerateCompareDoc {
                         runForEachLetter.setText(currentLetter);
                     }
                 }
-                s.getCell(1).setParagraph(par);
             }
 
-            XWPFParagraph par1 = document.createParagraph();
             if (p.getRevisedDto() != null && p.getRevisedDto().getRevisedText() != null && p.getRevisedDto().getAddData() != null) {
                 Set set1 = p.getRevisedDto().getAddData().keySet();
+                XWPFTableCell cell = tableRow.getCell(2);
+                cell.removeParagraph(0);
+                XWPFParagraph paragraph = cell.addParagraph();
                 for (int k = 0; k < p.getRevisedDto().getRevisedText().length(); k++) {
-                    XWPFRun runForEachLetter = par1.createRun();
+                    XWPFRun runForEachLetter = paragraph.createRun();
                     String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(k));
                     if (set1.contains(k)) {
                         runForEachLetter.setBold(true);
@@ -154,7 +144,6 @@ public class GenerateCompareDoc {
                         runForEachLetter.setText(currentLetter);
                     }
                 }
-                s.getCell(2).setParagraph(par1);
             }
         }
 
@@ -224,5 +213,44 @@ public class GenerateCompareDoc {
         run.setBold(true);
         run.setText(content);
         return pForRowOneC1;
+    }
+
+    private void pageSetup(XWPFDocument document) {
+        CTDocument1 doc = document.getDocument();
+        CTBody body = doc.getBody();
+        if (!body.isSetSectPr()) {
+            body.addNewSectPr();
+        }
+        CTSectPr section = body.getSectPr();
+        if (!section.isSetPgSz()) {
+            section.addNewPgSz();
+        }
+        CTPageSz pageSize = section.getPgSz();
+        pageSize.setW(A4_WIDTH);
+        pageSize.setH(A4_LENGTH);
+        pageSize.setOrient(STPageOrientation.LANDSCAPE);
+    }
+
+    private void generateTitle(XWPFDocument document, String title) {
+        XWPFParagraph paragraph = document.createParagraph();
+        paragraph.setAlignment(ParagraphAlignment.CENTER);
+        XWPFRun run = paragraph.createRun();
+        run.setFontSize(12);
+        run.setBold(true);
+        run.setText(title + "\n修改对照表");
+        run.addBreak();
+        run.addBreak();
+        run.addBreak();
+    }
+
+    private void generateLeadingText(XWPFDocument document, String leadingText) {
+        XWPFParagraph paragraphText = document.createParagraph();
+        paragraphText.setAlignment(ParagraphAlignment.LEFT);
+        XWPFRun runText = paragraphText.createRun();
+        //　宋体　１１号
+        runText.setFontSize(11);
+        runText.setText(leadingText);
+        runText.addBreak();
+        runText.addBreak();
     }
 }
