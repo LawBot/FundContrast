@@ -5,6 +5,7 @@ import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.PatchDto;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
 import cn.com.xiaofabo.tylaw.fundcontrast.util.CompareUtils;
+import cn.com.xiaofabo.tylaw.fundcontrast.util.CompareUtils2;
 import cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.Logger;

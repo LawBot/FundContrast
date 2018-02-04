@@ -55,7 +55,7 @@ public class DocProcessor extends TextProcessor {
         boolean foundFirstIdentifier = false;
         while (lineIdx < textList.size()) {
             String currentLine = ((String) textList.get(lineIdx)).trim();
-            //System.out.println("Processing line number: " + lineIdx + ", " + currentLine);
+
 
             if (lineIdx < 4) {
                 this.titleOfGenDoc += currentLine;

@@ -8,7 +8,7 @@ import cn.com.xiaofabo.tylaw.fundcontrast.entity.CompareDto;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.PatchDto;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
-import cn.com.xiaofabo.tylaw.fundcontrast.util.CompareUtils;
+import cn.com.xiaofabo.tylaw.fundcontrast.util.CompareUtils2;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -200,7 +200,6 @@ public class FundGUI extends javax.swing.JFrame {
 
 
                 java.util.List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
-
                 DocProcessor dp2 = new DocProcessor(contractPath);
                 try {
                     dp2.readText(contractPath);
@@ -209,6 +208,7 @@ public class FundGUI extends javax.swing.JFrame {
                 }
                 FundDoc fd2 = dp2.process();
                 String title = "《" + dp2.getNameForGenDoc() + "》";
+                System.out.println(title + ":MINMINMINMINMINMIN");
                 String txt = dp2.getTextForGenDoc() + "募集申请材料之" + title;
                 try {
                     switch (String.valueOf(jComboBox2.getSelectedItem())) {
@@ -227,15 +227,10 @@ public class FundGUI extends javax.swing.JFrame {
                 } catch (Exception ee) {
                     ee.printStackTrace();
                 }
-                java.util.List<CompareDto> revisedCompareDtoList = fd2.getFundDoc();
                 List<PatchDto> patchDtoList = null;
-                try {
-                    patchDtoList = CompareUtils.doCompare(orignalCompareDtoList, revisedCompareDtoList);
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
+                CompareTest2 forList = new CompareTest2();
+                patchDtoList = forList.getPatchDtoList(templateDoc, contractPath);
                 GenerateCompareDoc test = new GenerateCompareDoc();
-
                 try {
                     String genDocPath = jTextField2.getText();
                     test.generate(title, txt, patchDtoList, genDocPath);
