@@ -49,7 +49,7 @@ public class CompareTest {
                 s2.add(TextUtils.getPartTitle(dPart.getTitle()));
             }
 
-            List matchList = StringSimUtils.findBestMatch(s1, s2);
+            //List matchList = StringSimUtils.findBestMatch(s1, s2);
         }
 //        for (int i = 0; i < matchList.size(); ++i) {
 //            System.out.print(i + " = " + matchList.get(i));
