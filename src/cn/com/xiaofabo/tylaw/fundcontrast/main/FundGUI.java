@@ -190,6 +190,7 @@ public class FundGUI extends javax.swing.JFrame {
                 }
 
                 String contractPath = jTextField1.getText();
+
                 DocProcessor dp = new DocProcessor(templateDoc);
                 try {
                     dp.readText(templateDoc);
@@ -197,9 +198,8 @@ public class FundGUI extends javax.swing.JFrame {
                     e1.printStackTrace();
                 }
                 FundDoc fd = dp.process();
+                //java.util.List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
 
-
-                java.util.List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
                 DocProcessor dp2 = new DocProcessor(contractPath);
                 try {
                     dp2.readText(contractPath);
@@ -226,15 +226,16 @@ public class FundGUI extends javax.swing.JFrame {
                 } catch (Exception ee) {
                     ee.printStackTrace();
                 }
+                // get patchDtoList
                 List<PatchDto> patchDtoList = null;
                 CompareTest2 forList = new CompareTest2();
                 patchDtoList = forList.getPatchDtoList(templateDoc, contractPath);
-                GenerateCompareDoc test = new GenerateCompareDoc();
+                // generate compared doc
+                GenerateCompareDoc genDoc = new GenerateCompareDoc();
                 try {
                     String genDocPath = jTextField2.getText();
-                    test.generate(title, txt, patchDtoList, genDocPath);
+                    genDoc.generate(title, txt, patchDtoList, genDocPath);
                     JOptionPane.showMessageDialog(null, "成功生成对照表！");
-                    System.out.println("finished");
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }

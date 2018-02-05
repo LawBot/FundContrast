@@ -11,7 +11,7 @@ public class PatchDto {
 	private RevisedDto revisedDto;
 	private String indexType;//(代表原文的序号则为“orginal”,代表新条文的序号则为"revised"，当新增加原文没有的条文，则类型为"revised")
 	private String changeType;//(add:新增 delete:删减 change:更改)
-	
+
 	public String getOrignalText() {
 		return orignalText;
 	}
@@ -66,7 +66,7 @@ public class PatchDto {
 	public void setChangeType(String changeType) {
 		this.changeType = changeType;
 	}
-	
-	
-	
+
+
+
 }
