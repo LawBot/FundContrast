@@ -62,11 +62,18 @@ public class FundDoc {
                 compareDto= new CompareDto();
                 compareDto.setChapterIndex(i+1);
                 compareDto.setText(lvl1Part.getTitle());
+                if (lvl1Part.getIndex()!=null && lvl1Part.getIndex().length()!=0) {
+                	compareDto.setIndex(lvl1Part.getIndex());
+				}else {
+					compareDto.setIndex("");
+				}
+                
                 compareDtoList.add(compareDto);
                 if (lvl1Part.getText()!=null) {
                 	compareDto= new CompareDto();
                     compareDto.setChapterIndex(i+1);
                     compareDto.setText(lvl1Part.getText());
+                    compareDto.setIndex("");
                     compareDtoList.add(compareDto);
 				}
                 if (lvl1Part.hasPart()) {
@@ -81,12 +88,19 @@ public class FundDoc {
                             compareDto.setChapterIndex(i+1);
                             compareDto.setSectionIndex(j+1);
                             compareDto.setText(lvl2Part.getTitle());
+                            System.out.println(lvl2Part.getIndex());
+                            if (lvl2Part.getIndex()!=null && lvl2Part.getIndex().length()!=0) {
+                            	compareDto.setIndex(lvl2Part.getIndex());
+            				}else {
+            					compareDto.setIndex("");
+            				}
                             compareDtoList.add(compareDto);
                             if (lvl2Part.getText()!=null) {
                             	compareDto= new CompareDto();
                                 compareDto.setChapterIndex(i+1);
                                 compareDto.setSectionIndex(j+1);
                                 compareDto.setText(lvl2Part.getText());
+                                compareDto.setIndex("");
                                 compareDtoList.add(compareDto);
             				}
                             
@@ -103,6 +117,11 @@ public class FundDoc {
                                         compareDto.setSectionIndex(j+1);
                                         compareDto.setSubSectionIndex(k+1);
                                         compareDto.setText(lvl3Part.getTitle());
+                                        if (lvl3Part.getIndex()!=null && lvl3Part.getIndex().length()!=0) {
+                                        	compareDto.setIndex(lvl3Part.getIndex());
+                        				}else {
+                        					compareDto.setIndex("");
+                        				}
                                         compareDtoList.add(compareDto);
                                         if (lvl3Part.getText()!=null) {
                                         	compareDto= new CompareDto();
@@ -110,6 +129,7 @@ public class FundDoc {
                                             compareDto.setSectionIndex(j+1);
                                             compareDto.setSubSectionIndex(k+1);
                                             compareDto.setText(lvl3Part.getText());
+                                            compareDto.setIndex("");
                                             compareDtoList.add(compareDto);
                         				}
                                         if (lvl3Part.hasPart()) {
@@ -126,6 +146,11 @@ public class FundDoc {
                                                     compareDto.setSubSectionIndex(k+1);
                                                     compareDto.setSubsubSectionIndex(l+1);
                                                     compareDto.setText(lvl4Part.getTitle());
+                                                    if (lvl4Part.getIndex()!=null && lvl4Part.getIndex().length()!=0) {
+                                                    	compareDto.setIndex(lvl4Part.getIndex());
+                                    				}else {
+                                    					compareDto.setIndex("");
+                                    				}
                                                     compareDtoList.add(compareDto);
                                                     if (lvl4Part.getText()!=null) {
                                                     	compareDto= new CompareDto();
@@ -134,6 +159,7 @@ public class FundDoc {
                                                         compareDto.setSubSectionIndex(k+1);
                                                         compareDto.setSubsubSectionIndex(l+1);
                                                         compareDto.setText(lvl4Part.getText());
+                                                        compareDto.setIndex("");
                                                         compareDtoList.add(compareDto);
                                     				}
                                                     if (lvl4Part.hasPart()) {
@@ -151,6 +177,11 @@ public class FundDoc {
                                                                 compareDto.setSubsubSectionIndex(l+1);
                                                                 compareDto.setSubsubsubSectionIndex(m+1);
                                                                 compareDto.setText(lvl5Part.getTitle());
+                                                                if (lvl5Part.getIndex()!=null && lvl5Part.getIndex().length()!=0) {
+                                                                	compareDto.setIndex(lvl5Part.getIndex());
+                                                				}else {
+                                                					compareDto.setIndex("");
+                                                				}
                                                                 compareDtoList.add(compareDto);
                                                                 if (lvl5Part.getText()!=null) {
                                                                 	compareDto= new CompareDto();
@@ -160,6 +191,7 @@ public class FundDoc {
                                                                     compareDto.setSubsubSectionIndex(l+1);
                                                                     compareDto.setSubsubsubSectionIndex(m+1);
                                                                     compareDto.setText(lvl5Part.getText());
+                                                                    compareDto.setIndex("");
                                                                     compareDtoList.add(compareDto);
                                                 				}
                                                             }

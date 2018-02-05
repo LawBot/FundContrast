@@ -100,9 +100,18 @@ public class DocProcessor extends TextProcessor {
                         partText = new StringBuilder();
                     }
                     currentPart = new DocPart();
-//                    String title = TextUtils.getPartTitle(currentLine);
-                    String title = currentLine;
+                    String title = TextUtils.getPartTitle(currentLine);
+//                    String title = currentLine;
+                     
+                    String index = "";
+                    if (currentLine.length()>title.length()) {
+                    	index = currentLine.replace(title,"");
+					}else {
+						index = "";
+					}
+                    currentPart.setIndex(index);
                     currentPart.setTitle(title);
+                    
                     tmpPartList.add(currentPart);
                     ++currentLevel;
                 } else if (lastPartLevel > currentPartLevel) {
@@ -127,8 +136,15 @@ public class DocProcessor extends TextProcessor {
                         tmpPartList = new LinkedList();
                     }
                     currentPart = new DocPart();
-//                    String title = TextUtils.getPartTitle(currentLine);
-                    String title = currentLine;
+                    String title = TextUtils.getPartTitle(currentLine);
+//                    String title = currentLine;
+                    String index = "";
+                    if (currentLine.length()>title.length()) {
+                    	index = currentLine.replace(title,"");
+					}else {
+						index = "";
+					}
+                    currentPart.setIndex(index);
                     currentPart.setTitle(title);
                     tmpPartList.add(currentPart);
                     currentLevel = actualLevel;
@@ -145,8 +161,16 @@ public class DocProcessor extends TextProcessor {
                         parentDp.addPart(currentPart);
                     }
                     currentPart = new DocPart();
-//                    String title = TextUtils.getPartTitle(currentLine);
-                    String title = currentLine;
+                    String title = TextUtils.getPartTitle(currentLine);
+//                    String title = currentLine;
+                    String index = "";
+                    if (currentLine.length()>title.length()) {
+                    	index = currentLine.replace(title,"");
+					}else {
+						index = "";
+					}
+                    
+                    currentPart.setIndex(index);
                     currentPart.setTitle(title);
                     if (currentPartLevel == 0) {
                         tmpPartList.add(currentPart);

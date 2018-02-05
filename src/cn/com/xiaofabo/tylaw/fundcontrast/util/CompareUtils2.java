@@ -20,10 +20,11 @@ public class CompareUtils2 {
 			List<PatchDto> patchList = new ArrayList<PatchDto>();
 			
 			RevisedDto revisedDto = compare(orignalCompare.getText(), revisedCompare.getText());
+			revisedDto.setRevisedText(revisedCompare.getIndex()+revisedCompare.getText());
 			PatchDto patchDto = new PatchDto();
 			patchDto.setRevisedDto(revisedDto);
 			patchDto.setChapterIndex(orignalCompare.getChapterIndex());
-			patchDto.setOrignalText(orignalCompare.getText());
+			patchDto.setOrignalText(orignalCompare.getIndex()+orignalCompare.getText());
 			patchDto.setSectionIndex(orignalCompare.getSectionIndex());
 			patchDto.setSubSectionIndex(orignalCompare.getSubSectionIndex());
 			patchDto.setSubsubSectionIndex(orignalCompare.getSubsubSectionIndex());

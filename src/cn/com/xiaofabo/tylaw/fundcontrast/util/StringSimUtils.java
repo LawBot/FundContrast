@@ -190,6 +190,8 @@ public class StringSimUtils {
             String str1 = s1.get(i);
             for (int j = 0; j < s2.size(); ++j) {
                 String str2 = s2.get(j);
+//                str1 = TextUtils.getPartTitle(str1);
+//                str2 = TextUtils.getPartTitle(str2);
                 double r = getSimilarityRatio(str1, str2);
                 if (r > bestRatio) {
                     bestRatio = r;

@@ -7,6 +7,7 @@ public class CompareDto {
 	private int subSectionIndex;
 	private int subsubSectionIndex;
 	private int subsubsubSectionIndex;
+	private String index; 
 	
 	public String getText() {
 		return text;
@@ -43,6 +44,12 @@ public class CompareDto {
 	}
 	public void setSubsubsubSectionIndex(int subsubsubSectionIndex) {
 		this.subsubsubSectionIndex = subsubsubSectionIndex;
+	}
+	public String getIndex() {
+		return index;
+	}
+	public void setIndex(String index) {
+		this.index = index;
 	}
 	
 	

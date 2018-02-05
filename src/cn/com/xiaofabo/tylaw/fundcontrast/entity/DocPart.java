@@ -16,6 +16,7 @@ public class DocPart {
 
     String title;
     String text;
+    String index;
     List<DocPart> childPart;
 
     public DocPart() {
@@ -41,7 +42,15 @@ public class DocPart {
         this.text = text;
     }
 
-    public boolean addPart(DocPart part) {
+    public String getIndex() {
+		return index;
+	}
+
+	public void setIndex(String index) {
+		this.index = index;
+	}
+
+	public boolean addPart(DocPart part) {
         if (childPart == null) {
             childPart = new LinkedList();
         }
