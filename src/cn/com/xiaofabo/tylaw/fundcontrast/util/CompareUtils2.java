@@ -18,9 +18,8 @@ public class CompareUtils2 {
 			List<String> originalList = new ArrayList<String>();
 		    List<String> revisedList = new ArrayList<String>();
 			List<PatchDto> patchList = new ArrayList<PatchDto>();
-			String orignalText = TextUtils.getPartTitle(orignalCompare.getText());
-			String revisedText = TextUtils.getPartTitle(revisedCompare.getText());
-			RevisedDto revisedDto = compare(orignalText, revisedText);
+			
+			RevisedDto revisedDto = compare(orignalCompare.getText(), revisedCompare.getText());
 			PatchDto patchDto = new PatchDto();
 			patchDto.setRevisedDto(revisedDto);
 			patchDto.setChapterIndex(orignalCompare.getChapterIndex());
