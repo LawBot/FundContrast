@@ -208,7 +208,6 @@ public class FundGUI extends javax.swing.JFrame {
                 }
                 FundDoc fd2 = dp2.process();
                 String title = "《" + dp2.getNameForGenDoc() + "》";
-                System.out.println(title + ":MINMINMINMINMINMIN");
                 String txt = dp2.getTextForGenDoc() + "募集申请材料之" + title;
                 try {
                     switch (String.valueOf(jComboBox2.getSelectedItem())) {

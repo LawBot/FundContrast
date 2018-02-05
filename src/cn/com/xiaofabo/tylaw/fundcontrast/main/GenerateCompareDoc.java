@@ -26,24 +26,20 @@ import java.util.Set;
  * Created on @ 17.01.18
  *
  * @author 杨敏 email ddl-15 at outlook.com
- *
  */
 public class GenerateCompareDoc {
 
     /**
      * Defined Constants.
      */
-    public static final BigInteger A4_WIDTH = BigInteger.valueOf(16840L);
-    public static final BigInteger A4_LENGTH = BigInteger.valueOf(11900L);
-    public static final BigInteger TABLE_WIDTH = BigInteger.valueOf(13040L);
-    
+    private static final BigInteger A4_WIDTH = BigInteger.valueOf(16840L);
+    private static final BigInteger A4_LENGTH = BigInteger.valueOf(11900L);
+    private static final BigInteger TABLE_WIDTH = BigInteger.valueOf(13040L);
+    private static final String Color_grey = "808080";
     private static final BigInteger TABLE_COLUMN_1_WIDTH = BigInteger.valueOf(1133L);    /// ~2.0cm
     private static final BigInteger TABLE_COLUMN_2_WIDTH = BigInteger.valueOf(4820L);    /// ~8.5cm
     private static final BigInteger TABLE_COLUMN_3_WIDTH = BigInteger.valueOf(4253L);    /// ~7.5cm
     private static final BigInteger TABLE_COLUMN_4_WIDTH = BigInteger.valueOf(2551L);    /// ~4.5cm
-    
-    public static final String Color_grey = "808080";
-
     private static Logger log = Logger.getLogger(GenerateCompareDoc.class.getName());
 
     public static void main(String[] args) throws Exception {
@@ -72,7 +68,6 @@ public class GenerateCompareDoc {
         int row = resultDto.size() + 1;
         XWPFDocument document = new XWPFDocument();
         FileOutputStream out = new FileOutputStream(new File(outputPath + "/条文对照表.docx"));
-//        FileOutputStream out = new FileOutputStream(new File(outputPath));
 
         /// Document page setup
         pageSetup(document);
@@ -88,6 +83,7 @@ public class GenerateCompareDoc {
         width.setW(TABLE_WIDTH);
         CTTblLayoutType type = table.getCTTbl().getTblPr().addNewTblLayout();
         type.setType(STTblLayoutType.FIXED);
+
         XWPFTableRow tableRowOne = table.getRow(0);
         tableRowOne.setRepeatHeader(true);
         tableRowOne.getTableCells().get(0).getCTTc().addNewTcPr().addNewShd().setFill(Color_grey);
@@ -109,40 +105,74 @@ public class GenerateCompareDoc {
             //章节
             String column0 = "第" + p.getChapterIndex() + "章";
             tableRow.getCell(0).setText(column0);
-            String column1;
-            String column2;
 
-            if (p.getRevisedDto() != null && p.getRevisedDto().getDeleteData() != null) {
-                Set set = p.getRevisedDto().getDeleteData().keySet();
-                XWPFTableCell cell = tableRow.getCell(1);
-                cell.removeParagraph(0);
-                XWPFParagraph paragraph = cell.addParagraph();
-                for (int j = 0; j < p.getOrignalText().length(); j++) {
-                    XWPFRun runForEachLetter = paragraph.createRun();
-                    String currentLetter = Character.toString(p.getOrignalText().charAt(j));
-                    if (set.contains(j)) {
-                        runForEachLetter.setStrike(true);
-                        runForEachLetter.setText(currentLetter);
-                    } else {
-                        runForEachLetter.setText(currentLetter);
+            if (p.getChangeType() == "change") {
+                System.out.println("INSIDE Change");
+
+                // set delete
+                if (p.getRevisedDto() != null && p.getRevisedDto().getDeleteData() != null) {
+                    Set set = p.getRevisedDto().getDeleteData().keySet();
+                    XWPFTableCell cell = tableRow.getCell(1);
+                    cell.removeParagraph(0);
+                    XWPFParagraph paragraph = cell.addParagraph();
+                    for (int j = 0; j < p.getOrignalText().length(); j++) {
+                        XWPFRun runForEachLetter = paragraph.createRun();
+                        String currentLetter = Character.toString(p.getOrignalText().charAt(j));
+                        if (set.contains(j)) {
+                            runForEachLetter.setStrike(true);
+                            runForEachLetter.setText(currentLetter);
+                        } else {
+                            runForEachLetter.setText(currentLetter);
+                        }
+                    }
+                }
+
+                // set add
+                if (p.getRevisedDto() != null && p.getRevisedDto().getRevisedText() != null && p.getRevisedDto().getAddData() != null) {
+                    Set set1 = p.getRevisedDto().getAddData().keySet();
+                    XWPFTableCell cell = tableRow.getCell(2);
+                    cell.removeParagraph(0);
+                    XWPFParagraph paragraph = cell.addParagraph();
+                    for (int k = 0; k < p.getRevisedDto().getRevisedText().length(); k++) {
+                        XWPFRun runForEachLetter = paragraph.createRun();
+                        String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(k));
+                        if (set1.contains(k)) {
+                            runForEachLetter.setBold(true);
+                            runForEachLetter.setText(currentLetter);
+                        } else {
+                            runForEachLetter.setText(currentLetter);
+                        }
                     }
                 }
             }
 
-            if (p.getRevisedDto() != null && p.getRevisedDto().getRevisedText() != null && p.getRevisedDto().getAddData() != null) {
-                Set set1 = p.getRevisedDto().getAddData().keySet();
+
+            // type==add
+            if (p.getChangeType() == "add") {
+                System.out.println("INSIDE ADD");
                 XWPFTableCell cell = tableRow.getCell(2);
                 cell.removeParagraph(0);
                 XWPFParagraph paragraph = cell.addParagraph();
                 for (int k = 0; k < p.getRevisedDto().getRevisedText().length(); k++) {
                     XWPFRun runForEachLetter = paragraph.createRun();
                     String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(k));
-                    if (set1.contains(k)) {
-                        runForEachLetter.setBold(true);
-                        runForEachLetter.setText(currentLetter);
-                    } else {
-                        runForEachLetter.setText(currentLetter);
-                    }
+                    runForEachLetter.setBold(true);
+                    runForEachLetter.setText(currentLetter);
+                }
+            }
+
+            //type==delete
+            if (p.getChangeType() == "delete") {
+                System.out.println("INSIDE delete");
+
+                XWPFTableCell cell = tableRow.getCell(1);
+                cell.removeParagraph(0);
+                XWPFParagraph paragraph = cell.addParagraph();
+                for (int k = 0; k < p.getOrignalText().length(); k++) {
+                    XWPFRun runForEachLetter = paragraph.createRun();
+                    String currentLetter = Character.toString(p.getOrignalText().charAt(k));
+                    runForEachLetter.setStrike(true);
+                    runForEachLetter.setText(currentLetter);
                 }
             }
         }
@@ -215,6 +245,9 @@ public class GenerateCompareDoc {
         return pForRowOneC1;
     }
 
+    /**
+     * @param document
+     */
     private void pageSetup(XWPFDocument document) {
         CTDocument1 doc = document.getDocument();
         CTBody body = doc.getBody();
@@ -231,6 +264,10 @@ public class GenerateCompareDoc {
         pageSize.setOrient(STPageOrientation.LANDSCAPE);
     }
 
+    /**
+     * @param document
+     * @param title
+     */
     private void generateTitle(XWPFDocument document, String title) {
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
@@ -243,6 +280,10 @@ public class GenerateCompareDoc {
         run.addBreak();
     }
 
+    /**
+     * @param document
+     * @param leadingText
+     */
     private void generateLeadingText(XWPFDocument document, String leadingText) {
         XWPFParagraph paragraphText = document.createParagraph();
         paragraphText.setAlignment(ParagraphAlignment.LEFT);
