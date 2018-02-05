@@ -63,7 +63,7 @@ public class CompareTest2 {
                     for (int k = 0; k < group2List.get(j).size(); k++) {
                         CompareDto compareDto = group2List.get(j).get(k);
                         RevisedDto revisedDto = new RevisedDto();
-                        revisedDto.setRevisedText(compareDto.getIndex()+compareDto.getText());
+                        revisedDto.setRevisedText(compareDto.getIndex() + compareDto.getText());
                         PatchDto patchDto = new PatchDto();
                         patchDto.setRevisedDto(revisedDto);
                         patchDto.setChapterIndex(compareDto.getChapterIndex());
@@ -98,7 +98,7 @@ public class CompareTest2 {
                     if (!revisedIndexList.contains(j) && revisedIndexList.get(revisedIndexList.size() - 1) > j) {
                         CompareDto compareDto = group2List.get(matchList.get(i).getRevisedIndex()).get(compareMatchList.get(j).getOrignalIndex());
                         RevisedDto revisedDto = new RevisedDto();
-                        revisedDto.setRevisedText(compareDto.getIndex()+compareDto.getText());
+                        revisedDto.setRevisedText(compareDto.getIndex() + compareDto.getText());
                         PatchDto patchDto = new PatchDto();
                         patchDto.setRevisedDto(revisedDto);
                         patchDto.setChapterIndex(compareDto.getChapterIndex());
@@ -128,7 +128,7 @@ public class CompareTest2 {
                         PatchDto patchDto = new PatchDto();
                         patchDto.setRevisedDto(revisedDto);
                         patchDto.setChapterIndex(compareDto.getChapterIndex());
-                        patchDto.setOrignalText(compareDto.getIndex()+compareDto.getText());
+                        patchDto.setOrignalText(compareDto.getIndex() + compareDto.getText());
                         patchDto.setSectionIndex(compareDto.getSectionIndex());
                         patchDto.setSubSectionIndex(compareDto.getSubSectionIndex());
                         patchDto.setSubsubSectionIndex(compareDto.getSubsubSectionIndex());
@@ -144,7 +144,7 @@ public class CompareTest2 {
                     for (int j = compareMatchList.size(); j < group2List.get(i).size(); j++) {
                         CompareDto compareDto = group2List.get(i).get(j);
                         RevisedDto revisedDto = new RevisedDto();
-                        revisedDto.setRevisedText(compareDto.getIndex()+compareDto.getText());
+                        revisedDto.setRevisedText(compareDto.getIndex() + compareDto.getText());
                         PatchDto patchDto = new PatchDto();
                         patchDto.setRevisedDto(revisedDto);
                         patchDto.setChapterIndex(compareDto.getChapterIndex());
@@ -164,7 +164,7 @@ public class CompareTest2 {
                     PatchDto patchDto = new PatchDto();
                     patchDto.setRevisedDto(revisedDto);
                     patchDto.setChapterIndex(compareDto.getChapterIndex());
-                    patchDto.setOrignalText(compareDto.getIndex()+compareDto.getText());
+                    patchDto.setOrignalText(compareDto.getIndex() + compareDto.getText());
                     patchDto.setSectionIndex(compareDto.getSectionIndex());
                     patchDto.setSubSectionIndex(compareDto.getSubSectionIndex());
                     patchDto.setSubsubSectionIndex(compareDto.getSubsubSectionIndex());
@@ -181,7 +181,7 @@ public class CompareTest2 {
                     for (int k = 0; k < group2List.get(j).size(); k++) {
                         CompareDto compareDto = group2List.get(j).get(k);
                         RevisedDto revisedDto = new RevisedDto();
-                        revisedDto.setRevisedText(compareDto.getIndex()+compareDto.getText());
+                        revisedDto.setRevisedText(compareDto.getIndex() + compareDto.getText());
                         PatchDto patchDto = new PatchDto();
                         patchDto.setRevisedDto(revisedDto);
                         patchDto.setChapterIndex(compareDto.getChapterIndex());
@@ -269,7 +269,7 @@ public class CompareTest2 {
                     for (int k = 0; k < group2List.get(j).size(); k++) {
                         CompareDto compareDto = group2List.get(j).get(k);
                         RevisedDto revisedDto = new RevisedDto();
-                        revisedDto.setRevisedText(compareDto.getText());
+                        revisedDto.setRevisedText(compareDto.getIndex() + compareDto.getText());
                         PatchDto patchDto = new PatchDto();
                         patchDto.setRevisedDto(revisedDto);
                         patchDto.setChapterIndex(compareDto.getChapterIndex());
@@ -304,7 +304,7 @@ public class CompareTest2 {
                     if (!revisedIndexList.contains(j) && revisedIndexList.get(revisedIndexList.size() - 1) > j) {
                         CompareDto compareDto = group2List.get(matchList.get(i).getRevisedIndex()).get(compareMatchList.get(j).getOrignalIndex());
                         RevisedDto revisedDto = new RevisedDto();
-                        revisedDto.setRevisedText(compareDto.getText());
+                        revisedDto.setRevisedText(compareDto.getIndex() + compareDto.getText());
                         PatchDto patchDto = new PatchDto();
                         patchDto.setRevisedDto(revisedDto);
                         patchDto.setChapterIndex(compareDto.getChapterIndex());
@@ -334,7 +334,7 @@ public class CompareTest2 {
                         PatchDto patchDto = new PatchDto();
                         patchDto.setRevisedDto(revisedDto);
                         patchDto.setChapterIndex(compareDto.getChapterIndex());
-                        patchDto.setOrignalText(compareDto.getText());
+                        patchDto.setOrignalText(compareDto.getIndex() + compareDto.getText());
                         patchDto.setSectionIndex(compareDto.getSectionIndex());
                         patchDto.setSubSectionIndex(compareDto.getSubSectionIndex());
                         patchDto.setSubsubSectionIndex(compareDto.getSubsubSectionIndex());
@@ -350,7 +350,7 @@ public class CompareTest2 {
                     for (int j = compareMatchList.size(); j < group2List.get(i).size(); j++) {
                         CompareDto compareDto = group2List.get(i).get(j);
                         RevisedDto revisedDto = new RevisedDto();
-                        revisedDto.setRevisedText(compareDto.getText());
+                        revisedDto.setRevisedText(compareDto.getIndex() + compareDto.getText());
                         PatchDto patchDto = new PatchDto();
                         patchDto.setRevisedDto(revisedDto);
                         patchDto.setChapterIndex(compareDto.getChapterIndex());
@@ -370,7 +370,7 @@ public class CompareTest2 {
                     PatchDto patchDto = new PatchDto();
                     patchDto.setRevisedDto(revisedDto);
                     patchDto.setChapterIndex(compareDto.getChapterIndex());
-                    patchDto.setOrignalText(compareDto.getText());
+                    patchDto.setOrignalText(compareDto.getIndex() + compareDto.getText());
                     patchDto.setSectionIndex(compareDto.getSectionIndex());
                     patchDto.setSubSectionIndex(compareDto.getSubSectionIndex());
                     patchDto.setSubsubSectionIndex(compareDto.getSubsubSectionIndex());
@@ -387,7 +387,7 @@ public class CompareTest2 {
                     for (int k = 0; k < group2List.get(j).size(); k++) {
                         CompareDto compareDto = group2List.get(j).get(k);
                         RevisedDto revisedDto = new RevisedDto();
-                        revisedDto.setRevisedText(compareDto.getText());
+                        revisedDto.setRevisedText(compareDto.getIndex() + compareDto.getText());
                         PatchDto patchDto = new PatchDto();
                         patchDto.setRevisedDto(revisedDto);
                         patchDto.setChapterIndex(compareDto.getChapterIndex());

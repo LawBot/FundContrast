@@ -4,11 +4,9 @@ package cn.com.xiaofabo.tylaw.fundcontrast.main;/*
  * and open the template in the editor.
  */
 
-import cn.com.xiaofabo.tylaw.fundcontrast.entity.CompareDto;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.PatchDto;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
-import cn.com.xiaofabo.tylaw.fundcontrast.util.CompareUtils2;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -198,7 +196,6 @@ public class FundGUI extends javax.swing.JFrame {
                     e1.printStackTrace();
                 }
                 FundDoc fd = dp.process();
-                //java.util.List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
 
                 DocProcessor dp2 = new DocProcessor(contractPath);
                 try {
