@@ -115,9 +115,9 @@ public class FundGUI extends javax.swing.JFrame {
         jLabel2.setFont(new Font("Serif", Font.PLAIN, 24));
         jTextField1.setText("file...");
         jTextField2.setText("path...");
-        jButton1.setText("选择文件");
+        jButton1.setText("比较的合同");
         jButton1.setFont(new Font("Serif", Font.PLAIN, 24));
-        jButton2.setText("选择路径");
+        jButton2.setText("条文的路径");
         jButton2.setFont(new Font("Serif", Font.PLAIN, 24));
         jButton3.setText("生成条文");
         jButton3.setFont(new Font("Serif", Font.PLAIN, 24));
