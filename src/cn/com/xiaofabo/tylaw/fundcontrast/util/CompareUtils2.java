@@ -19,7 +19,7 @@ public class CompareUtils2 {
 		    List<String> revisedList = new ArrayList<String>();
 			List<PatchDto> patchList = new ArrayList<PatchDto>();
 			
-			RevisedDto revisedDto = compare(orignalCompare.getText(), revisedCompare.getText());
+			RevisedDto revisedDto = compare(orignalCompare.getText(), revisedCompare.getText(),orignalCompare.getIndex().length(),revisedCompare.getIndex().length());
 			revisedDto.setRevisedText(revisedCompare.getIndex()+revisedCompare.getText());
 			PatchDto patchDto = new PatchDto();
 			patchDto.setRevisedDto(revisedDto);
@@ -141,7 +141,7 @@ public class CompareUtils2 {
 		
 	}
 	
-	public static RevisedDto compare(String original, String revised){
+	public static RevisedDto compare(String original, String revised, int originalLength, int revisedLength){
 		RevisedDto revisedDto = new RevisedDto();
 		revisedDto.setRevisedText(revised);
 		String[] a = revised.split("(?![-\\w])");
@@ -168,8 +168,20 @@ public class CompareUtils2 {
 			//按Key进行排序
 			Map<Integer, Character> addDataMap = sortMapByKey(compareStrshort(revised, original, "blue"));    
 			Map<Integer, Character> deleteDataMap = sortMapByKey(compareStrLong(revised, original, "blue"));
-			revisedDto.setAddData(addDataMap);
-			revisedDto.setDeleteData(deleteDataMap);
+			Map<Integer,Character> new_add = new HashMap<Integer,Character>();
+			Map<Integer,Character> new_delete = new HashMap<Integer,Character>();
+			if (addDataMap!=null) {
+				for(Integer key:addDataMap.keySet()){
+					new_add.put(key+revisedLength, addDataMap.get(key));
+				}
+			}
+			if (deleteDataMap!=null) {
+				for(Integer key:deleteDataMap.keySet()){
+					new_delete.put(key+revisedLength, deleteDataMap.get(key));
+				}
+			}
+			revisedDto.setAddData(new_add);
+			revisedDto.setDeleteData(new_delete);
 			 
 		}else if(original.length()<revised.length()){
 //			System.out.println("revised增加了："+compareStrLong(revised, original, "blue"));
@@ -179,8 +191,20 @@ public class CompareUtils2 {
 			//按Key进行排序
 			Map<Integer, Character> addDataMap = sortMapByKey(compareStrLong(revised, original, "blue"));    
 			Map<Integer, Character> deleteDataMap = sortMapByKey(compareStrshort(revised, original, "blue"));
-			revisedDto.setAddData(addDataMap);
-			revisedDto.setDeleteData(deleteDataMap);
+			Map<Integer,Character> new_add = new HashMap<Integer,Character>();
+			Map<Integer,Character> new_delete = new HashMap<Integer,Character>();
+			if (addDataMap!=null) {
+				for(Integer key:addDataMap.keySet()){
+					new_add.put(key+revisedLength, addDataMap.get(key));
+				}
+			}
+			if (deleteDataMap!=null) {
+				for(Integer key:deleteDataMap.keySet()){
+					new_delete.put(key+revisedLength, deleteDataMap.get(key));
+				}
+			}
+			revisedDto.setAddData(new_add);
+			revisedDto.setDeleteData(new_delete);
 			
 		}
 		
