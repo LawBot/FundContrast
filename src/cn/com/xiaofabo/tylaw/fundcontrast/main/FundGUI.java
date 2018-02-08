@@ -214,16 +214,16 @@ public class FundGUI extends javax.swing.JFrame {
                 } catch (Exception ee) {
                     ee.printStackTrace();
                 }
+                // generate compared doc
+                GenerateCompareDoc genDoc = new GenerateCompareDoc();
                 // get patchDtoList
                 List<PatchDto> patchDtoList = null;
-                CompareTest2 forList = new CompareTest2();
                 try {
-                    patchDtoList = forList.getPatchDtoList(templateDoc, contractPath);
+                    patchDtoList = genDoc.getPatchDtoList(templateDoc, contractPath);
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
-                // generate compared doc
-                GenerateCompareDoc genDoc = new GenerateCompareDoc();
+
                 try {
                     String genDocPath = jTextField2.getText();
                     genDoc.generate(title, txt, patchDtoList, genDocPath);
