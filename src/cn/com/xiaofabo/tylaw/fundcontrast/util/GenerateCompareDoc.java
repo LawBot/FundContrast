@@ -2,6 +2,7 @@ package cn.com.xiaofabo.tylaw.fundcontrast.util;
 
 
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.*;
+import cn.com.xiaofabo.tylaw.fundcontrast.main.CompareTest2;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.Logger;
@@ -36,28 +37,6 @@ public class GenerateCompareDoc {
      * Defined Constants.
      */
     private static Logger log = Logger.getLogger(GenerateCompareDoc.class.getName());
-
-    private static List<List<CompareDto>> getListByGroup(List<CompareDto> list) {
-        List<List<CompareDto>> result = new ArrayList<List<CompareDto>>();
-        Map<Integer, List<CompareDto>> map = new TreeMap<Integer, List<CompareDto>>();
-
-        for (CompareDto bean : list) {
-            if (map.containsKey(bean.getChapterIndex())) {
-                List<CompareDto> t = map.get(bean.getChapterIndex());
-                t.add(bean);
-                new ArrayList<CompareDto>().add(bean);
-                map.put(bean.getChapterIndex(), t);
-            } else {
-                List<CompareDto> t = new ArrayList<CompareDto>();
-                t.add(bean);
-                map.put(bean.getChapterIndex(), t);
-            }
-        }
-        for (Map.Entry<Integer, List<CompareDto>> entry : map.entrySet()) {
-            result.add(entry.getValue());
-        }
-        return result;
-    }
 
     public void generate(String title, String leadingText, List<PatchDto> resultDto, String outputPath) throws IOException {
         PropertyConfigurator.configure("log.properties");
@@ -303,8 +282,9 @@ public class GenerateCompareDoc {
         FundDoc fd2 = dp2.process();
         List<CompareDto> revisedCompareDtoList = fd2.getFundDoc();
 
-        List<List<CompareDto>> group1List = getListByGroup(orignalCompareDtoList);
-        List<List<CompareDto>> group2List = getListByGroup(revisedCompareDtoList);
+        CompareTest2 test = new CompareTest2();
+        List<List<CompareDto>> group1List = test.getListByGroup(orignalCompareDtoList);
+        List<List<CompareDto>> group2List = test.getListByGroup(revisedCompareDtoList);
 
         List<String> s1 = new LinkedList<String>();
         List<String> s2 = new LinkedList<String>();

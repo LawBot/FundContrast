@@ -201,7 +201,7 @@ public class CompareTest2 {
 
     }
 
-    private static List<List<CompareDto>> getListByGroup(List<CompareDto> list) {
+    public static List<List<CompareDto>> getListByGroup(List<CompareDto> list) {
         List<List<CompareDto>> result = new ArrayList<List<CompareDto>>();
         Map<Integer, List<CompareDto>> map = new TreeMap<Integer, List<CompareDto>>();
 
