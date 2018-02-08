@@ -223,22 +223,14 @@ public class CompareTest2 {
         return result;
     }
 
-    public List<PatchDto> getPatchDtoList(String testPath, String testPath2) {
+    public List<PatchDto> getPatchDtoList(String testPath, String testPath2) throws IOException {
         DocProcessor dp = new DocProcessor(testPath);
-        try {
-            dp.readText(testPath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        dp.readText(testPath);
         FundDoc fd = dp.process();
         List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
 
         DocProcessor dp2 = new DocProcessor(testPath2);
-        try {
-            dp2.readText(testPath2);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        dp2.readText(testPath2);
         FundDoc fd2 = dp2.process();
         List<CompareDto> revisedCompareDtoList = fd2.getFundDoc();
 
@@ -343,7 +335,6 @@ public class CompareTest2 {
                         patchDto.setChangeType("delete");
                         patchDtoList.add(patchDto);
                     }
-
                 }
                 //当新条文section结尾新增的情况
                 if (group2List.get(i).size() > compareMatchList.size()) {

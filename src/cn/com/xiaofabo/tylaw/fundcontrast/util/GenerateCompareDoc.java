@@ -1,12 +1,7 @@
-package cn.com.xiaofabo.tylaw.fundcontrast.main;
+package cn.com.xiaofabo.tylaw.fundcontrast.util;
 
-import cn.com.xiaofabo.tylaw.fundcontrast.entity.CompareDto;
-import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
+
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.PatchDto;
-import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
-import cn.com.xiaofabo.tylaw.fundcontrast.util.CompareUtils;
-import cn.com.xiaofabo.tylaw.fundcontrast.util.CompareUtils2;
-import cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
@@ -18,10 +13,17 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.TABLE_WIDTH;
+import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.A4_WIDTH;
+import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.A4_LENGTH;
+import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.TABLE_COLUMN_1_WIDTH;
+import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.TABLE_COLUMN_2_WIDTH;
+import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.TABLE_COLUMN_3_WIDTH;
+import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.TABLE_COLUMN_4_WIDTH;
+import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.Color_grey;
 /**
  * Created on @ 17.01.18
  *
@@ -32,35 +34,8 @@ public class GenerateCompareDoc {
     /**
      * Defined Constants.
      */
-    private static final BigInteger A4_WIDTH = BigInteger.valueOf(16840L);
-    private static final BigInteger A4_LENGTH = BigInteger.valueOf(11900L);
-    private static final BigInteger TABLE_WIDTH = BigInteger.valueOf(13040L);
-    private static final String Color_grey = "808080";
-    private static final BigInteger TABLE_COLUMN_1_WIDTH = BigInteger.valueOf(1133L);    /// ~2.0cm
-    private static final BigInteger TABLE_COLUMN_2_WIDTH = BigInteger.valueOf(4820L);    /// ~8.5cm
-    private static final BigInteger TABLE_COLUMN_3_WIDTH = BigInteger.valueOf(4253L);    /// ~7.5cm
-    private static final BigInteger TABLE_COLUMN_4_WIDTH = BigInteger.valueOf(2551L);    /// ~4.5cm
     private static Logger log = Logger.getLogger(GenerateCompareDoc.class.getName());
 
-    public static void main(String[] args) throws Exception {
-        String standardPath = DataUtils.STANDARD_TYPE_STOCK;
-        String samplePath = DataUtils.SAMPLE_GYRX_STOCK_1;
-        DocProcessor dp = new DocProcessor(standardPath);
-        dp.readText(standardPath);
-        FundDoc fd = dp.process();
-        List<CompareDto> orignalCompareDtoList = fd.getFundDoc();
-
-        DocProcessor dp2 = new DocProcessor(samplePath);
-        dp2.readText(samplePath);
-        FundDoc fd2 = dp2.process();
-        List<CompareDto> revisedCompareDtoList = fd2.getFundDoc();
-        List<PatchDto> patchDtoList = CompareUtils.doCompare(orignalCompareDtoList, revisedCompareDtoList);
-
-        GenerateCompareDoc test = new GenerateCompareDoc();
-        String title = "《九泰天辰量化新动力混合型证券投资基金基金合同（草案）》\n";
-        String txt = "九泰天辰量化新动力混合型证券投资基金募集申请材料之《九泰天辰量化新动力混合型证券投资基金基金合同（草案）》（以下简称“《基金合同》”）系按照中国证监会基金监管部发布的《证券投资基金基金合同填报指引第1号——股票型（混合型）证券投资基金基金合同填报指引(试行)》（以下简称“《指引》”）撰写。根据基金托管人和律师事务所的意见，我公司在撰写《基金合同》时对《指引》部分条款进行了增加、删除或修改，现将具体情况详细说明如下。";
-        test.generate(title, txt, patchDtoList, "data");
-    }
 
     public void generate(String title, String leadingText, List<PatchDto> resultDto, String outputPath) throws IOException {
         PropertyConfigurator.configure("log.properties");
@@ -161,7 +136,7 @@ public class GenerateCompareDoc {
                 }
             }
 
-            //type==delete
+            // type==delete
             if (p.getChangeType() == "delete") {
                 System.out.println("INSIDE delete");
 
@@ -274,7 +249,7 @@ public class GenerateCompareDoc {
         XWPFRun run = paragraph.createRun();
         run.setFontSize(12);
         run.setBold(true);
-        run.setText(title + "\n修改对照表");
+        run.setText(title + "\n" + "修改对照表");
         run.addBreak();
         run.addBreak();
         run.addBreak();
