@@ -92,13 +92,15 @@ public class GenerateCompareDoc {
                     XWPFParagraph paragraph = cell.addParagraph();
                     for (int j = 0; j < p.getOrignalText().length(); j++) {
                         XWPFRun runForEachLetter = paragraph.createRun();
-                        String currentLetter = Character.toString(p.getOrignalText().charAt(j));
-                        if (set.contains(j)) {
-                            runForEachLetter.setStrike(true);
-                            runForEachLetter.setText(currentLetter);
-                        } else {
-                            runForEachLetter.setText(currentLetter);
-                        }
+                        // String currentLetter = Character.toString(p.getOrignalText().charAt(j));
+                        String currentLetter = p.getOrignalText();
+                        String currentLetter2 = p.getRevisedDto().getRevisedText();
+//                        if (set.contains(j)) {
+//                            runForEachLetter.setStrike(true);
+                        runForEachLetter.setText(currentLetter);
+//                        } else {
+                        runForEachLetter.setText(currentLetter2);
+                        //  }
                     }
                 }
 
@@ -274,28 +276,28 @@ public class GenerateCompareDoc {
         String sampleText = samplePart.getPoint();
         /// Compare templateText and sampleText
         /// In case they are different, patchDtoList.add
-        
-        if(!templatePart.hasPart() && !samplePart.hasPart()){
+
+        if (!templatePart.hasPart() && !samplePart.hasPart()) {
             return;
         }
-        
+
         List templateTitles = new LinkedList();
         List sampleTitles = new LinkedList();
-        
-        for(int i = 0; templatePart.hasPart() && i < templatePart.getChildPart().size(); ++i){
+
+        for (int i = 0; templatePart.hasPart() && i < templatePart.getChildPart().size(); ++i) {
             String title = ((DocPart) templatePart.getChildPart().get(i)).getTitle();
             templateTitles.add(title);
         }
-        for(int i = 0; samplePart.hasPart() && i < samplePart.getChildPart().size(); ++i){
+        for (int i = 0; samplePart.hasPart() && i < samplePart.getChildPart().size(); ++i) {
             String title = ((DocPart) samplePart.getChildPart().get(i)).getTitle();
             sampleTitles.add(title);
         }
-        
+
         PartMatch partMatch = StringSimUtils.findBestMatch(templateTitles, sampleTitles);
         List addList = partMatch.getAddList();
         List deleteList = partMatch.getDeleteList();
         Map matchList = partMatch.getMatchList();
-        
+
         for (int i = 0; i < deleteList.size(); ++i) {
             int chapterIndex = (int) deleteList.get(i);
             PatchDto pdt = new PatchDto();
@@ -332,7 +334,7 @@ public class GenerateCompareDoc {
             pdt.setRevisedDto(rdt);
             patchDtoList.add(pdt);
         }
-        
+
         Iterator it = matchList.keySet().iterator();
         while (it.hasNext()) {
             int templateIndex = (int) it.next();
@@ -591,7 +593,7 @@ public class GenerateCompareDoc {
 //                }
 //            }
 //        }
-        return null;
+        return patchDtoList;
     }
 
 }
