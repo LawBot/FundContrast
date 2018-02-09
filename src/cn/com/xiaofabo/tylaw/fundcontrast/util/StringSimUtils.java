@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.MatchDto;
+import cn.com.xiaofabo.tylaw.fundcontrast.entity.PartMatch;
 
 /**
  *
@@ -83,11 +84,8 @@ public class StringSimUtils {
     }
 
     //--------------------------------------------------------------------------
-
-   
-
-    public static List<MatchDto> findBestMatch(List<String> s1, List<String> s2, String type) {
-        List<MatchDto> matchList = new LinkedList<>();
+    public static PartMatch findBestMatch(List<String> s1, List<String> s2) {
+        PartMatch partMatch = new PartMatch();
 
         for (int i = 0; i < s1.size(); ++i) {
             int bestMatch = -1;
@@ -103,6 +101,7 @@ public class StringSimUtils {
                     bestRatio = r;
                     bestMatch = j;
                     sampleStr = str2;
+                    /// In case of similar match ratios, same section number has priority
                     if (i != j) {
                         if (i < s2.size()) {
                             String str3 = s2.get(i);
@@ -116,36 +115,29 @@ public class StringSimUtils {
                     }
                 }
             }
-            if ("0".equals(type)) {
-            	if (bestMatch != i && bestRatio <1) {
-                    bestMatch = -1;
-                }
-//            	MatchDto matchDto = new MatchDto(i, bestMatch);
-//            	matchList.add(matchDto);
-			}else {
-				if (bestMatch != i && bestRatio < 0.5) {
-	                bestMatch = -1;
-	            }
-				if (bestRatio<1) {
-//					MatchDto matchDto = new MatchDto(i, bestMatch);
-//	            	matchList.add(matchDto);
-				}
-			}
-            
-            System.out.println(i + " -- " + bestMatch);
-            if (bestMatch != i) {
-                System.out.println("MATCH RATIO: " + bestRatio);
-                System.out.println("ORIGINAL STR: " + str1);
-                System.out.println("SAMPLE STR: " + sampleStr);
+            if (bestMatch != i && bestRatio < 0.5) {
+                bestMatch = -1;
             }
-            MatchDto matchDto = new MatchDto(i, bestMatch, bestRatio);
-        	matchList.add(matchDto);
-            
-            
+
+            if (bestMatch != -1) {
+                if (partMatch.getMatchList().values().contains(bestMatch)) {
+                    partMatch.addToDeleteList(i);
+                } else {
+                    partMatch.addToMatchList(i, bestMatch);
+                }
+            } else {
+                partMatch.addToDeleteList(i);
+            }
         }
-        return matchList;
+        for (int j = 0; j < s2.size(); ++j) {
+            if (!partMatch.getMatchList().values().contains(j)) {
+                partMatch.addToAddList(j);
+            }
+        }
+        return partMatch;
     }
-    
+}
+
 //     /* 
 //     * 计算相似度 
 //     * */
@@ -241,4 +233,3 @@ public class StringSimUtils {
 //    public static String similarityResult(double resule) {
 //        return NumberFormat.getPercentInstance(new Locale("en ", "US ")).format(resule);
 //    }
-}

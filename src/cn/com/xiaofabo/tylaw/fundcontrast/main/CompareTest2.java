@@ -47,7 +47,8 @@ public class CompareTest2 {
         for (int i = 0; i < group2List.size(); i++) {
             s2.add(group2List.get(i).get(0).getText());
         }
-        List<MatchDto> matchList = StringSimUtils.findBestMatch(s1, s2, "0");
+        List<MatchDto> matchList = null;
+//        List<MatchDto> matchList = StringSimUtils.findBestMatch(s1, s2, "0");
         List<PatchDto> patchDtoList = new ArrayList<PatchDto>();
 
         for (int i = 0; i < matchList.size(); i++) {
@@ -86,7 +87,8 @@ public class CompareTest2 {
                 for (int j = 0; j < group2List.get(matchList.get(i).getRevisedIndex()).size(); j++) {
                     str2List.add(group2List.get(matchList.get(i).getRevisedIndex()).get(j).getText());
                 }
-                List<MatchDto> compareMatchList = StringSimUtils.findBestMatch(str1List, str2List, "");
+                List<MatchDto> compareMatchList = null;
+//                List<MatchDto> compareMatchList = StringSimUtils.findBestMatch(str1List, str2List, "");
 
                 List<Integer> revisedIndexList = new ArrayList<Integer>();
                 for (int j = 0; j < compareMatchList.size(); j++) {

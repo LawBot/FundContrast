@@ -33,9 +33,9 @@ public class DocPart {
     public String getText() {
         return text;
     }
-    
-    public String getPoint(){
-        return title + "\n" + text;
+
+    public String getPoint() {
+        return text == null ? (title) : (title + "\n" + text);
     }
 
     public void setText(String text) {
@@ -43,14 +43,14 @@ public class DocPart {
     }
 
     public String getIndex() {
-		return index;
-	}
+        return index;
+    }
 
-	public void setIndex(String index) {
-		this.index = index;
-	}
+    public void setIndex(String index) {
+        this.index = index;
+    }
 
-	public boolean addPart(DocPart part) {
+    public boolean addPart(DocPart part) {
         if (childPart == null) {
             childPart = new LinkedList();
         }
