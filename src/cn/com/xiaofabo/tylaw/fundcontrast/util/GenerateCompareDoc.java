@@ -286,6 +286,16 @@ public class GenerateCompareDoc {
         String sampleText = samplePart.getPoint();
         /// Compare templateText and sampleText
         /// In case they are different, patchDtoList.add
+        if (!templateText.equalsIgnoreCase(sampleText)) {
+            PatchDto p = new PatchDto();
+            p.setChapterIndex(0);
+            p.setChangeType("change");
+            p.setOrignalText(templateText);
+            RevisedDto r = new RevisedDto();
+            r.setRevisedText(sampleText);
+            p.setRevisedDto(r);
+            patchDtoList.add(p);
+        }
 
         if (!templatePart.hasPart() && !samplePart.hasPart()) {
             return;
