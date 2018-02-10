@@ -91,24 +91,12 @@ public class GenerateCompareDoc {
             //type==change
             if (p.getChangeType() == "change") {
                 System.out.println("INSIDE Change");
-                // set delete
+                // change: delete
                 if (p.getRevisedDto() != null && p.getRevisedDto().getDeleteData() != null) {
                     Set set = p.getRevisedDto().getDeleteData().keySet();
                     XWPFTableCell cell = tableRow.getCell(1);
                     cell.removeParagraph(0);
                     XWPFParagraph paragraph = cell.addParagraph();
-                    if (p.getRevisedDto().getRevisedText() != null) {
-                        XWPFTableCell cell1 = tableRow.getCell(2);
-                        cell1.removeParagraph(0);
-                        XWPFParagraph paragraph1 = cell1.addParagraph();
-                        for (int w = 0; w < p.getRevisedDto().getRevisedText().length(); w++) {
-                            XWPFRun runForEachLetter = paragraph1.createRun();
-                            String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(w));
-                            runForEachLetter.setText(currentLetter);
-
-                        }
-                    }
-
                     for (int j = 0; j < p.getOrignalText().length(); j++) {
                         XWPFRun runForEachLetter = paragraph.createRun();
                         String currentLetter = Character.toString(p.getOrignalText().charAt(j));
@@ -121,26 +109,12 @@ public class GenerateCompareDoc {
                     }
                 }
             }
-            // set add
+            // change: add
             if (p.getRevisedDto() != null && p.getRevisedDto().getRevisedText() != null && p.getRevisedDto().getAddData() != null) {
                 Set set1 = p.getRevisedDto().getAddData().keySet();
-                if (p.getOrignalText() != null) {
-                    XWPFTableCell cell = tableRow.getCell(1);
-                    cell.removeParagraph(0);
-                    XWPFParagraph paragraph = cell.addParagraph();
-
-                    for (int m = 0; m < p.getOrignalText().length(); m++) {
-                        XWPFRun runForEachLetter = paragraph.createRun();
-                        String currentLetter = Character.toString(p.getOrignalText().charAt(m));
-                        runForEachLetter.setText(currentLetter);
-                    }
-                }
-
                 XWPFTableCell cell1 = tableRow.getCell(2);
                 cell1.removeParagraph(0);
                 XWPFParagraph paragraph1 = cell1.addParagraph();
-
-
                 for (int k = 0; k < p.getRevisedDto().getRevisedText().length(); k++) {
                     XWPFRun runForEachLetter = paragraph1.createRun();
                     String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(k));
@@ -152,7 +126,6 @@ public class GenerateCompareDoc {
                     }
                 }
             }
-
             // type==add
             if (p.getChangeType() == "add") {
                 System.out.println("INSIDE ADD");
@@ -170,7 +143,6 @@ public class GenerateCompareDoc {
             // type==delete
             if (p.getChangeType() == "delete") {
                 System.out.println("INSIDE delete");
-
                 XWPFTableCell cell = tableRow.getCell(1);
                 cell.removeParagraph(0);
                 XWPFParagraph paragraph = cell.addParagraph();
