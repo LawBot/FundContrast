@@ -37,6 +37,10 @@ public class DocPart {
     public String getPoint() {
         return text == null ? (title) : (title + "\n" + text);
     }
+    
+    public String getWholePoint(){
+        return text == null ? (index + title) : (index + title + "\n" + text);
+    }
 
     public void setText(String text) {
         this.text = text;

@@ -26,6 +26,10 @@ public class CompareUtils3 {
         /// In case they are different, patchDtoList.add
         if (!templateText.equalsIgnoreCase(sampleText)) {
         	PatchDto patchDto = doCompare(templateText, sampleText);
+                patchDto.setOrignalText(templatePart.getIndex() + patchDto.getOrignalText());
+                RevisedDto tmpDto = patchDto.getRevisedDto();
+                tmpDto.setRevisedText(samplePart.getIndex() + tmpDto.getRevisedText());
+                patchDto.setRevisedDto(tmpDto);
             patchDtoList.add(patchDto);
 //            PatchDto p = new PatchDto();
 //            p.setChapterIndex(0);
@@ -66,7 +70,7 @@ public class CompareUtils3 {
             /// TODO: should be recursive
             /// Delete means exists in template but not in sample
             DocPart dp = templatePart.getChildPart().get(chapterIndex);
-            String pointText = dp.getPoint();
+            String pointText = dp.getWholePoint();
             pdt.setOrignalText(pointText);
             RevisedDto rdt = new RevisedDto();
             for (int j = 0; j < pointText.length(); ++j) {
@@ -85,7 +89,7 @@ public class CompareUtils3 {
             /// TODO: should be recursive
             /// Add means exists in sample but not in template
             DocPart dp = samplePart.getChildPart().get(chapterIndex);
-            String pointText = dp.getPoint();
+            String pointText = dp.getWholePoint();
             RevisedDto rdt = new RevisedDto();
             rdt.setRevisedText(pointText);
             for (int j = 0; j < pointText.length(); ++j) {
@@ -148,7 +152,7 @@ public class CompareUtils3 {
             /// TODO: should be recursive
             /// Delete means exists in template but not in sample
             DocPart dp = templateDoc.getParts().get(chapterIndex);
-            String pointText = dp.getPoint();
+            String pointText = dp.getWholePoint();
             pdt.setOrignalText(pointText);
             RevisedDto rdt = new RevisedDto();
             for (int j = 0; j < pointText.length(); ++j) {
@@ -167,7 +171,7 @@ public class CompareUtils3 {
             /// TODO: should be recursive
             /// Add means exists in sample but not in template
             DocPart dp = sampleDoc.getParts().get(chapterIndex);
-            String pointText = dp.getPoint();
+            String pointText = dp.getWholePoint();
             RevisedDto rdt = new RevisedDto();
             rdt.setRevisedText(pointText);
             for (int j = 0; j < pointText.length(); ++j) {
