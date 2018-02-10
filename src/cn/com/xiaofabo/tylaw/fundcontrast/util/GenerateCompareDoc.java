@@ -101,9 +101,9 @@ public class GenerateCompareDoc {
                     XWPFTableCell cell1 = tableRow.getCell(2);
                     cell1.removeParagraph(0);
                     XWPFParagraph paragraph1 = cell1.addParagraph();
-                    for (int i = 0; i < p.getRevisedDto().getRevisedText().length(); i++) {
+                    for (int w = 0; w < p.getRevisedDto().getRevisedText().length(); w++) {
                         XWPFRun runForEachLetter = paragraph1.createRun();
-                        String currentLetter = Character.toString(p.getOrignalText().charAt(j));
+                        String currentLetter = Character.toString(p.getOrignalText().charAt(w));
                         runForEachLetter.setText(currentLetter);
 
                     }
