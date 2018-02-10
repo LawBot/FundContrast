@@ -36,6 +36,12 @@ public class GenerateCompareDoc {
      * Defined Constants.
      */
     private static Logger log = Logger.getLogger(GenerateCompareDoc.class.getName());
+    // add header, footer
+    String headerContent = "条文对照表测试文本";
+
+//    createHeader(document, headerContent);
+//
+//    createFooter(document);
 
     public void generate(String title, String leadingText, List<PatchDto> resultDto, String outputPath) throws IOException {
         PropertyConfigurator.configure("log.properties");
@@ -58,6 +64,8 @@ public class GenerateCompareDoc {
         width.setW(TABLE_WIDTH);
         CTTblLayoutType type = table.getCTTbl().getTblPr().addNewTblLayout();
         type.setType(STTblLayoutType.FIXED);
+//       boolean ok =  table.getCTTbl().getTblPr().isSetTblBorders();
+//        System.out.println("OKOKOKOKMIN: " + ok);
 
         XWPFTableRow tableRowOne = table.getRow(0);
         tableRowOne.setRepeatHeader(true);
@@ -80,57 +88,56 @@ public class GenerateCompareDoc {
             //章节
             String column0 = "第" + p.getChapterIndex() + "章";
             tableRow.getCell(0).setText(column0);
-
             //type==change
             if (p.getChangeType() == "change") {
                 System.out.println("INSIDE Change");
                 // set delete
-                //if (p.getRevisedDto() != null && p.getRevisedDto().getDeleteData() != null) {
-                // Set set = p.getRevisedDto().getDeleteData().keySet();
-                XWPFTableCell cell = tableRow.getCell(1);
-                cell.removeParagraph(0);
-                XWPFParagraph paragraph = cell.addParagraph();
-                for (int j = 0; j < p.getOrignalText().length(); j++) {
-                    XWPFRun runForEachLetter = paragraph.createRun();
-                    String currentLetter = Character.toString(p.getOrignalText().charAt(j));
-                    runForEachLetter.setStrike(true);
-                    runForEachLetter.setText(currentLetter);
-
+                if (p.getRevisedDto() != null && p.getRevisedDto().getDeleteData() != null) {
+                    Set set = p.getRevisedDto().getDeleteData().keySet();
+                    XWPFTableCell cell = tableRow.getCell(1);
+                    cell.removeParagraph(0);
+                    XWPFParagraph paragraph = cell.addParagraph();
+//                for (int j = 0; j < p.getOrignalText().length(); j++) {
+//                    XWPFRun runForEachLetter = paragraph.createRun();
+//                    String currentLetter = Character.toString(p.getOrignalText().charAt(j));
+//                    runForEachLetter.setStrike(true);
+//                    runForEachLetter.setText(currentLetter);
+//
+//                }
+                    for (int j = 0; j < p.getOrignalText().length(); j++) {
+                        XWPFRun runForEachLetter = paragraph.createRun();
+                        String currentLetter = Character.toString(p.getOrignalText().charAt(j));
+                        if (set.contains(j)) {
+                            runForEachLetter.setStrike(true);
+                            runForEachLetter.setText(currentLetter);
+                        } else {
+                            runForEachLetter.setText(currentLetter);
+                        }
+                    }
                 }
-//                    for (int j = 0; j < p.getOrignalText().length(); j++) {
-//                        XWPFRun runForEachLetter = paragraph.createRun();
-//                        String currentLetter = Character.toString(p.getOrignalText().charAt(j));
-//                        if (set.contains(j)) {
-//                            runForEachLetter.setStrike(true);
-//                            runForEachLetter.setText(currentLetter);
-//                        } else {
-//                            runForEachLetter.setText(currentLetter);
-//                        }
-//                    }
-                //}
-                // set add
-//                if (p.getRevisedDto() != null && p.getRevisedDto().getRevisedText() != null && p.getRevisedDto().getAddData() != null) {
-                //Set set1 = p.getRevisedDto().getAddData().keySet();
+            }
+            // set add
+            if (p.getRevisedDto() != null && p.getRevisedDto().getRevisedText() != null && p.getRevisedDto().getAddData() != null) {
+                Set set1 = p.getRevisedDto().getAddData().keySet();
                 XWPFTableCell cell1 = tableRow.getCell(2);
                 cell1.removeParagraph(0);
-                XWPFParagraph paragraph1 = cell1.addParagraph();
+                XWPFParagraph paragraph = cell1.addParagraph();
+//                for (int k = 0; k < p.getRevisedDto().getRevisedText().length(); k++) {
+//                    XWPFRun runForEachLetter = paragraph1.createRun();
+//                    String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(k));
+//                    runForEachLetter.setBold(true);
+//                    runForEachLetter.setText(currentLetter);
+//                }
                 for (int k = 0; k < p.getRevisedDto().getRevisedText().length(); k++) {
-                    XWPFRun runForEachLetter = paragraph1.createRun();
+                    XWPFRun runForEachLetter = paragraph.createRun();
                     String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(k));
-                    runForEachLetter.setBold(true);
-                    runForEachLetter.setText(currentLetter);
+                    if (set1.contains(k)) {
+                        runForEachLetter.setBold(true);
+                        runForEachLetter.setText(currentLetter);
+                    } else {
+                        runForEachLetter.setText(currentLetter);
+                    }
                 }
-//                    for (int k = 0; k < p.getRevisedDto().getRevisedText().length(); k++) {
-//                        XWPFRun runForEachLetter = paragraph.createRun();
-//                        String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(k));
-//                        if (set1.contains(k)) {
-//                            runForEachLetter.setBold(true);
-//                            runForEachLetter.setText(currentLetter);
-//                        } else {
-//                            runForEachLetter.setText(currentLetter);
-//                        }
-//                    }
-
             }
 
             // type==add
@@ -162,13 +169,11 @@ public class GenerateCompareDoc {
                 }
             }
         }
-
-        // add header, footer
-        String headerContent = "条文对照表测试文本";
         createHeader(document, headerContent);
         createFooter(document);
         document.write(out);
         out.close();
+
     }
 
     /**
@@ -281,177 +286,179 @@ public class GenerateCompareDoc {
         runText.addBreak();
     }
 
-    public void compareParts(List patchDtoList, DocPart templatePart, DocPart samplePart) {
-        String templateText = templatePart.getPoint();
-        String sampleText = samplePart.getPoint();
-        /// Compare templateText and sampleText
-        /// In case they are different, patchDtoList.add
-        if (!templateText.equalsIgnoreCase(sampleText)) {
-            PatchDto p = new PatchDto();
-            p.setChapterIndex(0);
-            p.setChangeType("change");
-            p.setOrignalText(templateText);
-            RevisedDto r = new RevisedDto();
-            r.setRevisedText(sampleText);
-            p.setRevisedDto(r);
-            patchDtoList.add(p);
-        }
+//    public void compareParts(List patchDtoList, DocPart templatePart, DocPart samplePart) {
+//        String templateText = templatePart.getPoint();
+//        String sampleText = samplePart.getPoint();
+//        /// Compare templateText and sampleText
+//        /// In case they are different, patchDtoList.add
+//
+//
+//        if (!templateText.equalsIgnoreCase(sampleText)) {
+//            PatchDto p = new PatchDto();
+//            p.setChapterIndex(0);
+//            p.setChangeType("change");
+//            p.setOrignalText(templateText);
+//            RevisedDto r = new RevisedDto();
+//            r.setRevisedText(sampleText);
+//            p.setRevisedDto(r);
+//            patchDtoList.add(p);
+//        }
+//
+//        if (!templatePart.hasPart() && !samplePart.hasPart()) {
+//            return;
+//        }
+//
+//        List templateTitles = new LinkedList();
+//        List sampleTitles = new LinkedList();
+//
+//        for (int i = 0; templatePart.hasPart() && i < templatePart.getChildPart().size(); ++i) {
+//            String title = ((DocPart) templatePart.getChildPart().get(i)).getTitle();
+//            templateTitles.add(title);
+//        }
+//        for (int i = 0; samplePart.hasPart() && i < samplePart.getChildPart().size(); ++i) {
+//            String title = ((DocPart) samplePart.getChildPart().get(i)).getTitle();
+//            sampleTitles.add(title);
+//        }
+//
+//        PartMatch partMatch = StringSimUtils.findBestMatch(templateTitles, sampleTitles);
+//        List addList = partMatch.getAddList();
+//        List deleteList = partMatch.getDeleteList();
+//        Map matchList = partMatch.getMatchList();
+//
+//        for (int i = 0; i < deleteList.size(); ++i) {
+//            int chapterIndex = (int) deleteList.get(i);
+//            PatchDto pdt = new PatchDto();
+//            pdt.setChapterIndex(chapterIndex);
+//            pdt.setChangeType("delete");
+//            /// TODO: should be recursive
+//            /// Delete means exists in template but not in sample
+//            DocPart dp = templatePart.getChildPart().get(chapterIndex);
+//            String pointText = dp.getPoint();
+//            pdt.setOrignalText(pointText);
+//            RevisedDto rdt = new RevisedDto();
+//            for (int j = 0; j < pointText.length(); ++j) {
+//                Character c = pointText.charAt(j);
+//                rdt.deleteData(j, c);
+//            }
+//            pdt.setRevisedDto(rdt);
+//            patchDtoList.add(pdt);
+//        }
+//
+//        for (int i = 0; i < addList.size(); ++i) {
+//            int chapterIndex = (int) addList.get(i);
+//            PatchDto pdt = new PatchDto();
+//            pdt.setChapterIndex(chapterIndex);
+//            pdt.setChangeType("add");
+//            /// TODO: should be recursive
+//            /// Add means exists in sample but not in template
+//            DocPart dp = samplePart.getChildPart().get(chapterIndex);
+//            String pointText = dp.getPoint();
+//            RevisedDto rdt = new RevisedDto();
+//            rdt.setRevisedText(pointText);
+//            for (int j = 0; j < pointText.length(); ++j) {
+//                Character c = pointText.charAt(j);
+//                rdt.addData(j, c);
+//            }
+//            pdt.setRevisedDto(rdt);
+//            patchDtoList.add(pdt);
+//        }
+//
+//        Iterator it = matchList.keySet().iterator();
+//        while (it.hasNext()) {
+//            int templateIndex = (int) it.next();
+//            int sampleIndex = (int) matchList.get(templateIndex);
+//            PatchDto pdt = new PatchDto();
+//            pdt.setChapterIndex(sampleIndex);
+//            pdt.setChangeType("change");
+//            DocPart tPart = templatePart.getChildPart().get(templateIndex);
+//            DocPart sPart = samplePart.getChildPart().get(sampleIndex);
+//
+//            /// Then compare children parts
+//            compareParts(patchDtoList, tPart, sPart);
+//        }
+//    }
 
-        if (!templatePart.hasPart() && !samplePart.hasPart()) {
-            return;
-        }
-
-        List templateTitles = new LinkedList();
-        List sampleTitles = new LinkedList();
-
-        for (int i = 0; templatePart.hasPart() && i < templatePart.getChildPart().size(); ++i) {
-            String title = ((DocPart) templatePart.getChildPart().get(i)).getTitle();
-            templateTitles.add(title);
-        }
-        for (int i = 0; samplePart.hasPart() && i < samplePart.getChildPart().size(); ++i) {
-            String title = ((DocPart) samplePart.getChildPart().get(i)).getTitle();
-            sampleTitles.add(title);
-        }
-
-        PartMatch partMatch = StringSimUtils.findBestMatch(templateTitles, sampleTitles);
-        List addList = partMatch.getAddList();
-        List deleteList = partMatch.getDeleteList();
-        Map matchList = partMatch.getMatchList();
-
-        for (int i = 0; i < deleteList.size(); ++i) {
-            int chapterIndex = (int) deleteList.get(i);
-            PatchDto pdt = new PatchDto();
-            pdt.setChapterIndex(chapterIndex);
-            pdt.setChangeType("delete");
-            /// TODO: should be recursive
-            /// Delete means exists in template but not in sample
-            DocPart dp = templatePart.getChildPart().get(chapterIndex);
-            String pointText = dp.getPoint();
-            pdt.setOrignalText(pointText);
-            RevisedDto rdt = new RevisedDto();
-            for (int j = 0; j < pointText.length(); ++j) {
-                Character c = pointText.charAt(j);
-                rdt.deleteData(j, c);
-            }
-            pdt.setRevisedDto(rdt);
-            patchDtoList.add(pdt);
-        }
-
-        for (int i = 0; i < addList.size(); ++i) {
-            int chapterIndex = (int) addList.get(i);
-            PatchDto pdt = new PatchDto();
-            pdt.setChapterIndex(chapterIndex);
-            pdt.setChangeType("add");
-            /// TODO: should be recursive
-            /// Add means exists in sample but not in template
-            DocPart dp = samplePart.getChildPart().get(chapterIndex);
-            String pointText = dp.getPoint();
-            RevisedDto rdt = new RevisedDto();
-            rdt.setRevisedText(pointText);
-            for (int j = 0; j < pointText.length(); ++j) {
-                Character c = pointText.charAt(j);
-                rdt.addData(j, c);
-            }
-            pdt.setRevisedDto(rdt);
-            patchDtoList.add(pdt);
-        }
-
-        Iterator it = matchList.keySet().iterator();
-        while (it.hasNext()) {
-            int templateIndex = (int) it.next();
-            int sampleIndex = (int) matchList.get(templateIndex);
-            PatchDto pdt = new PatchDto();
-            pdt.setChapterIndex(sampleIndex);
-            pdt.setChangeType("change");
-            DocPart tPart = templatePart.getChildPart().get(templateIndex);
-            DocPart sPart = samplePart.getChildPart().get(sampleIndex);
-
-            /// Then compare children parts
-            compareParts(patchDtoList, tPart, sPart);
-        }
-    }
-
-    public List<PatchDto> getPatchDtoList(String templatePath, String samplePath) throws IOException {
-        List<PatchDto> patchDtoList = new LinkedList();
-
-        DocProcessor templateProcessor = new DocProcessor(templatePath);
-        templateProcessor.readText(templatePath);
-        FundDoc templateDoc = templateProcessor.process();
-
-        DocProcessor sampleProcessor = new DocProcessor(samplePath);
-        sampleProcessor.readText(samplePath);
-        FundDoc sampleDoc = sampleProcessor.process();
-
-        /// Compare first level part
-        List templateTitles = new LinkedList();
-        List sampleTitles = new LinkedList();
-
-        for (int i = 0; i < templateDoc.getParts().size(); ++i) {
-            String title = ((DocPart) templateDoc.getParts().get(i)).getTitle();
-            templateTitles.add(title);
-        }
-        for (int i = 0; i < sampleDoc.getParts().size(); ++i) {
-            String title = ((DocPart) sampleDoc.getParts().get(i)).getTitle();
-            sampleTitles.add(title);
-        }
-
-        PartMatch partMatch = StringSimUtils.findBestMatch(templateTitles, sampleTitles);
-        List addList = partMatch.getAddList();
-        List deleteList = partMatch.getDeleteList();
-        Map matchList = partMatch.getMatchList();
-
-        for (int i = 0; i < deleteList.size(); ++i) {
-            int chapterIndex = (int) deleteList.get(i);
-            PatchDto pdt = new PatchDto();
-            pdt.setChapterIndex(chapterIndex);
-            pdt.setChangeType("delete");
-            /// TODO: should be recursive
-            /// Delete means exists in template but not in sample
-            DocPart dp = templateDoc.getParts().get(chapterIndex);
-            String pointText = dp.getPoint();
-            pdt.setOrignalText(pointText);
-            RevisedDto rdt = new RevisedDto();
-            for (int j = 0; j < pointText.length(); ++j) {
-                Character c = pointText.charAt(j);
-                rdt.deleteData(j, c);
-            }
-            pdt.setRevisedDto(rdt);
-            patchDtoList.add(pdt);
-        }
-
-        for (int i = 0; i < addList.size(); ++i) {
-            int chapterIndex = (int) addList.get(i);
-            PatchDto pdt = new PatchDto();
-            pdt.setChapterIndex(chapterIndex);
-            pdt.setChangeType("add");
-            /// TODO: should be recursive
-            /// Add means exists in sample but not in template
-            DocPart dp = sampleDoc.getParts().get(chapterIndex);
-            String pointText = dp.getPoint();
-            RevisedDto rdt = new RevisedDto();
-            rdt.setRevisedText(pointText);
-            for (int j = 0; j < pointText.length(); ++j) {
-                Character c = pointText.charAt(j);
-                rdt.addData(j, c);
-            }
-            pdt.setRevisedDto(rdt);
-            patchDtoList.add(pdt);
-        }
-
-        Iterator it = matchList.keySet().iterator();
-        while (it.hasNext()) {
-            int templateIndex = (int) it.next();
-            int sampleIndex = (int) matchList.get(templateIndex);
-            PatchDto pdt = new PatchDto();
-            pdt.setChapterIndex(sampleIndex);
-            pdt.setChangeType("change");
-            DocPart templatePart = templateDoc.getParts().get(templateIndex);
-            DocPart samplePart = sampleDoc.getParts().get(sampleIndex);
-            /// Then compare children parts
-            compareParts(patchDtoList, templatePart, samplePart);
-        }
-        return patchDtoList;
-    }
+//    public List<PatchDto> getPatchDtoList(String templatePath, String samplePath) throws IOException {
+//        List<PatchDto> patchDtoList = new LinkedList();
+//
+//        DocProcessor templateProcessor = new DocProcessor(templatePath);
+//        templateProcessor.readText(templatePath);
+//        FundDoc templateDoc = templateProcessor.process();
+//
+//        DocProcessor sampleProcessor = new DocProcessor(samplePath);
+//        sampleProcessor.readText(samplePath);
+//        FundDoc sampleDoc = sampleProcessor.process();
+//
+//        /// Compare first level part
+//        List templateTitles = new LinkedList();
+//        List sampleTitles = new LinkedList();
+//
+//        for (int i = 0; i < templateDoc.getParts().size(); ++i) {
+//            String title = ((DocPart) templateDoc.getParts().get(i)).getTitle();
+//            templateTitles.add(title);
+//        }
+//        for (int i = 0; i < sampleDoc.getParts().size(); ++i) {
+//            String title = ((DocPart) sampleDoc.getParts().get(i)).getTitle();
+//            sampleTitles.add(title);
+//        }
+//
+//        PartMatch partMatch = StringSimUtils.findBestMatch(templateTitles, sampleTitles);
+//        List addList = partMatch.getAddList();
+//        List deleteList = partMatch.getDeleteList();
+//        Map matchList = partMatch.getMatchList();
+//
+//        for (int i = 0; i < deleteList.size(); ++i) {
+//            int chapterIndex = (int) deleteList.get(i);
+//            PatchDto pdt = new PatchDto();
+//            pdt.setChapterIndex(chapterIndex);
+//            pdt.setChangeType("delete");
+//            /// TODO: should be recursive
+//            /// Delete means exists in template but not in sample
+//            DocPart dp = templateDoc.getParts().get(chapterIndex);
+//            String pointText = dp.getPoint();
+//            pdt.setOrignalText(pointText);
+//            RevisedDto rdt = new RevisedDto();
+//            for (int j = 0; j < pointText.length(); ++j) {
+//                Character c = pointText.charAt(j);
+//                rdt.deleteData(j, c);
+//            }
+//            pdt.setRevisedDto(rdt);
+//            patchDtoList.add(pdt);
+//        }
+//
+//        for (int i = 0; i < addList.size(); ++i) {
+//            int chapterIndex = (int) addList.get(i);
+//            PatchDto pdt = new PatchDto();
+//            pdt.setChapterIndex(chapterIndex);
+//            pdt.setChangeType("add");
+//            /// TODO: should be recursive
+//            /// Add means exists in sample but not in template
+//            DocPart dp = sampleDoc.getParts().get(chapterIndex);
+//            String pointText = dp.getPoint();
+//            RevisedDto rdt = new RevisedDto();
+//            rdt.setRevisedText(pointText);
+//            for (int j = 0; j < pointText.length(); ++j) {
+//                Character c = pointText.charAt(j);
+//                rdt.addData(j, c);
+//            }
+//            pdt.setRevisedDto(rdt);
+//            patchDtoList.add(pdt);
+//        }
+//
+//        Iterator it = matchList.keySet().iterator();
+//        while (it.hasNext()) {
+//            int templateIndex = (int) it.next();
+//            int sampleIndex = (int) matchList.get(templateIndex);
+//            PatchDto pdt = new PatchDto();
+//            pdt.setChapterIndex(sampleIndex);
+//            pdt.setChangeType("change");
+//            DocPart templatePart = templateDoc.getParts().get(templateIndex);
+//            DocPart samplePart = sampleDoc.getParts().get(sampleIndex);
+//            /// Then compare children parts
+//            compareParts(patchDtoList, templatePart, samplePart);
+//        }
+//        return patchDtoList;
+//    }
 
 
 //    CompareTest2 test = new CompareTest2();
