@@ -97,13 +97,16 @@ public class GenerateCompareDoc {
                     XWPFTableCell cell = tableRow.getCell(1);
                     cell.removeParagraph(0);
                     XWPFParagraph paragraph = cell.addParagraph();
-//                for (int j = 0; j < p.getOrignalText().length(); j++) {
-//                    XWPFRun runForEachLetter = paragraph.createRun();
-//                    String currentLetter = Character.toString(p.getOrignalText().charAt(j));
-//                    runForEachLetter.setStrike(true);
-//                    runForEachLetter.setText(currentLetter);
-//
-//                }
+
+                    XWPFTableCell cell1 = tableRow.getCell(2);
+                    cell1.removeParagraph(0);
+                    XWPFParagraph paragraph1 = cell1.addParagraph();
+                    for (int i = 0; i < p.getRevisedDto().getRevisedText().length(); i++) {
+                        XWPFRun runForEachLetter = paragraph1.createRun();
+                        String currentLetter = Character.toString(p.getOrignalText().charAt(j));
+                        runForEachLetter.setText(currentLetter);
+
+                    }
                     for (int j = 0; j < p.getOrignalText().length(); j++) {
                         XWPFRun runForEachLetter = paragraph.createRun();
                         String currentLetter = Character.toString(p.getOrignalText().charAt(j));
@@ -119,15 +122,18 @@ public class GenerateCompareDoc {
             // set add
             if (p.getRevisedDto() != null && p.getRevisedDto().getRevisedText() != null && p.getRevisedDto().getAddData() != null) {
                 Set set1 = p.getRevisedDto().getAddData().keySet();
+                XWPFTableCell cell2 = tableRow.getCell(1);
+                cell2.removeParagraph(0);
+
+                XWPFParagraph paragraph1 = cell2.addParagraph();
                 XWPFTableCell cell1 = tableRow.getCell(2);
                 cell1.removeParagraph(0);
                 XWPFParagraph paragraph = cell1.addParagraph();
-//                for (int k = 0; k < p.getRevisedDto().getRevisedText().length(); k++) {
-//                    XWPFRun runForEachLetter = paragraph1.createRun();
-//                    String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(k));
-//                    runForEachLetter.setBold(true);
-//                    runForEachLetter.setText(currentLetter);
-//                }
+                for (int m = 0; m < p.getOrignalText().length(); m++) {
+                    XWPFRun runForEachLetter = paragraph1.createRun();
+                    String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(m));
+                    runForEachLetter.setText(currentLetter);
+                }
                 for (int k = 0; k < p.getRevisedDto().getRevisedText().length(); k++) {
                     XWPFRun runForEachLetter = paragraph.createRun();
                     String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(k));
@@ -173,7 +179,6 @@ public class GenerateCompareDoc {
         createFooter(document);
         document.write(out);
         out.close();
-
     }
 
     /**
