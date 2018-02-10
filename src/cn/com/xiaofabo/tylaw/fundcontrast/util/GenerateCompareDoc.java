@@ -103,7 +103,7 @@ public class GenerateCompareDoc {
                         XWPFParagraph paragraph1 = cell1.addParagraph();
                         for (int w = 0; w < p.getRevisedDto().getRevisedText().length(); w++) {
                             XWPFRun runForEachLetter = paragraph1.createRun();
-                            String currentLetter = Character.toString(p.getOrignalText().charAt(w));
+                            String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(w));
                             runForEachLetter.setText(currentLetter);
 
                         }
@@ -131,7 +131,7 @@ public class GenerateCompareDoc {
 
                     for (int m = 0; m < p.getOrignalText().length(); m++) {
                         XWPFRun runForEachLetter = paragraph.createRun();
-                        String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(m));
+                        String currentLetter = Character.toString(p.getOrignalText().charAt(m));
                         runForEachLetter.setText(currentLetter);
                     }
                 }
