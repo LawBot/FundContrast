@@ -111,11 +111,11 @@ public class GenerateCompareDoc {
                 // set add
 //                if (p.getRevisedDto() != null && p.getRevisedDto().getRevisedText() != null && p.getRevisedDto().getAddData() != null) {
                 //Set set1 = p.getRevisedDto().getAddData().keySet();
-                XWPFTableCell cell = tableRow.getCell(2);
-                cell.removeParagraph(0);
-                XWPFParagraph paragraph = cell.addParagraph();
+                XWPFTableCell cell1 = tableRow.getCell(2);
+                cell1.removeParagraph(0);
+                XWPFParagraph paragraph1 = cell1.addParagraph();
                 for (int k = 0; k < p.getRevisedDto().getRevisedText().length(); k++) {
-                    XWPFRun runForEachLetter = paragraph.createRun();
+                    XWPFRun runForEachLetter = paragraph1.createRun();
                     String currentLetter = Character.toString(p.getRevisedDto().getRevisedText().charAt(k));
                     runForEachLetter.setBold(true);
                     runForEachLetter.setText(currentLetter);
