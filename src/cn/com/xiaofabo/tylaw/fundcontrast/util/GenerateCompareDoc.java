@@ -347,6 +347,7 @@ public class GenerateCompareDoc {
             DocPart dp = samplePart.getChildPart().get(chapterIndex);
             String pointText = dp.getPoint();
             RevisedDto rdt = new RevisedDto();
+            rdt.setRevisedText(pointText);
             for (int j = 0; j < pointText.length(); ++j) {
                 Character c = pointText.charAt(j);
                 rdt.addData(j, c);
@@ -428,6 +429,7 @@ public class GenerateCompareDoc {
             DocPart dp = sampleDoc.getParts().get(chapterIndex);
             String pointText = dp.getPoint();
             RevisedDto rdt = new RevisedDto();
+            rdt.setRevisedText(pointText);
             for (int j = 0; j < pointText.length(); ++j) {
                 Character c = pointText.charAt(j);
                 rdt.addData(j, c);
