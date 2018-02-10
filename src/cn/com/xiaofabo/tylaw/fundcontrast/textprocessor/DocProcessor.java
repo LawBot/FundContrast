@@ -100,8 +100,8 @@ public class DocProcessor extends TextProcessor {
                         partText = new StringBuilder();
                     }
                     currentPart = new DocPart();
-                    String title = TextUtils.getPartTitle(currentLine);
-//                    String title = currentLine;
+//                    String title = TextUtils.getPartTitle(currentLine);
+                    String title = currentLine;
                      
                     String index = "";
                     if (currentLine.length()>title.length()) {
