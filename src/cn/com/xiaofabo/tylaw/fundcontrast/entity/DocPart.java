@@ -9,7 +9,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *
  * @author 陈光曦
  */
 public class DocPart {
@@ -18,6 +17,7 @@ public class DocPart {
     String text;
     String index;
     List<DocPart> childPart;
+    List<Integer> partCount;
 
     public DocPart() {
     }
@@ -34,16 +34,16 @@ public class DocPart {
         return text;
     }
 
+    public void setText(String text) {
+        this.text = text;
+    }
+
     public String getPoint() {
         return text == null ? (title) : (title + "\n" + text);
     }
-    
-    public String getWholePoint(){
-        return text == null ? (index + title) : (index + title + "\n" + text);
-    }
 
-    public void setText(String text) {
-        this.text = text;
+    public String getWholePoint() {
+        return text == null ? (index + title) : (index + title + "\n" + text);
     }
 
     public String getIndex() {
@@ -61,6 +61,14 @@ public class DocPart {
         return childPart.add(part);
     }
 
+    public List<Integer> getPartCount() {
+        return partCount;
+    }
+
+    public void setPartCount(List<Integer> partCount) {
+        this.partCount = partCount;
+    }
+
     public List<DocPart> getChildPart() {
         return childPart;
     }
@@ -69,6 +77,7 @@ public class DocPart {
         this.childPart = childPart;
     }
 
+    //是否是叶子节点
     public boolean hasPart() {
         if (childPart == null) {
             return false;
