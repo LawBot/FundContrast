@@ -1,0 +1,58 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package cn.com.xiaofabo.testproject;
+
+import com.github.difflib.DiffUtils;
+import com.github.difflib.patch.Delta;
+import com.github.difflib.patch.Patch;
+import java.util.List;
+
+/**
+ *
+ * @author 陈光曦
+ */
+public class Test {
+
+    public static void main(String argv[]) throws Exception {
+        String str1A = "证券投资基金由基金管理人依照《基金法》、基金合同及其他有关规定募集，"
+                + "并经中国证券监督管理委员会(以下简称“中国证监会”)核准。"
+                + "中国证监会对本基金募集的核准，"
+                + "并不表明其对本基金的价值和收益做出实质性判断或保证，"
+                + "也不表明投资于本基金没有风险。"
+                + "基金管理人依照恪尽职守、诚实信用、谨慎勤勉的原则管理和运用基金财产，"
+                + "但不保证投资于本基金一定盈利，也不保证最低收益。";
+        String str1B = "工银瑞信新动力灵活配置混合型证券投资基金由基金管理人依照《基金法》、"
+                + "基金合同及其他有关规定募集，"
+                + "并经中国证券监督管理委员会(以下简称“中国证监会”)注册。"
+                + "中国证监会不对基金的投资价值及市场前景等作出实质性判断或者保证。"
+                + "中国证监会对本基金募集申请的注册，"
+                + "并不表明其对本基金的价值和收益做出实质性判断或保证，"
+                + "也不表明投资于本基金没有风险。"
+                + "基金管理人依照恪尽职守、诚实信用、谨慎勤勉的原则管理和运用基金财产，"
+                + "但不保证投资于本基金一定盈利，也不保证最低收益。";
+
+        Patch<String> patch = DiffUtils.diffInline(str1A, str1B);
+        List<Delta<String>> deltaList = patch.getDeltas();
+        
+        String str2A = "基金管理人：指";
+        String str2B = "基金管理人：指工银瑞信基金管理有限公司";
+        patch = DiffUtils.diffInline(str2A, str2B);
+        deltaList = patch.getDeltas();
+        
+        String str3A = "《基金法》：指2003年10月28日经第十届全国人民代表大会常务委员会第五次会议通过，"
+                + "自2004年6月1日起实施的《中华人民共和国证券投资基金法》及颁布机关对其不时做出的修订";
+        String str3B = "《基金法》：指2003年10月28日经第十届全国人民代表大会常务委员会第五次会议通过，"
+                + "并经2012年12月28日第十一届全国人民代表大会常务委员会第三十次会议修订，"
+                + "自2013年6月1日起实施的，"
+                + "并经2015年4 月24日第十二届全国人民代表大会常务委员会第十四次会议"
+                + "《全国人民代表大会常务委员会关于修改<中华人民共和国港口法>等七部法律的决定》"
+                + "修改的《中华人民共和国证券投资基金法》及颁布机关对其不时做出的修订";
+        patch = DiffUtils.diffInline(str3A, str3B);
+        deltaList = patch.getDeltas();
+        
+        int a = 0;
+    }
+}
