@@ -188,6 +188,8 @@ public class FundGUI extends javax.swing.JFrame {
                     e1.printStackTrace();
                 }
                 FundDoc fd = dp.process();
+                //TODO
+                FundDoc IndexedFd = dp.setPartIdsForEachNode(fd);
 
                 DocProcessor dp2 = new DocProcessor(contractPath);
                 try {
@@ -196,6 +198,9 @@ public class FundGUI extends javax.swing.JFrame {
                     e1.printStackTrace();
                 }
                 FundDoc fd2 = dp2.process();
+                //TODO
+                FundDoc indexedFd = dp2.setPartIdsForEachNode(fd2);
+
                 String title = "《" + dp2.getNameForGenDoc() + "》";
                 String txt = dp2.getTextForGenDoc() + "募集申请材料之" + title;
                 try {
@@ -220,13 +225,13 @@ public class FundGUI extends javax.swing.JFrame {
                 // get patchDtoList
                 List<PatchDto> patchDtoList = null;
                 CompareUtils3 compareUtils3 = new CompareUtils3();
-				try {
-					patchDtoList = compareUtils3.getPatchDtoList(templateDoc, contractPath);
-					System.out.println(patchDtoList);
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+                try {
+                    patchDtoList = compareUtils3.getPatchDtoList(templateDoc, contractPath);
+                    System.out.println(patchDtoList);
+                } catch (Exception e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
 
                 try {
                     String genDocPath = jTextField2.getText();

@@ -9,6 +9,7 @@ import cn.com.xiaofabo.tylaw.fundcontrast.entity.DocPart;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
 import cn.com.xiaofabo.tylaw.fundcontrast.util.TextUtils;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -102,16 +103,16 @@ public class DocProcessor extends TextProcessor {
                     currentPart = new DocPart();
 //                    String title = TextUtils.getPartTitle(currentLine);
                     String title = currentLine;
-                     
+
                     String index = "";
-                    if (currentLine.length()>title.length()) {
-                    	index = currentLine.replace(title,"");
-					}else {
-						index = "";
-					}
+                    if (currentLine.length() > title.length()) {
+                        index = currentLine.replace(title, "");
+                    } else {
+                        index = "";
+                    }
                     currentPart.setIndex(index);
                     currentPart.setTitle(title);
-                    
+
                     tmpPartList.add(currentPart);
                     ++currentLevel;
                 } else if (lastPartLevel > currentPartLevel) {
@@ -139,11 +140,11 @@ public class DocProcessor extends TextProcessor {
                     String title = TextUtils.getPartTitle(currentLine);
 //                    String title = currentLine;
                     String index = "";
-                    if (currentLine.length()>title.length()) {
-                    	index = currentLine.replace(title,"");
-					}else {
-						index = "";
-					}
+                    if (currentLine.length() > title.length()) {
+                        index = currentLine.replace(title, "");
+                    } else {
+                        index = "";
+                    }
                     currentPart.setIndex(index);
                     currentPart.setTitle(title);
                     tmpPartList.add(currentPart);
@@ -164,12 +165,12 @@ public class DocProcessor extends TextProcessor {
                     String title = TextUtils.getPartTitle(currentLine);
 //                    String title = currentLine;
                     String index = "";
-                    if (currentLine.length()>title.length()) {
-                    	index = currentLine.replace(title,"");
-					}else {
-						index = "";
-					}
-                    
+                    if (currentLine.length() > title.length()) {
+                        index = currentLine.replace(title, "");
+                    } else {
+                        index = "";
+                    }
+
                     currentPart.setIndex(index);
                     currentPart.setTitle(title);
                     if (currentPartLevel == 0) {
@@ -196,5 +197,62 @@ public class DocProcessor extends TextProcessor {
             ++lineIdx;
         }
         return fundDoc;
+    }
+
+    public FundDoc setPartIdsForEachNode(FundDoc myFundDOc) {
+        for (int i = 0; i < myFundDOc.getParts().size(); i++) {
+            DocPart tmpDocPart = new DocPart();
+            tmpDocPart = myFundDOc.getParts().get(i);
+            String[] tmpList = new String[myFundDOc.getParts().size()];
+            tmpList[i] = i + "";
+            myFundDOc.getParts().get(i).setPartCount(tmpList[i]);
+
+
+            if (tmpDocPart.hasPart()) {
+                for (int j = 0; j < tmpDocPart.getChildPart().size(); j++) {
+                    DocPart tmpSection = new DocPart();
+                    tmpSection = tmpDocPart.getChildPart().get(j);
+                    String[] tmpSectionList = new String[tmpDocPart.getChildPart().size()];
+                    tmpSectionList[j] = tmpDocPart.getPartCount() + "-";
+                    tmpSectionList[j] = tmpSectionList[j] + j;
+                    tmpDocPart.getChildPart().get(j).setPartCount(tmpSectionList[j]);
+
+
+                    if (tmpSection.hasPart()) {
+                        for (int k = 0; k < tmpSection.getChildPart().size(); k++) {
+                            DocPart tmpSubSection = new DocPart();
+                            tmpSubSection = tmpSection.getChildPart().get(k);
+                            String[] tmpSubSectionList = new String[tmpSection.getChildPart().size()];
+                            tmpSubSectionList[k] = tmpSection.getPartCount() + "-";
+                            tmpSubSectionList[k] = tmpSubSectionList[k] + k;
+                            tmpSection.getChildPart().get(k).setPartCount(tmpSubSectionList[k]);
+
+
+                            if (tmpSubSection.hasPart()) {
+                                for (int m = 0; m < tmpSubSection.getChildPart().size(); m++) {
+                                    DocPart tmpSubSubSection = new DocPart();
+                                    tmpSubSubSection = tmpSubSection.getChildPart().get(m);
+                                    String[] tmpSubSubSectionList = new String[tmpSubSection.getChildPart().size()];
+                                    tmpSubSubSectionList[m] = tmpSubSection.getPartCount() + "-";
+                                    tmpSubSubSectionList[m] = tmpSubSubSectionList[m] + m;
+                                    tmpSubSection.getChildPart().get(m).setPartCount(tmpSubSubSectionList[m]);
+
+
+                                    if (tmpSubSubSection.hasPart()) {
+                                        for (int n = 0; n < tmpSubSubSection.getChildPart().size(); n++) {
+                                            String[] tmpSubSubSubSectionList = new String[tmpSubSubSection.getChildPart().size()];
+                                            tmpSubSubSubSectionList[n] = tmpSubSubSection.getPartCount() + "-";
+                                            tmpSubSubSubSectionList[n] = tmpSubSubSubSectionList[n] + n;
+                                            tmpSubSubSection.getChildPart().get(n).setPartCount(tmpSubSubSubSectionList[n]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return myFundDOc;
     }
 }
