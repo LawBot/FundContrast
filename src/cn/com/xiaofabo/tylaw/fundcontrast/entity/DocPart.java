@@ -18,6 +18,7 @@ public class DocPart {
     String index;
     List<DocPart> childPart;
     String partCount;
+    List<Integer> partId;
 
     public DocPart() {
     }
@@ -61,12 +62,21 @@ public class DocPart {
         return childPart.add(part);
     }
 
+
     public String getPartCount() {
         return partCount;
     }
 
     public void setPartCount(String partCount) {
         this.partCount = partCount;
+    }
+
+    public List<Integer> getPartId() {
+        return partId;
+    }
+
+    public void setPartId(List<Integer> partId) {
+        this.partId = partId;
     }
 
     public List<DocPart> getChildPart() {
@@ -76,6 +86,7 @@ public class DocPart {
     public void setChildPart(List<DocPart> childPart) {
         this.childPart = childPart;
     }
+
 
     //是否是叶子节点
     public boolean hasPart() {

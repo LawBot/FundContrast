@@ -35,6 +35,21 @@ public class DocProcessor extends TextProcessor {
         partIdentifiers.add(TextUtils.REGEX_IDENTIFIER_LEVEL_4);
     }
 
+    public List<Integer> string2List(String currentString) {
+        List<Integer> currentList = new ArrayList<>();
+        String[] tmp = currentString.split("-");
+        for (int i = 0; i < tmp.length; i++) {
+            currentList.add(Integer.valueOf(tmp[i]));
+        }
+        return currentList;
+    }
+
+    public List<Integer> string2ListForC(String currentString) {
+        List<Integer> currentList = new ArrayList<>();
+        currentList.add(Integer.valueOf(currentString));
+        return currentList;
+    }
+
     // 0--3
     public String getNameForGenDoc() {
         return this.titleOfGenDoc;
@@ -206,6 +221,7 @@ public class DocProcessor extends TextProcessor {
             String[] tmpList = new String[myFundDOc.getParts().size()];
             tmpList[i] = i + "";
             myFundDOc.getParts().get(i).setPartCount(tmpList[i]);
+            myFundDOc.getParts().get(i).setPartId(string2ListForC(myFundDOc.getParts().get(i).getPartCount()));
 
 
             if (tmpDocPart.hasPart()) {
@@ -216,6 +232,7 @@ public class DocProcessor extends TextProcessor {
                     tmpSectionList[j] = tmpDocPart.getPartCount() + "-";
                     tmpSectionList[j] = tmpSectionList[j] + j;
                     tmpDocPart.getChildPart().get(j).setPartCount(tmpSectionList[j]);
+                    tmpDocPart.getChildPart().get(j).setPartId(string2List(tmpDocPart.getChildPart().get(j).getPartCount()));
 
 
                     if (tmpSection.hasPart()) {
@@ -226,6 +243,7 @@ public class DocProcessor extends TextProcessor {
                             tmpSubSectionList[k] = tmpSection.getPartCount() + "-";
                             tmpSubSectionList[k] = tmpSubSectionList[k] + k;
                             tmpSection.getChildPart().get(k).setPartCount(tmpSubSectionList[k]);
+                            tmpSection.getChildPart().get(k).setPartId(string2List(tmpSection.getChildPart().get(k).getPartCount()));
 
 
                             if (tmpSubSection.hasPart()) {
@@ -236,7 +254,7 @@ public class DocProcessor extends TextProcessor {
                                     tmpSubSubSectionList[m] = tmpSubSection.getPartCount() + "-";
                                     tmpSubSubSectionList[m] = tmpSubSubSectionList[m] + m;
                                     tmpSubSection.getChildPart().get(m).setPartCount(tmpSubSubSectionList[m]);
-
+                                    tmpSubSection.getChildPart().get(m).setPartId(string2List(tmpSubSection.getChildPart().get(m).getPartCount()));
 
                                     if (tmpSubSubSection.hasPart()) {
                                         for (int n = 0; n < tmpSubSubSection.getChildPart().size(); n++) {
@@ -244,6 +262,7 @@ public class DocProcessor extends TextProcessor {
                                             tmpSubSubSubSectionList[n] = tmpSubSubSection.getPartCount() + "-";
                                             tmpSubSubSubSectionList[n] = tmpSubSubSubSectionList[n] + n;
                                             tmpSubSubSection.getChildPart().get(n).setPartCount(tmpSubSubSubSectionList[n]);
+                                            tmpSubSubSection.getChildPart().get(n).setPartId(string2List(tmpSubSubSection.getChildPart().get(n).getPartCount()));
                                         }
                                     }
                                 }
