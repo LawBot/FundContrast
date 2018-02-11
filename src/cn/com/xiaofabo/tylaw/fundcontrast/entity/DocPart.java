@@ -17,7 +17,7 @@ public class DocPart {
     String text;
     String index;
     List<DocPart> childPart;
-    List<Integer> partCount;
+    String partCount;
 
     public DocPart() {
     }
@@ -61,11 +61,11 @@ public class DocPart {
         return childPart.add(part);
     }
 
-    public List<Integer> getPartCount() {
+    public String getPartCount() {
         return partCount;
     }
 
-    public void setPartCount(List<Integer> partCount) {
+    public void setPartCount(String partCount) {
         this.partCount = partCount;
     }
 
