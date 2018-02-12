@@ -24,51 +24,49 @@ import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
 
 public class CompareUtils3 {
 
-	public void compareParts(List patchDtoList, DocPart templatePart, DocPart samplePart) throws Exception {
-        String templateText = templatePart.getPoint();
-        String sampleText = samplePart.getPoint();
+    public void compareParts(List patchDtoList, DocPart templatePart, DocPart samplePart) throws Exception {
+        String templateText = templatePart.getIndex() + templatePart.getPoint();
+        String sampleText = samplePart.getIndex() + samplePart.getPoint();
         /// Compare templateText and sampleText
         /// In case they are different, patchDtoList.add
         if (!templateText.equalsIgnoreCase(sampleText)) {
-        	
-        	Patch<String> patch = DiffUtils.diffInline(templateText, sampleText);
-        	List<Delta<String>> deltaList = patch.getDeltas();
-        	Map<Integer, Character> deleteMap = new HashMap();
+
+            Patch<String> patch = DiffUtils.diffInline(templateText, sampleText);
+            List<Delta<String>> deltaList = patch.getDeltas();
+            Map<Integer, Character> deleteMap = new HashMap();
             Map<Integer, Character> addMap = new HashMap();
             for (Delta<String> delta : deltaList) {
-            	if (delta.getType().equals(DeltaType.CHANGE)) {
-            		for (int i = delta.getOriginal().getPosition(); i < delta.getOriginal().getPosition() + delta.getOriginal().getLines().get(0).length(); i++) {
-            			deleteMap.put(i, templateText.charAt(i));
-        			}
-            		for (int i = delta.getRevised().getPosition(); i < delta.getRevised().getPosition() + delta.getRevised().getLines().get(0).length(); i++) {
-    					addMap.put(i, sampleText.charAt(i));
-    				}
-    			}
-            	if (delta.getType().equals(DeltaType.DELETE)) {
-            		for (int i = delta.getOriginal().getPosition(); i < delta.getOriginal().getPosition() + delta.getOriginal().getLines().get(0).length(); i++) {
-            			deleteMap.put(i, templateText.charAt(i));
-        			}
-    			}
-            	if (delta.getType().equals(DeltaType.INSERT)) {
-            		for (int i = delta.getRevised().getPosition(); i < delta.getRevised().getPosition() + delta.getRevised().getLines().get(0).length(); i++) {
-    					addMap.put(i, sampleText.charAt(i));
-    				}
-    			}
-    		}
+                if (delta.getType().equals(DeltaType.CHANGE)) {
+                    for (int i = delta.getOriginal().getPosition(); i < delta.getOriginal().getPosition() + delta.getOriginal().getLines().get(0).length(); i++) {
+                        deleteMap.put(i, templateText.charAt(i));
+                    }
+                    for (int i = delta.getRevised().getPosition(); i < delta.getRevised().getPosition() + delta.getRevised().getLines().get(0).length(); i++) {
+                        addMap.put(i, sampleText.charAt(i));
+                    }
+                }
+                if (delta.getType().equals(DeltaType.DELETE)) {
+                    for (int i = delta.getOriginal().getPosition(); i < delta.getOriginal().getPosition() + delta.getOriginal().getLines().get(0).length(); i++) {
+                        deleteMap.put(i, templateText.charAt(i));
+                    }
+                }
+                if (delta.getType().equals(DeltaType.INSERT)) {
+                    for (int i = delta.getRevised().getPosition(); i < delta.getRevised().getPosition() + delta.getRevised().getLines().get(0).length(); i++) {
+                        addMap.put(i, sampleText.charAt(i));
+                    }
+                }
+            }
             RevisedDto revisedDto = new RevisedDto();
             revisedDto.setAddData(addMap);
             revisedDto.setDeleteData(deleteMap);
-            revisedDto.setRevisedText(samplePart.getIndex() + sampleText);
+            revisedDto.setRevisedText(sampleText);
             PatchDto patchDto = new PatchDto();
-			patchDto.setRevisedDto(revisedDto);
-			patchDto.setOrignalText(templateText);
-			patchDto.setIndexType("orginal");
-			patchDto.setChangeType("change");
-			patchDto.setOrignalText(templatePart.getIndex() + templateText);
-			patchDtoList.add(patchDto);
-        	
-        	
-        	
+            patchDto.setRevisedDto(revisedDto);
+            patchDto.setOrignalText(templateText);
+            patchDto.setIndexType("orginal");
+            patchDto.setChangeType("change");
+            patchDto.setOrignalText(templateText);
+            patchDtoList.add(patchDto);
+
 //        	PatchDto patchDto = doCompare(templateText, sampleText);
 //                patchDto.setOrignalText(templatePart.getIndex() + patchDto.getOrignalText());
 //                RevisedDto tmpDto = patchDto.getRevisedDto();
@@ -240,316 +238,317 @@ public class CompareUtils3 {
         }
         return patchDtoList;
     }
-    
-    public static PatchDto doCompare(String orignalCompare, String revisedCompare) throws Exception{
-		try {
-			RevisedDto revisedDto = compare(orignalCompare, revisedCompare);
-			revisedDto.setRevisedText(revisedCompare);
-			PatchDto patchDto = new PatchDto();
-			patchDto.setRevisedDto(revisedDto);
-			patchDto.setOrignalText(orignalCompare);
-			patchDto.setIndexType("orginal");
-			patchDto.setChangeType("change");
-			return patchDto;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception();
-		}
-		
-	}
-	
-	public static RevisedDto compare(String original, String revised){
-		RevisedDto revisedDto = new RevisedDto();
-		revisedDto.setRevisedText(revised);
-		String[] a = revised.split("(?![-\\w])");
-		List<String> list = new ArrayList<String>();
-		for (String s : a) {
-			if (!s.equals("") && !s.equals(".") && !s.equals(",")) {
-				list.add(s.trim());
-			}
-		}
-		String[] b = original.split("(?![-\\w])");
-		List<String> list1 = new ArrayList<String>();
-		for (String s : b) {
-			if (!s.equals("") && !s.equals(".") && !s.equals(",")) {
-				list1.add(s.trim());
-			}
-		}
-		list1.removeAll(list);
-		
-		if (original.length()>=revised.length()) {
+
+    public static PatchDto doCompare(String orignalCompare, String revisedCompare) throws Exception {
+        try {
+            RevisedDto revisedDto = compare(orignalCompare, revisedCompare);
+            revisedDto.setRevisedText(revisedCompare);
+            PatchDto patchDto = new PatchDto();
+            patchDto.setRevisedDto(revisedDto);
+            patchDto.setOrignalText(orignalCompare);
+            patchDto.setIndexType("orginal");
+            patchDto.setChangeType("change");
+            return patchDto;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception();
+        }
+
+    }
+
+    public static RevisedDto compare(String original, String revised) {
+        RevisedDto revisedDto = new RevisedDto();
+        revisedDto.setRevisedText(revised);
+        String[] a = revised.split("(?![-\\w])");
+        List<String> list = new ArrayList<String>();
+        for (String s : a) {
+            if (!s.equals("") && !s.equals(".") && !s.equals(",")) {
+                list.add(s.trim());
+            }
+        }
+        String[] b = original.split("(?![-\\w])");
+        List<String> list1 = new ArrayList<String>();
+        for (String s : b) {
+            if (!s.equals("") && !s.equals(".") && !s.equals(",")) {
+                list1.add(s.trim());
+            }
+        }
+        list1.removeAll(list);
+
+        if (original.length() >= revised.length()) {
 //			System.out.println("revised增加了："+compareStrshort(revised, original, "blue"));
 //			System.out.println("revised减少了："+compareStrLong(revised, original, "blue"));
 //			revisedDto.setAddData(compareStrshort(revised, original, "blue"));
 //			revisedDto.setDeleteData(compareStrLong(revised, original, "blue"));
-			//按Key进行排序
-			Map<Integer, Character> addDataMap = sortMapByKey(compareStrshort(revised, original, "blue"));    
-			Map<Integer, Character> deleteDataMap = sortMapByKey(compareStrLong(revised, original, "blue"));
-			revisedDto.setAddData(addDataMap);
-			revisedDto.setDeleteData(deleteDataMap);
-			 
-		}else if(original.length()<revised.length()){
+            //按Key进行排序
+            Map<Integer, Character> addDataMap = sortMapByKey(compareStrshort(revised, original, "blue"));
+            Map<Integer, Character> deleteDataMap = sortMapByKey(compareStrLong(revised, original, "blue"));
+            revisedDto.setAddData(addDataMap);
+            revisedDto.setDeleteData(deleteDataMap);
+
+        } else if (original.length() < revised.length()) {
 //			System.out.println("revised增加了："+compareStrLong(revised, original, "blue"));
 //			System.out.println("revised减少了："+compareStrshort(revised, original, "blue"));
 //			revisedDto.setAddData(compareStrLong(revised, original, "blue"));
 //			revisedDto.setDeleteData(compareStrshort(revised, original, "blue"));
-			//按Key进行排序
-			Map<Integer, Character> addDataMap = sortMapByKey(compareStrLong(revised, original, "blue"));    
-			Map<Integer, Character> deleteDataMap = sortMapByKey(compareStrshort(revised, original, "blue"));
-			revisedDto.setAddData(addDataMap);
-			revisedDto.setDeleteData(deleteDataMap);
-			
-		}
-		
-		List<Integer> keyList = new ArrayList<Integer>();
-		return revisedDto;
-		
-	}		
+            //按Key进行排序
+            Map<Integer, Character> addDataMap = sortMapByKey(compareStrLong(revised, original, "blue"));
+            Map<Integer, Character> deleteDataMap = sortMapByKey(compareStrshort(revised, original, "blue"));
+            revisedDto.setAddData(addDataMap);
+            revisedDto.setDeleteData(deleteDataMap);
 
-	public static Map compareStrLong(String char1, String char2, String colour) {
-		String bcolor = "";
-		String ecolor = "";
-		StringBuffer sb = new StringBuffer();
-		char[] a = new char[char1.length()];
-		for (int i = 0; i < char1.length(); i++) {
-			a[i] = char1.charAt(i);
-		}
-		char[] b = new char[char2.length()];
-		for (int i = 0; i < char2.length(); i++) {
-			b[i] = char2.charAt(i);
-		}
-		// 不同字符集合
-		Map map1 = new HashMap();
-		// 包含字符集合
-		Map map2 = new HashMap();
-		if (char1.length() > char2.length()) {
-			for (int i = 0; i < a.length; i++) {
-				if (i == a.length - 1) {
-					if (i > 1) {
-						if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
-							map2.put(i - 1, a[i - 1]);
-							map2.put(i, a[i]);
-						}else{
-							map1.put(i, a[i]);
-						}
-					} else {
-						map2.put(i, a[i]);
-					}
-				} else {
-					if (String.valueOf(b).contains(String.valueOf(a[i]) + String.valueOf(a[i + 1]))) {
-						if (i > 1) {
-							if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
-								map2.put(i - 1, a[i - 1]);
-								map2.put(i, a[i]);
-							}
-						} else {
-							map2.put(i, a[i]);
-						}
-					} else {
-						if (i > 0) {
-							if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
-								map2.put(i - 1, a[i - 1]);
-								map2.put(i, a[i]);
-							} else {
-								map1.put(i, a[i]);
-							}
-						} else {
-							map1.put(i, a[i]);
-						}
-					}
-				}
-			}
-		} else {
-			for (int i = 0; i < b.length; i++) {
-				if (i == b.length - 1) {
-					if (i > 1) {
-						if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
-							map2.put(i - 1, b[i - 1]);
-							map2.put(i, b[i]);
-						}else{
-							map1.put(i, b[i]);
-						}
-					} else {
-						map2.put(i, b[i]);
-					}
-				} else {
-					if (String.valueOf(a).contains(String.valueOf(b[i]) + String.valueOf(b[i + 1]))) {
-						if (i > 1) {
-							if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
-								map2.put(i - 1, b[i - 1]);
-								map2.put(i, b[i]);
-							}
-						} else {
-							map2.put(i, b[i]);
-						}
-					} else {
-						if (i > 0) {
-							if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
-								map2.put(i - 1, b[i - 1]);
-								map2.put(i, b[i]);
-							} else {
-								map1.put(i, b[i]);
-							}
-						} else {
-							map1.put(i, b[i]);
-						}
-					}
-				}
-			}
-		}
-		if (char1.length() > char2.length()) {
-			for (int i = 0; i < a.length; i++) {
-				if (map1.get(i) != null) {
-					sb.append(bcolor).append(map1.get(i)).append(ecolor);
-				} else if (map2.get(i) != null) {
-					sb.append(map2.get(i));
-				}
-			}
-		} else if (char1.length() <= char2.length()) {
-			for (int i = 0; i < b.length; i++) {
-				if (map1.get(i) != null) {
-					sb.append(bcolor).append(map1.get(i)).append(ecolor);
-				} else if (map2.get(i) != null) {
-					sb.append(map2.get(i));
-				}
-			}
-		}
+        }
+
+        List<Integer> keyList = new ArrayList<Integer>();
+        return revisedDto;
+
+    }
+
+    public static Map compareStrLong(String char1, String char2, String colour) {
+        String bcolor = "";
+        String ecolor = "";
+        StringBuffer sb = new StringBuffer();
+        char[] a = new char[char1.length()];
+        for (int i = 0; i < char1.length(); i++) {
+            a[i] = char1.charAt(i);
+        }
+        char[] b = new char[char2.length()];
+        for (int i = 0; i < char2.length(); i++) {
+            b[i] = char2.charAt(i);
+        }
+        // 不同字符集合
+        Map map1 = new HashMap();
+        // 包含字符集合
+        Map map2 = new HashMap();
+        if (char1.length() > char2.length()) {
+            for (int i = 0; i < a.length; i++) {
+                if (i == a.length - 1) {
+                    if (i > 1) {
+                        if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
+                            map2.put(i - 1, a[i - 1]);
+                            map2.put(i, a[i]);
+                        } else {
+                            map1.put(i, a[i]);
+                        }
+                    } else {
+                        map2.put(i, a[i]);
+                    }
+                } else {
+                    if (String.valueOf(b).contains(String.valueOf(a[i]) + String.valueOf(a[i + 1]))) {
+                        if (i > 1) {
+                            if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
+                                map2.put(i - 1, a[i - 1]);
+                                map2.put(i, a[i]);
+                            }
+                        } else {
+                            map2.put(i, a[i]);
+                        }
+                    } else {
+                        if (i > 0) {
+                            if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
+                                map2.put(i - 1, a[i - 1]);
+                                map2.put(i, a[i]);
+                            } else {
+                                map1.put(i, a[i]);
+                            }
+                        } else {
+                            map1.put(i, a[i]);
+                        }
+                    }
+                }
+            }
+        } else {
+            for (int i = 0; i < b.length; i++) {
+                if (i == b.length - 1) {
+                    if (i > 1) {
+                        if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
+                            map2.put(i - 1, b[i - 1]);
+                            map2.put(i, b[i]);
+                        } else {
+                            map1.put(i, b[i]);
+                        }
+                    } else {
+                        map2.put(i, b[i]);
+                    }
+                } else {
+                    if (String.valueOf(a).contains(String.valueOf(b[i]) + String.valueOf(b[i + 1]))) {
+                        if (i > 1) {
+                            if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
+                                map2.put(i - 1, b[i - 1]);
+                                map2.put(i, b[i]);
+                            }
+                        } else {
+                            map2.put(i, b[i]);
+                        }
+                    } else {
+                        if (i > 0) {
+                            if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
+                                map2.put(i - 1, b[i - 1]);
+                                map2.put(i, b[i]);
+                            } else {
+                                map1.put(i, b[i]);
+                            }
+                        } else {
+                            map1.put(i, b[i]);
+                        }
+                    }
+                }
+            }
+        }
+        if (char1.length() > char2.length()) {
+            for (int i = 0; i < a.length; i++) {
+                if (map1.get(i) != null) {
+                    sb.append(bcolor).append(map1.get(i)).append(ecolor);
+                } else if (map2.get(i) != null) {
+                    sb.append(map2.get(i));
+                }
+            }
+        } else if (char1.length() <= char2.length()) {
+            for (int i = 0; i < b.length; i++) {
+                if (map1.get(i) != null) {
+                    sb.append(bcolor).append(map1.get(i)).append(ecolor);
+                } else if (map2.get(i) != null) {
+                    sb.append(map2.get(i));
+                }
+            }
+        }
 //		System.out.println("map1:" + map1);
 //		System.out.println("map2:" + map2);
 //		return sb.toString();
-		return map1;
-	}
+        return map1;
+    }
 
-	public static Map compareStrshort(String char1, String char2, String colour) {
-		String bcolor = "";
-		String ecolor = "";
-		StringBuffer sb = new StringBuffer();
-		char[] a = new char[char1.length()];
-		for (int i = 0; i < char1.length(); i++) {
-			a[i] = char1.charAt(i);
-		}
-		char[] b = new char[char2.length()];
-		for (int i = 0; i < char2.length(); i++) {
-			b[i] = char2.charAt(i);
-		}
-		// 不同字符集合
-		Map map1 = new HashMap();
-		// 包含字符集合
-		Map map2 = new HashMap();
-		if (char1.length() > char2.length()) {
-			for (int i = 0; i < b.length; i++) {
-				if (i == b.length - 1) {
-					if (i > 1) {
-						if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
-							map2.put(i - 1, b[i - 1]);
-							map2.put(i, b[i]);
-						}else{
-							map1.put(i, b[i]);
-						}
-					} else {
-						map2.put(i, b[i]);
-					}
-				} else {
-					if (String.valueOf(a).contains(String.valueOf(b[i]) + String.valueOf(b[i + 1]))) {
-						if (i > 1) {
-							if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
-								map2.put(i - 1, b[i - 1]);
-								map2.put(i, b[i]);
-							}
-						} else {
-							map2.put(i, b[i]);
-						}
-					} else {
-						if (i > 0) {
-							if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
-								map2.put(i - 1, b[i - 1]);
-								map2.put(i, b[i]);
-							} else {
-								map1.put(i, b[i]);
-							}
-						} else {
-							map1.put(i, b[i]);
-						}
-					}
-				}
-			}
-		} else {
-			for (int i = 0; i < a.length; i++) {
-				if (i == a.length - 1) {
-					if (i > 1) {
-						if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
-							map2.put(i - 1, a[i - 1]);
-							map2.put(i, a[i]);
-						}else{
-							map1.put(i, a[i]);
-						}
-					} else {
-						map2.put(i, a[i]);
-					}
-				} else {
-					if (String.valueOf(b).contains(String.valueOf(a[i]) + String.valueOf(a[i + 1]))) {
-						if (i > 1) {
-							if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
-								map2.put(i - 1, a[i - 1]);
-								map2.put(i, a[i]);
-							}else{
-								map1.put(i, a[i]);
-							}
-						} else {
-							map2.put(i, a[i]);
-						}
-					} else {
-						if (i > 0) {
-							if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
-								map2.put(i - 1, a[i - 1]);
-								map2.put(i, a[i]);
-							} else {
-								map1.put(i, a[i]);
-							}
-						} else {
-							map1.put(i, a[i]);
-						}
-					}
-				}
-			}
-		}
+    public static Map compareStrshort(String char1, String char2, String colour) {
+        String bcolor = "";
+        String ecolor = "";
+        StringBuffer sb = new StringBuffer();
+        char[] a = new char[char1.length()];
+        for (int i = 0; i < char1.length(); i++) {
+            a[i] = char1.charAt(i);
+        }
+        char[] b = new char[char2.length()];
+        for (int i = 0; i < char2.length(); i++) {
+            b[i] = char2.charAt(i);
+        }
+        // 不同字符集合
+        Map map1 = new HashMap();
+        // 包含字符集合
+        Map map2 = new HashMap();
+        if (char1.length() > char2.length()) {
+            for (int i = 0; i < b.length; i++) {
+                if (i == b.length - 1) {
+                    if (i > 1) {
+                        if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
+                            map2.put(i - 1, b[i - 1]);
+                            map2.put(i, b[i]);
+                        } else {
+                            map1.put(i, b[i]);
+                        }
+                    } else {
+                        map2.put(i, b[i]);
+                    }
+                } else {
+                    if (String.valueOf(a).contains(String.valueOf(b[i]) + String.valueOf(b[i + 1]))) {
+                        if (i > 1) {
+                            if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
+                                map2.put(i - 1, b[i - 1]);
+                                map2.put(i, b[i]);
+                            }
+                        } else {
+                            map2.put(i, b[i]);
+                        }
+                    } else {
+                        if (i > 0) {
+                            if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
+                                map2.put(i - 1, b[i - 1]);
+                                map2.put(i, b[i]);
+                            } else {
+                                map1.put(i, b[i]);
+                            }
+                        } else {
+                            map1.put(i, b[i]);
+                        }
+                    }
+                }
+            }
+        } else {
+            for (int i = 0; i < a.length; i++) {
+                if (i == a.length - 1) {
+                    if (i > 1) {
+                        if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
+                            map2.put(i - 1, a[i - 1]);
+                            map2.put(i, a[i]);
+                        } else {
+                            map1.put(i, a[i]);
+                        }
+                    } else {
+                        map2.put(i, a[i]);
+                    }
+                } else {
+                    if (String.valueOf(b).contains(String.valueOf(a[i]) + String.valueOf(a[i + 1]))) {
+                        if (i > 1) {
+                            if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
+                                map2.put(i - 1, a[i - 1]);
+                                map2.put(i, a[i]);
+                            } else {
+                                map1.put(i, a[i]);
+                            }
+                        } else {
+                            map2.put(i, a[i]);
+                        }
+                    } else {
+                        if (i > 0) {
+                            if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
+                                map2.put(i - 1, a[i - 1]);
+                                map2.put(i, a[i]);
+                            } else {
+                                map1.put(i, a[i]);
+                            }
+                        } else {
+                            map1.put(i, a[i]);
+                        }
+                    }
+                }
+            }
+        }
 
-		if (char1.length() > char2.length()) {
-			for (int i = 0; i < a.length; i++) {
-				if (map1.get(i) != null) {
-					sb.append(bcolor).append(map1.get(i)).append(ecolor);
-				} else if (map2.get(i) != null) {
-					sb.append(map2.get(i));
-				}
-			}
-		} else if (char1.length() <= char2.length()) {
-			for (int i = 0; i < b.length; i++) {
-				if (map1.get(i) != null) {
-					sb.append(bcolor).append(map1.get(i)).append(ecolor);
-				} else if (map2.get(i) != null) {
-					sb.append(map2.get(i));
-				}
-			}
-		}
+        if (char1.length() > char2.length()) {
+            for (int i = 0; i < a.length; i++) {
+                if (map1.get(i) != null) {
+                    sb.append(bcolor).append(map1.get(i)).append(ecolor);
+                } else if (map2.get(i) != null) {
+                    sb.append(map2.get(i));
+                }
+            }
+        } else if (char1.length() <= char2.length()) {
+            for (int i = 0; i < b.length; i++) {
+                if (map1.get(i) != null) {
+                    sb.append(bcolor).append(map1.get(i)).append(ecolor);
+                } else if (map2.get(i) != null) {
+                    sb.append(map2.get(i));
+                }
+            }
+        }
 //		System.out.println(map1);
 //		return sb.toString();
-		return map1;
-	}
+        return map1;
+    }
 
-	 /**
+    /**
      * 使用 Map按key进行排序
+     *
      * @param map
      * @return
      */
-	 public static Map<Integer, Character> sortMapByKey(Map<Integer, Character> map) {
-	        if (map == null || map.isEmpty()) {
-	            return null;
-	        }
+    public static Map<Integer, Character> sortMapByKey(Map<Integer, Character> map) {
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
 
-	        Map<Integer, Character> sortMap = new TreeMap<Integer, Character>(new MapKeyComparator());
+        Map<Integer, Character> sortMap = new TreeMap<Integer, Character>(new MapKeyComparator());
 
-	        sortMap.putAll(map);
+        sortMap.putAll(map);
 
-	        return sortMap;
-	    }
+        return sortMap;
+    }
 }
