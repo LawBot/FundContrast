@@ -116,7 +116,6 @@ public class DocProcessor extends TextProcessor {
                         partText = new StringBuilder();
                     }
                     currentPart = new DocPart();
-//                    String title = TextUtils.getPartTitle(currentLine);
                     String title = currentLine;
 
                     String index = "";
@@ -153,7 +152,6 @@ public class DocProcessor extends TextProcessor {
                     }
                     currentPart = new DocPart();
                     String title = TextUtils.getPartTitle(currentLine);
-//                    String title = currentLine;
                     String index = "";
                     if (currentLine.length() > title.length()) {
                         index = currentLine.replace(title, "");
@@ -178,7 +176,6 @@ public class DocProcessor extends TextProcessor {
                     }
                     currentPart = new DocPart();
                     String title = TextUtils.getPartTitle(currentLine);
-//                    String title = currentLine;
                     String index = "";
                     if (currentLine.length() > title.length()) {
                         index = currentLine.replace(title, "");
@@ -211,10 +208,16 @@ public class DocProcessor extends TextProcessor {
             }
             ++lineIdx;
         }
+        // sortPartIds
+        fundDoc = setPartIdsForEachNode(fundDoc);
         return fundDoc;
     }
 
-    public FundDoc setPartIdsForEachNode(FundDoc myFundDOc) {
+    /**
+     * @param myFundDOc
+     * @return
+     */
+    private FundDoc setPartIdsForEachNode(FundDoc myFundDOc) {
         for (int i = 0; i < myFundDOc.getParts().size(); i++) {
             DocPart tmpDocPart = new DocPart();
             tmpDocPart = myFundDOc.getParts().get(i);

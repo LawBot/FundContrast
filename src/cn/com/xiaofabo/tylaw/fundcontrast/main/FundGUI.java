@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.*;
@@ -188,8 +189,7 @@ public class FundGUI extends javax.swing.JFrame {
                     e1.printStackTrace();
                 }
                 FundDoc fd = dp.process();
-                //TODO
-                FundDoc IndexedFd = dp.setPartIdsForEachNode(fd);
+
 
                 DocProcessor dp2 = new DocProcessor(contractPath);
                 try {
@@ -198,8 +198,6 @@ public class FundGUI extends javax.swing.JFrame {
                     e1.printStackTrace();
                 }
                 FundDoc fd2 = dp2.process();
-                //TODO
-                FundDoc indexedFd = dp2.setPartIdsForEachNode(fd2);
 
                 String title = "《" + dp2.getNameForGenDoc() + "》";
                 String txt = dp2.getTextForGenDoc() + "募集申请材料之" + title;
@@ -225,9 +223,10 @@ public class FundGUI extends javax.swing.JFrame {
                 // get patchDtoList
                 List<PatchDto> patchDtoList = null;
                 CompareUtils3 compareUtils3 = new CompareUtils3();
+                List<String> listOfId = new ArrayList<>();
                 try {
                     patchDtoList = compareUtils3.getPatchDtoList(templateDoc, contractPath);
-                    System.out.println(patchDtoList);
+                    listOfId = compareUtils3.getSortIdList();
                 } catch (Exception e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
@@ -235,7 +234,7 @@ public class FundGUI extends javax.swing.JFrame {
 
                 try {
                     String genDocPath = jTextField2.getText();
-                    genDoc.generate(title, txt, patchDtoList, genDocPath);
+                    genDoc.generate(title, txt, patchDtoList, genDocPath, listOfId);
                     JOptionPane.showMessageDialog(null, "成功生成对照表！");
                 } catch (IOException e1) {
                     e1.printStackTrace();

@@ -36,14 +36,9 @@ public class GenerateCompareDoc {
      * Defined Constants.
      */
     private static Logger log = Logger.getLogger(GenerateCompareDoc.class.getName());
-    // add header, footer
     String headerContent = "条文对照表测试文本";
 
-//    createHeader(document, headerContent);
-//
-//    createFooter(document);
-
-    public void generate(String title, String leadingText, List<PatchDto> resultDto, String outputPath) throws IOException {
+    public void generate(String title, String leadingText, List<PatchDto> resultDto, String outputPath, List<String> listOfId) throws IOException {
         PropertyConfigurator.configure("log.properties");
         log.info("Create an empty document");
         int row = resultDto.size() + 1;
@@ -64,8 +59,7 @@ public class GenerateCompareDoc {
         width.setW(TABLE_WIDTH);
         CTTblLayoutType type = table.getCTTbl().getTblPr().addNewTblLayout();
         type.setType(STTblLayoutType.FIXED);
-//       boolean ok =  table.getCTTbl().getTblPr().isSetTblBorders();
-//        System.out.println("OKOKOKOKMIN: " + ok);
+
 
         XWPFTableRow tableRowOne = table.getRow(0);
         tableRowOne.setRepeatHeader(true);
@@ -82,15 +76,23 @@ public class GenerateCompareDoc {
         tableRowOne.getCell(3).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_COLUMN_4_WIDTH);
         tableRowOne.getCell(3).setText("修改理由\n");
 
-        for (int i = 0; i < resultDto.size(); i++) {
-            PatchDto p = resultDto.get(i);
+        for (int i = 0; i < listOfId.size(); i++) {
+            String targetId = listOfId.get(i);
+
+            PatchDto p = new PatchDto();
+            for (PatchDto tmp : resultDto) {
+                if (tmp.getPartId() == (targetId)) {
+                    p = tmp;
+                    break;
+                }
+            }
+
             XWPFTableRow tableRow = table.getRow(1 + i);
             //章节
             String column0 = "第" + p.getChapterIndex() + "章";
             tableRow.getCell(0).setText(column0);
             //type==change
             if (p.getChangeType() == "change") {
-                System.out.println("INSIDE Change");
                 // change: delete
                 if (p.getRevisedDto() != null && p.getRevisedDto().getDeleteData() != null && p.getRevisedDto().getAddData() == null) {
                     Set set = p.getRevisedDto().getDeleteData().keySet();
@@ -180,7 +182,6 @@ public class GenerateCompareDoc {
             }
             // type==add
             if (p.getChangeType() == "add") {
-                System.out.println("INSIDE ADD");
                 XWPFTableCell cell = tableRow.getCell(2);
                 cell.removeParagraph(0);
                 XWPFParagraph paragraph = cell.addParagraph();
@@ -194,7 +195,6 @@ public class GenerateCompareDoc {
 
             // type==delete
             if (p.getChangeType() == "delete") {
-                System.out.println("INSIDE delete");
                 XWPFTableCell cell = tableRow.getCell(1);
                 cell.removeParagraph(0);
                 XWPFParagraph paragraph = cell.addParagraph();
