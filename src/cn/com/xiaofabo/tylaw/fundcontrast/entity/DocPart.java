@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * @author 陈光曦
  */
-public class DocPart {
+public class DocPart implements Comparable<DocPart> {
 
     String title;
     String text;
@@ -19,8 +19,10 @@ public class DocPart {
     List<DocPart> childPart;
     String partCount;
     List<Integer> partId;
+    List<Integer> partIndex;
 
     public DocPart() {
+        partIndex = new LinkedList<Integer>();
     }
 
     public String getTitle() {
@@ -62,7 +64,6 @@ public class DocPart {
         return childPart.add(part);
     }
 
-
     public String getPartCount() {
         return partCount;
     }
@@ -79,6 +80,14 @@ public class DocPart {
         this.partId = partId;
     }
 
+    public List<Integer> getPartIndex() {
+        return partIndex;
+    }
+
+    public void setPartIndex(List<Integer> partIndex) {
+        this.partIndex = partIndex;
+    }
+
     public List<DocPart> getChildPart() {
         return childPart;
     }
@@ -86,7 +95,6 @@ public class DocPart {
     public void setChildPart(List<DocPart> childPart) {
         this.childPart = childPart;
     }
-
 
     //是否是叶子节点
     public boolean hasPart() {
@@ -110,5 +118,21 @@ public class DocPart {
             });
         }
         return toReturn.toString();
+    }
+
+    @Override
+    public int compareTo(DocPart dp) {
+        for (int i = 0; i < partIndex.size(); ++i) {
+            if (i > dp.getPartIndex().size() - 1) {
+                return 1;
+            }
+            int thisIndex = partIndex.get(i);
+            int compareIndex = dp.getPartIndex().get(i);
+            int diff = thisIndex - compareIndex;
+            if (diff != 0) {
+                return diff;
+            }
+        }
+        return 0;
     }
 }

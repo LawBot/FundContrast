@@ -63,6 +63,7 @@ public class DocProcessor extends TextProcessor {
         int currentLevel = -1;
         int lastPartLevel = -1;
         int lineIdx = 0;
+        int partIndex = 0;
         List textList = TextUtils.removeAllEmptyLines(super.getLines());
         StringBuilder partText = new StringBuilder();
         List<DocPart> tmpPartList = new LinkedList();
@@ -71,8 +72,6 @@ public class DocProcessor extends TextProcessor {
         boolean foundFirstIdentifier = false;
         while (lineIdx < textList.size()) {
             String currentLine = ((String) textList.get(lineIdx)).trim();
-
-
             if (lineIdx < 4) {
                 this.titleOfGenDoc += currentLine;
             }
@@ -116,16 +115,18 @@ public class DocProcessor extends TextProcessor {
                         partText = new StringBuilder();
                     }
                     currentPart = new DocPart();
-                    String title = currentLine;
+                    String title = TextUtils.getPartTitle(currentLine);
+                    String index = currentLine.substring(0, currentLine.indexOf(title)).trim();
 
-                    String index = "";
-                    if (currentLine.length() > title.length()) {
-                        index = currentLine.replace(title, "");
-                    } else {
-                        index = "";
-                    }
                     currentPart.setIndex(index);
                     currentPart.setTitle(title);
+
+                    List<Integer> idxList = new LinkedList();
+                    if (!tmpPartList.isEmpty()) {
+                        idxList.addAll(tmpPartList.get(tmpPartList.size() - 1).getPartIndex());
+                    }
+                    idxList.add(0);
+                    currentPart.setPartIndex(idxList);
 
                     tmpPartList.add(currentPart);
                     ++currentLevel;
@@ -134,6 +135,7 @@ public class DocProcessor extends TextProcessor {
                         currentPart.setText(partText.toString());
                         partText = new StringBuilder();
                     }
+
                     DocPart parentDp = (DocPart) tmpPartList.get(currentLevel - 1);
                     parentDp.addPart(currentPart);
                     tmpPartList.remove(currentLevel);
@@ -146,20 +148,31 @@ public class DocProcessor extends TextProcessor {
                         parentDp.addPart(dp);
                         tmpPartList.remove(i);
                     }
+
                     if (actualLevel == 0) {
                         fundDoc.addPart(tmpPartList.get(0));
+                        partIndex = tmpPartList.get(0).getPartIndex().get(0) + 1;
                         tmpPartList = new LinkedList();
                     }
                     currentPart = new DocPart();
                     String title = TextUtils.getPartTitle(currentLine);
-                    String index = "";
-                    if (currentLine.length() > title.length()) {
-                        index = currentLine.replace(title, "");
-                    } else {
-                        index = "";
-                    }
+                    String index = currentLine.substring(0, currentLine.indexOf(title)).trim();
+
                     currentPart.setIndex(index);
                     currentPart.setTitle(title);
+
+                    List<Integer> idxList = new LinkedList();
+                    if (actualLevel == 0) {
+                        idxList.add(partIndex);
+                    } else {
+                        List childParts = tmpPartList.get(tmpPartList.size() - 1).getChildPart();
+                        DocPart part = (DocPart) childParts.get(childParts.size() - 1);
+                        idxList.addAll(part.getPartIndex());
+                        partIndex = idxList.get(idxList.size() - 1) + 1;
+                        idxList.set(idxList.size() - 1, partIndex);
+                    }
+                    currentPart.setPartIndex(idxList);
+
                     tmpPartList.add(currentPart);
                     currentLevel = actualLevel;
                 } else {  //(currentPartLevel == tmpPartLevel)
@@ -176,15 +189,22 @@ public class DocProcessor extends TextProcessor {
                     }
                     currentPart = new DocPart();
                     String title = TextUtils.getPartTitle(currentLine);
-                    String index = "";
-                    if (currentLine.length() > title.length()) {
-                        index = currentLine.replace(title, "");
-                    } else {
-                        index = "";
-                    }
+                    String index = currentLine.substring(0, currentLine.indexOf(title)).trim();
 
                     currentPart.setIndex(index);
                     currentPart.setTitle(title);
+
+                    List<Integer> idxList = new LinkedList();
+                    if (!tmpPartList.isEmpty()) {
+                        idxList.addAll(tmpPartList.get(tmpPartList.size() - 1).getPartIndex());
+                        partIndex = idxList.get(idxList.size() - 1) + 1;
+                        idxList.set(idxList.size() - 1, partIndex);
+                    } else {
+                        idxList.add(++partIndex);
+                    }
+
+                    currentPart.setPartIndex(idxList);
+
                     if (currentPartLevel == 0) {
                         tmpPartList.add(currentPart);
                     } else {
@@ -226,7 +246,6 @@ public class DocProcessor extends TextProcessor {
             myFundDOc.getParts().get(i).setPartCount(tmpList[i]);
             myFundDOc.getParts().get(i).setPartId(string2ListForC(myFundDOc.getParts().get(i).getPartCount()));
 
-
             if (tmpDocPart.hasPart()) {
                 for (int j = 0; j < tmpDocPart.getChildPart().size(); j++) {
                     DocPart tmpSection = new DocPart();
@@ -237,7 +256,6 @@ public class DocProcessor extends TextProcessor {
                     tmpDocPart.getChildPart().get(j).setPartCount(tmpSectionList[j]);
                     tmpDocPart.getChildPart().get(j).setPartId(string2List(tmpDocPart.getChildPart().get(j).getPartCount()));
 
-
                     if (tmpSection.hasPart()) {
                         for (int k = 0; k < tmpSection.getChildPart().size(); k++) {
                             DocPart tmpSubSection = new DocPart();
@@ -247,7 +265,6 @@ public class DocProcessor extends TextProcessor {
                             tmpSubSectionList[k] = tmpSubSectionList[k] + k;
                             tmpSection.getChildPart().get(k).setPartCount(tmpSubSectionList[k]);
                             tmpSection.getChildPart().get(k).setPartId(string2List(tmpSection.getChildPart().get(k).getPartCount()));
-
 
                             if (tmpSubSection.hasPart()) {
                                 for (int m = 0; m < tmpSubSection.getChildPart().size(); m++) {

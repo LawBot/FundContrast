@@ -18,7 +18,6 @@ import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
 
 public class CompareUtils3 {
 
-
     // sort patchDtoList
     List<String> sortIdList = new ArrayList<>();
 
@@ -376,6 +375,7 @@ public class CompareUtils3 {
             patchDto.setIndexType("orginal");
             patchDto.setChangeType("change");
             patchDto.setPartId(templatePart.getPartCount());
+            patchDto.setPartIndex(templatePart.getPartIndex());
             patchDto.setOrignalText(templateText);
             patchDtoList.add(patchDto);
 
@@ -432,6 +432,7 @@ public class CompareUtils3 {
                 rdt.deleteData(j, c);
             }
             pdt.setPartId(dp.getPartCount());
+            pdt.setPartIndex(dp.getPartIndex());
             pdt.setRevisedDto(rdt);
             patchDtoList.add(pdt);
         }
@@ -453,6 +454,7 @@ public class CompareUtils3 {
             }
             pdt.setRevisedDto(rdt);
             pdt.setPartId(dp.getPartCount());
+            pdt.setPartIndex(dp.getPartIndex());
             patchDtoList.add(pdt);
         }
 
@@ -466,6 +468,7 @@ public class CompareUtils3 {
             DocPart tPart = templatePart.getChildPart().get(templateIndex);
             DocPart sPart = samplePart.getChildPart().get(sampleIndex);
             pdt.setPartId(tPart.getPartCount());
+            pdt.setPartIndex(tPart.getPartIndex());
 
             /// Then compare children parts
             compareParts(patchDtoList, tPart, sPart);
@@ -518,6 +521,7 @@ public class CompareUtils3 {
                 rdt.deleteData(j, c);
             }
             pdt.setPartId(dp.getPartCount());
+            pdt.setPartIndex(dp.getPartIndex());
             pdt.setRevisedDto(rdt);
             patchDtoList.add(pdt);
         }
@@ -538,6 +542,7 @@ public class CompareUtils3 {
                 rdt.addData(j, c);
             }
             pdt.setPartId(dp.getPartCount());
+            pdt.setPartIndex(dp.getPartIndex());
             pdt.setRevisedDto(rdt);
             patchDtoList.add(pdt);
         }
@@ -552,17 +557,12 @@ public class CompareUtils3 {
             DocPart templatePart = templateDoc.getParts().get(templateIndex);
             DocPart samplePart = sampleDoc.getParts().get(sampleIndex);
             pdt.setPartId(samplePart.getPartCount());
+            pdt.setPartIndex(samplePart.getPartIndex());
             /// Then compare children parts
             compareParts(patchDtoList, templatePart, samplePart);
         }
 
-
-        for (PatchDto p : patchDtoList) {
-            sortIdList.add(p.getPartId());
-        }
-
-
-        Collections.sort(sortIdList);
+        Collections.sort(patchDtoList);
         return patchDtoList;
     }
 
