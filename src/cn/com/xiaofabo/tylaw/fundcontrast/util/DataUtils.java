@@ -65,13 +65,4 @@ public class DataUtils {
             "data/Sample/九泰基金/20171010九泰汇利定期开放混合型发起式/九泰汇利定期开放灵活配置混合型发起式证券投资基金基金合同(草案)-流动性新规修订-1010清洁版.docx";
     public static String SAMPLE_JTJJ_BOND_1 =
             "data/Sample/九泰基金/20171103九泰安鑫纯债债券型/九泰安鑫纯债债券型证券投资基金合同（草案）20170725定稿清洁版.doc";
-
-    public static final BigInteger A4_WIDTH = BigInteger.valueOf(16840L);
-    public static final BigInteger A4_LENGTH = BigInteger.valueOf(11900L);
-    public static final BigInteger TABLE_WIDTH = BigInteger.valueOf(13040L);
-    public static final String Color_grey = "808080";
-    public static final BigInteger TABLE_COLUMN_1_WIDTH = BigInteger.valueOf(1133L);    /// ~2.0cm
-    public static final BigInteger TABLE_COLUMN_2_WIDTH = BigInteger.valueOf(4820L);    /// ~8.5cm
-    public static final BigInteger TABLE_COLUMN_3_WIDTH = BigInteger.valueOf(4253L);    /// ~7.5cm
-    public static final BigInteger TABLE_COLUMN_4_WIDTH = BigInteger.valueOf(2551L);    /// ~4.5cm
 }

@@ -16,21 +16,31 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.*;
 
-import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.TABLE_WIDTH;
-import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.A4_WIDTH;
-import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.A4_LENGTH;
-import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.TABLE_COLUMN_1_WIDTH;
-import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.TABLE_COLUMN_2_WIDTH;
-import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.TABLE_COLUMN_3_WIDTH;
-import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.TABLE_COLUMN_4_WIDTH;
-import static cn.com.xiaofabo.tylaw.fundcontrast.util.DataUtils.Color_grey;
-
 /**
  * Created on @ 17.01.18
  *
  * @author 杨敏 email ddl-15 at outlook.com
+ * 
+ * Modified on 2018-02-14
  */
 public class GenerateCompareDoc {
+    
+    public static final BigInteger A4_WIDTH = BigInteger.valueOf(16840L);
+    public static final BigInteger A4_LENGTH = BigInteger.valueOf(11900L);
+    public static final BigInteger TABLE_WIDTH = BigInteger.valueOf(13040L);
+    
+    public static final String TABLE_HEADER_BGCOLOR = "808080";
+    
+    public static final BigInteger TABLE_COLUMN_1_WIDTH = BigInteger.valueOf(1133L);    /// ~2.0cm
+    public static final BigInteger TABLE_COLUMN_2_WIDTH = BigInteger.valueOf(4820L);    /// ~8.5cm
+    public static final BigInteger TABLE_COLUMN_3_WIDTH = BigInteger.valueOf(4253L);    /// ~7.5cm
+    public static final BigInteger TABLE_COLUMN_4_WIDTH = BigInteger.valueOf(2551L);    /// ~4.5cm
+    
+    public static final String TABLE_COLUMN_1_TEXT = "章节";
+    public static final String TABLE_COLUMN_2_TEXT = "《指引》条款";
+    public static final String TABLE_COLUMN_3_TEXT = "《基金合同》条款";
+    public static final String TABLE_COLUMN_4_TEXT = "修改理由";
+    
 
     /**
      * Defined Constants.
@@ -38,10 +48,10 @@ public class GenerateCompareDoc {
     private static Logger log = Logger.getLogger(GenerateCompareDoc.class.getName());
     String headerContent = "条文对照表测试文本";
 
-    public void generate(String title, String leadingText, List<PatchDto> resultDto, String outputPath, List<String> listOfId) throws IOException {
+    public int generate(String title, String leadingText, List<PatchDto> contrastList, String outputPath, List<String> listOfId) throws IOException {
         PropertyConfigurator.configure("log.properties");
         log.info("Create an empty document");
-        int row = resultDto.size() + 1;
+        int nRow = contrastList.size() + 1;
         XWPFDocument document = new XWPFDocument();
         FileOutputStream out = new FileOutputStream(new File(outputPath + "/条文对照表.docx"));
 
@@ -53,7 +63,7 @@ public class GenerateCompareDoc {
         generateLeadingText(document, leadingText);
 
         /// Generate contrast table
-        XWPFTable table = document.createTable(row, 4);
+        XWPFTable table = document.createTable(nRow, 4);
         CTTblWidth width = table.getCTTbl().addNewTblPr().addNewTblW();
         width.setType(STTblWidth.DXA);
         width.setW(TABLE_WIDTH);
@@ -63,24 +73,24 @@ public class GenerateCompareDoc {
 
         XWPFTableRow tableRowOne = table.getRow(0);
         tableRowOne.setRepeatHeader(true);
-        tableRowOne.getTableCells().get(0).getCTTc().addNewTcPr().addNewShd().setFill(Color_grey);
-        tableRowOne.getTableCells().get(1).getCTTc().addNewTcPr().addNewShd().setFill(Color_grey);
-        tableRowOne.getTableCells().get(2).getCTTc().addNewTcPr().addNewShd().setFill(Color_grey);
-        tableRowOne.getTableCells().get(3).getCTTc().addNewTcPr().addNewShd().setFill(Color_grey);
+        tableRowOne.getTableCells().get(0).getCTTc().addNewTcPr().addNewShd().setFill(TABLE_HEADER_BGCOLOR);
+        tableRowOne.getTableCells().get(1).getCTTc().addNewTcPr().addNewShd().setFill(TABLE_HEADER_BGCOLOR);
+        tableRowOne.getTableCells().get(2).getCTTc().addNewTcPr().addNewShd().setFill(TABLE_HEADER_BGCOLOR);
+        tableRowOne.getTableCells().get(3).getCTTc().addNewTcPr().addNewShd().setFill(TABLE_HEADER_BGCOLOR);
         tableRowOne.getCell(0).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_COLUMN_1_WIDTH);
-        tableRowOne.getCell(0).setText("章节\n");
+        tableRowOne.getCell(0).setText(TABLE_COLUMN_1_TEXT);
         tableRowOne.getCell(1).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_COLUMN_2_WIDTH);
-        tableRowOne.getCell(1).setText("《指引》条款\n");
+        tableRowOne.getCell(1).setText(TABLE_COLUMN_2_TEXT);
         tableRowOne.getCell(2).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_COLUMN_3_WIDTH);
-        tableRowOne.getCell(2).setText("《基金合同》条款\n");
+        tableRowOne.getCell(2).setText(TABLE_COLUMN_3_TEXT);
         tableRowOne.getCell(3).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_COLUMN_4_WIDTH);
-        tableRowOne.getCell(3).setText("修改理由\n");
+        tableRowOne.getCell(3).setText(TABLE_COLUMN_4_TEXT);
 
         for (int i = 0; i < listOfId.size(); i++) {
             String targetId = listOfId.get(i);
 
             PatchDto p = new PatchDto();
-            for (PatchDto tmp : resultDto) {
+            for (PatchDto tmp : contrastList) {
                 if (tmp.getPartId() == (targetId)) {
                     p = tmp;
                     break;
@@ -210,6 +220,8 @@ public class GenerateCompareDoc {
         createFooter(document);
         document.write(out);
         out.close();
+        
+        return 0;
     }
 
     /**
