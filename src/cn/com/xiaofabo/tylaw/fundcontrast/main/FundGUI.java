@@ -3,7 +3,7 @@ package cn.com.xiaofabo.tylaw.fundcontrast.main;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.PatchDto;
 import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
-import cn.com.xiaofabo.tylaw.fundcontrast.util.CompareUtils3;
+import cn.com.xiaofabo.tylaw.fundcontrast.util.CompareUtils;
 import cn.com.xiaofabo.tylaw.fundcontrast.util.GenerateCompareDoc;
 
 import javax.swing.*;
@@ -222,9 +222,9 @@ public class FundGUI extends javax.swing.JFrame {
                 GenerateCompareDoc genDoc = new GenerateCompareDoc();
                 // get patchDtoList
                 List<PatchDto> patchDtoList = null;
-                CompareUtils3 compareUtils3 = new CompareUtils3();
+                CompareUtils compareUtils = new CompareUtils();
                 try {
-                    patchDtoList = compareUtils3.getPatchDtoList(templateDoc, contractPath);
+                    patchDtoList = compareUtils.getPatchDtoList(templateDoc, contractPath);
                 } catch (Exception e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();

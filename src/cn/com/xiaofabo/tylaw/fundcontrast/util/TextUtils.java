@@ -114,7 +114,7 @@ public class TextUtils {
             if (matcher.find()) {
                 int start = matcher.start();
                 int end = matcher.end();
-                System.out.println(titleLine); 
+//                System.out.println(titleLine); 
                 title = titleLine.substring(end).trim();
                 break;
             }

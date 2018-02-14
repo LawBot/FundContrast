@@ -1,8 +1,6 @@
 package cn.com.xiaofabo.tylaw.fundcontrast.util;
 
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.*;
-import cn.com.xiaofabo.tylaw.fundcontrast.main.CompareTest2;
-import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.Logger;
 import org.apache.poi.wp.usermodel.HeaderFooterType;
@@ -28,18 +26,28 @@ public class GenerateCompareDoc {
     public static final BigInteger A4_WIDTH = BigInteger.valueOf(16840L);
     public static final BigInteger A4_LENGTH = BigInteger.valueOf(11900L);
     public static final BigInteger TABLE_WIDTH = BigInteger.valueOf(13040L);
+    
+    public static final String FONT_FAMILY_TIME_NEW_ROMAN = "Times New Roman";
+    public static final String FONT_FAMILY_SONG = "宋体";
+    
+    public static final int EFFECT_ADD_BOLD = 0;
+    public static final int EFFECT_ADD_UNDERLINE = 1;
+    public static final int EFFECT_ADD_BOLD_UNDERLINE = 2;
+    public static final int EFFECT_DELETE_STRIKE = 0;
 
     public static final String TABLE_HEADER_BGCOLOR = "808080";
 
     public static final BigInteger TABLE_COLUMN_1_WIDTH = BigInteger.valueOf(1133L);    /// ~2.0cm
     public static final BigInteger TABLE_COLUMN_2_WIDTH = BigInteger.valueOf(4820L);    /// ~8.5cm
-    public static final BigInteger TABLE_COLUMN_3_WIDTH = BigInteger.valueOf(4820L);    /// ~7.5cm
-    public static final BigInteger TABLE_COLUMN_4_WIDTH = BigInteger.valueOf(1985L);    /// ~4.5cm
+    public static final BigInteger TABLE_COLUMN_3_WIDTH = BigInteger.valueOf(4253L);    /// ~7.5cm
+    public static final BigInteger TABLE_COLUMN_4_WIDTH = BigInteger.valueOf(2551L);    /// ~4.5cm
 
     public static final String TABLE_COLUMN_1_TEXT = "章节";
     public static final String TABLE_COLUMN_2_TEXT = "《指引》条款";
     public static final String TABLE_COLUMN_3_TEXT = "《基金合同》条款";
     public static final String TABLE_COLUMN_4_TEXT = "修改理由";
+
+    public static final int FONT_SIZE_LEADING_TEXT = 11;
 
     /**
      * Defined Constants.
@@ -71,18 +79,39 @@ public class GenerateCompareDoc {
 
         XWPFTableRow tableRowOne = table.getRow(0);
         tableRowOne.setRepeatHeader(true);
-        tableRowOne.getTableCells().get(0).getCTTc().addNewTcPr().addNewShd().setFill(TABLE_HEADER_BGCOLOR);
-        tableRowOne.getTableCells().get(1).getCTTc().addNewTcPr().addNewShd().setFill(TABLE_HEADER_BGCOLOR);
-        tableRowOne.getTableCells().get(2).getCTTc().addNewTcPr().addNewShd().setFill(TABLE_HEADER_BGCOLOR);
-        tableRowOne.getTableCells().get(3).getCTTc().addNewTcPr().addNewShd().setFill(TABLE_HEADER_BGCOLOR);
-        tableRowOne.getCell(0).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_COLUMN_1_WIDTH);
-        tableRowOne.getCell(0).setText(TABLE_COLUMN_1_TEXT);
-        tableRowOne.getCell(1).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_COLUMN_2_WIDTH);
-        tableRowOne.getCell(1).setText(TABLE_COLUMN_2_TEXT);
-        tableRowOne.getCell(2).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_COLUMN_3_WIDTH);
-        tableRowOne.getCell(2).setText(TABLE_COLUMN_3_TEXT);
-        tableRowOne.getCell(3).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_COLUMN_4_WIDTH);
-        tableRowOne.getCell(3).setText(TABLE_COLUMN_4_TEXT);
+
+        for (int i = 0; i < 4; ++i) {
+            XWPFTableCell cell = tableRowOne.getCell(i);
+            cell.getCTTc().addNewTcPr().addNewShd().setFill(TABLE_HEADER_BGCOLOR);
+            BigInteger columnWidth = null;
+            String columnText = null;
+            switch (i) {
+                case 0:
+                    columnWidth = TABLE_COLUMN_1_WIDTH;
+                    columnText = TABLE_COLUMN_1_TEXT;
+                    break;
+                case 1:
+                    columnWidth = TABLE_COLUMN_2_WIDTH;
+                    columnText = TABLE_COLUMN_2_TEXT;
+                    break;
+                case 2:
+                    columnWidth = TABLE_COLUMN_3_WIDTH;
+                    columnText = TABLE_COLUMN_3_TEXT;
+                    break;
+                case 3:
+                    columnWidth = TABLE_COLUMN_4_WIDTH;
+                    columnText = TABLE_COLUMN_4_TEXT;
+                    break;
+                default:
+                    break;
+            }
+            cell.getCTTc().addNewTcPr().addNewTcW().setW(columnWidth);
+            cell.removeParagraph(0);
+            XWPFParagraph paragraph = cell.addParagraph();
+            XWPFRun run = paragraph.createRun();
+            addEffect(run, EFFECT_ADD_BOLD);
+            run.setText(columnText);
+        }
 
         for (int i = 0; i < contrastList.size(); ++i) {
             PatchDto contrastItem = contrastList.get(i);
@@ -91,17 +120,22 @@ public class GenerateCompareDoc {
             String changeType = contrastItem.getChangeType();
 
             XWPFTableRow tableRow = table.getRow(i + 1);
-            String column0Str = "第" + chapterIndex + "章";
-            tableRow.getCell(0).setText(column0Str);
+            String chapterTitle = contrastItem.getChapterTitle();
+            tableRow.getCell(0).removeParagraph(0);
+            XWPFParagraph p = tableRow.getCell(0).addParagraph();
+            XWPFRun r = p.createRun();
+            addEffect(r, EFFECT_ADD_BOLD);
+            r.setText(chapterTitle);
 
             if (changeType.equalsIgnoreCase("add")) {
                 XWPFTableCell cell = tableRow.getCell(2);
                 cell.removeParagraph(0);
                 XWPFParagraph paragraph = cell.addParagraph();
+                paragraph.setAlignment(ParagraphAlignment.LEFT);
 
                 String addText = contrastItem.getRevisedDto().getRevisedText();
                 XWPFRun run = paragraph.createRun();
-                run.setBold(true);
+                addEffect(run, EFFECT_ADD_BOLD_UNDERLINE);
                 run.setText(addText);
             }
 
@@ -109,10 +143,11 @@ public class GenerateCompareDoc {
                 XWPFTableCell cell = tableRow.getCell(1);
                 cell.removeParagraph(0);
                 XWPFParagraph paragraph = cell.addParagraph();
+                paragraph.setAlignment(ParagraphAlignment.LEFT);
 
                 String deleteText = contrastItem.getOrignalText();
                 XWPFRun run = paragraph.createRun();
-                run.setStrikeThrough(true);
+                deleteEffect(run, EFFECT_DELETE_STRIKE);
                 run.setText(deleteText);
             }
 
@@ -127,28 +162,36 @@ public class GenerateCompareDoc {
                     XWPFTableCell cell = tableRow.getCell(1);
                     cell.removeParagraph(0);
                     XWPFParagraph paragraph = cell.addParagraph();
+                    paragraph.setAlignment(ParagraphAlignment.LEFT);
                     for (int j = 0; j < contrastItem.getOrignalText().length(); j++) {
                         XWPFRun letterRun = paragraph.createRun();
+                        if(contrastItem.getOrignalText().charAt(j) == '\n'){
+                            letterRun.addBreak();
+                            continue;
+                        }
+                        
                         String currentLetter = Character.toString(contrastItem.getOrignalText().charAt(j));
                         if (set.contains(j)) {
-                            letterRun.setStrike(true);
-                            letterRun.setText(currentLetter);
-                        } else {
-                            letterRun.setText(currentLetter);
+                            deleteEffect(letterRun, EFFECT_DELETE_STRIKE);
                         }
+                        letterRun.setText(currentLetter);
+
                     }
                     XWPFTableCell cell1 = tableRow.getCell(2);
                     cell1.removeParagraph(0);
                     XWPFParagraph paragraph1 = cell1.addParagraph();
+                    paragraph.setAlignment(ParagraphAlignment.LEFT);
                     for (int j = 0; j < rdt.getRevisedText().length(); j++) {
                         XWPFRun letterRun = paragraph1.createRun();
+                        if(rdt.getRevisedText().charAt(j) == '\n'){
+                            letterRun.addBreak();
+                            continue;
+                        }
                         String currentLetter = Character.toString(rdt.getRevisedText().charAt(j));
                         if (set.contains(j)) {
-                            letterRun.setStrike(true);
-                            letterRun.setText(currentLetter);
-                        } else {
-                            letterRun.setText(currentLetter);
+                            deleteEffect(letterRun, EFFECT_DELETE_STRIKE);
                         }
+                        letterRun.setText(currentLetter);
                     }
                 }
                 // change: add
@@ -156,24 +199,26 @@ public class GenerateCompareDoc {
                     XWPFTableCell cell = tableRow.getCell(1);
                     cell.removeParagraph(0);
                     XWPFParagraph paragraph = cell.addParagraph();
-                    for (int k = 0; k < contrastItem.getOrignalText().length(); k++) {
-                        XWPFRun runForEachLetter = paragraph.createRun();
-                        String currentLetter = Character.toString(contrastItem.getOrignalText().charAt(k));
-                        runForEachLetter.setText(currentLetter);
-                    }
+                    paragraph.setAlignment(ParagraphAlignment.LEFT);
+                    XWPFRun run = paragraph.createRun();
+                    run.setText(contrastItem.getOrignalText());
+                    
                     Set set1 = rdt.getAddData().keySet();
                     XWPFTableCell cell1 = tableRow.getCell(2);
                     cell1.removeParagraph(0);
                     XWPFParagraph paragraph1 = cell1.addParagraph();
-                    for (int k = 0; k < rdt.getRevisedText().length(); k++) {
-                        XWPFRun runForEachLetter = paragraph1.createRun();
-                        String currentLetter = Character.toString(rdt.getRevisedText().charAt(k));
-                        if (set1.contains(k)) {
-                            runForEachLetter.setBold(true);
-                            runForEachLetter.setText(currentLetter);
-                        } else {
-                            runForEachLetter.setText(currentLetter);
+                    paragraph1.setAlignment(ParagraphAlignment.LEFT);
+                    for (int j = 0; j < rdt.getRevisedText().length(); j++) {
+                        XWPFRun letterRun = paragraph1.createRun();
+                        if(rdt.getRevisedText().charAt(j) == '\n'){
+                            letterRun.addBreak();
+                            continue;
                         }
+                        String currentLetter = Character.toString(rdt.getRevisedText().charAt(j));
+                        if (set1.contains(j)) {
+                            addEffect(letterRun, EFFECT_ADD_BOLD_UNDERLINE);
+                        }
+                        letterRun.setText(currentLetter);
                     }
                 }
                 // change: add + delete
@@ -182,34 +227,41 @@ public class GenerateCompareDoc {
                     XWPFTableCell cell = tableRow.getCell(1);
                     cell.removeParagraph(0);
                     XWPFParagraph paragraph = cell.addParagraph();
+                    paragraph.setAlignment(ParagraphAlignment.LEFT);
                     for (int j = 0; j < contrastItem.getOrignalText().length(); j++) {
-                        XWPFRun runForEachLetter = paragraph.createRun();
+                        XWPFRun letterRun = paragraph.createRun();
+                        if(contrastItem.getOrignalText().charAt(j) == '\n'){
+                            letterRun.addBreak();
+                            continue;
+                        }
                         String currentLetter = Character.toString(contrastItem.getOrignalText().charAt(j));
                         if (set.contains(j)) {
-                            runForEachLetter.setStrike(true);
-                            runForEachLetter.setText(currentLetter);
-                        } else {
-                            runForEachLetter.setText(currentLetter);
+                            deleteEffect(letterRun, EFFECT_DELETE_STRIKE);
                         }
+                        letterRun.setText(currentLetter);
                     }
                     Set set1 = rdt.getAddData().keySet();
                     XWPFTableCell cell1 = tableRow.getCell(2);
                     cell1.removeParagraph(0);
                     XWPFParagraph paragraph1 = cell1.addParagraph();
-                    for (int k = 0; k < rdt.getRevisedText().length(); k++) {
-                        XWPFRun runForEachLetter = paragraph1.createRun();
-                        String currentLetter = Character.toString(rdt.getRevisedText().charAt(k));
-                        if (set1.contains(k)) {
-                            runForEachLetter.setBold(true);
-                            runForEachLetter.setText(currentLetter);
-                        } else {
-                            runForEachLetter.setText(currentLetter);
+                    paragraph1.setAlignment(ParagraphAlignment.LEFT);
+                    for (int j = 0; j < rdt.getRevisedText().length(); j++) {
+                        XWPFRun letterRun = paragraph1.createRun();
+                        if(rdt.getRevisedText().charAt(j) == '\n'){
+                            letterRun.addBreak();
+                            continue;
                         }
+                        String currentLetter = Character.toString(rdt.getRevisedText().charAt(j));
+                        if (set1.contains(j)) {
+                            addEffect(letterRun, EFFECT_ADD_BOLD_UNDERLINE);
+                        }
+                        letterRun.setText(currentLetter);
+
                     }
                 }
             }
         }
-        
+
         createHeader(document, headerContent);
         createFooter(document);
         document.write(out);
@@ -282,6 +334,12 @@ public class GenerateCompareDoc {
         pageSize.setW(A4_WIDTH);
         pageSize.setH(A4_LENGTH);
         pageSize.setOrient(STPageOrientation.LANDSCAPE);
+        
+        XWPFStyles styles = document.createStyles();
+        CTFonts fonts = CTFonts.Factory.newInstance();
+        fonts.setEastAsia(FONT_FAMILY_SONG);
+        fonts.setAscii(FONT_FAMILY_TIME_NEW_ROMAN);
+        styles.setDefaultFonts(fonts);
     }
 
     /**
@@ -308,10 +366,42 @@ public class GenerateCompareDoc {
         XWPFParagraph paragraphText = document.createParagraph();
         paragraphText.setAlignment(ParagraphAlignment.LEFT);
         XWPFRun runText = paragraphText.createRun();
-        //　宋体　１１号
-        runText.setFontSize(11);
+        runText.setFontSize(FONT_SIZE_LEADING_TEXT);
         runText.setText(leadingText);
         runText.addBreak();
         runText.addBreak();
+    }
+    
+    /// style:
+    /// 0: strickthrough
+    private void deleteEffect(XWPFRun run, int style){
+        switch(style){
+            case EFFECT_DELETE_STRIKE:
+                run.setStrikeThrough(true);
+                break;
+            default:
+                break;
+        }
+    }
+    
+    /// style:
+    /// 0: bold
+    /// 1: underline
+    /// 2: bold + underline
+    private void addEffect(XWPFRun run, int style){
+        switch(style){
+            case EFFECT_ADD_BOLD:
+                run.setBold(true);
+                break;
+            case EFFECT_ADD_UNDERLINE:
+                run.setUnderline(UnderlinePatterns.SINGLE);
+                break;
+            case EFFECT_ADD_BOLD_UNDERLINE:
+                run.setUnderline(UnderlinePatterns.SINGLE);
+                run.setBold(true);
+                break;
+            default:
+                break;
+        }
     }
 }

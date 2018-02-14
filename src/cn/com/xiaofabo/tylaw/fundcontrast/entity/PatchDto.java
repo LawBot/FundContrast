@@ -2,7 +2,7 @@ package cn.com.xiaofabo.tylaw.fundcontrast.entity;
 
 import java.util.List;
 
-public class PatchDto implements Comparable<PatchDto>{
+public class PatchDto implements Comparable<PatchDto> {
 
     private String orignalText;
     private int chapterIndex;
@@ -15,6 +15,7 @@ public class PatchDto implements Comparable<PatchDto>{
     private String changeType;//(add:新增 delete:删减 change:更改)
     private String partId;
     private List<Integer> partIndex;
+    private String chapterTitle;
 
     public String getPartId() {
         return partId;
@@ -102,6 +103,14 @@ public class PatchDto implements Comparable<PatchDto>{
 
     public void setPartIndex(List<Integer> partIndex) {
         this.partIndex = partIndex;
+    }
+
+    public String getChapterTitle() {
+        return chapterTitle;
+    }
+
+    public void setChapterTitle(String chapterTitle) {
+        this.chapterTitle = chapterTitle;
     }
 
     @Override

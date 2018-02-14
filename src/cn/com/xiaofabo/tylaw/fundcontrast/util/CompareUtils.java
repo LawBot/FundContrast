@@ -1,449 +1,251 @@
 package cn.com.xiaofabo.tylaw.fundcontrast.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import com.github.difflib.DiffUtils;
-import com.github.difflib.algorithm.DiffException;
 import com.github.difflib.patch.Delta;
+import com.github.difflib.patch.DeltaType;
 import com.github.difflib.patch.Patch;
 
-import cn.com.xiaofabo.tylaw.fundcontrast.entity.CompareDto;
+import cn.com.xiaofabo.tylaw.fundcontrast.entity.DocPart;
+import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
+import cn.com.xiaofabo.tylaw.fundcontrast.entity.PartMatch;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.PatchDto;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.RevisedDto;
+import cn.com.xiaofabo.tylaw.fundcontrast.textprocessor.DocProcessor;
 
 public class CompareUtils {
-	
-	public static List<PatchDto> doCompare(List<CompareDto> orignalCompareDtoList, List<CompareDto> revisedCompareDtoList) throws Exception{
-		try {
-			List<String> originalList = new ArrayList<String>();
-			for (CompareDto compareDto : orignalCompareDtoList) {
-				originalList.add(compareDto.getText());
-			}
-		    List<String> revisedList = new ArrayList<String>();
-		    for (CompareDto compareDto : revisedCompareDtoList) {
-				revisedList.add(compareDto.getText());
-			}
-			List<PatchDto> patchList = new ArrayList<PatchDto>();
-			Patch<String> patch = DiffUtils.diff(originalList,revisedList);
-			for (Delta<String> delta : patch.getDeltas()) {
-				Map<String, Object> compareMap = delta.toMap();
-				String originalStr = "";
-				String revisedStr = "";
-				@SuppressWarnings("unchecked")
-				ArrayList<String> originalArr = (ArrayList<String>)compareMap.get("original");
-				ArrayList<String> revisedArr = (ArrayList<String>)compareMap.get("revised");
-				
-				if (originalArr!=null) {
-					int i =0;
-					if (originalArr.size()==revisedArr.size()) {
-						for (String str : originalArr) {
-							CompareDto compareDto = orignalCompareDtoList.get(originalList.indexOf(str));
-							RevisedDto revisedDto = compare(str, revisedArr.get(i));
-							PatchDto patchDto = new PatchDto();
-							patchDto.setRevisedDto(revisedDto);
-							patchDto.setChapterIndex(compareDto.getChapterIndex());
-							patchDto.setOrignalText(str);
-							patchDto.setSectionIndex(compareDto.getSectionIndex());
-							patchDto.setSubSectionIndex(compareDto.getSubSectionIndex());
-							patchDto.setSubsubSectionIndex(compareDto.getSubsubSectionIndex());
-							patchDto.setSubsubsubSectionIndex(compareDto.getSubsubsubSectionIndex());
-							patchDto.setIndexType("orginal");
-							patchList.add(patchDto);
-							i++;
-						}
-					}
-				}
-				if (originalArr!=null&&revisedArr!=null) {
-					if (originalArr.size()>revisedArr.size()) {
-						for (int i = 0; i < revisedArr.size(); i++) {
-							RevisedDto revisedDto = compare(originalArr.get(i), revisedArr.get(i));
-							PatchDto patchDto = new PatchDto();
-							patchDto.setRevisedDto(revisedDto);
-							CompareDto compareDto = orignalCompareDtoList.get(originalList.indexOf(originalArr.get(i)));
-							patchDto.setOrignalText(originalArr.get(i));
-							patchDto.setChapterIndex(compareDto.getChapterIndex());
-							patchDto.setSectionIndex(compareDto.getSectionIndex());
-							patchDto.setSubSectionIndex(compareDto.getSubSectionIndex());
-							patchDto.setSubsubSectionIndex(compareDto.getSubsubSectionIndex());
-							patchDto.setSubsubsubSectionIndex(compareDto.getSubsubsubSectionIndex());
-							patchDto.setIndexType("orginal");
-							patchList.add(patchDto);
-						}
-						for (int i = revisedArr.size(); i < originalArr.size(); i++) {
-							RevisedDto revisedDto = new RevisedDto();
-							Map map = new HashMap<>();
-							for (int j = 0; j < originalArr.get(i).length(); j++) {
-								map.put(j, originalArr.get(i).charAt(j));
-							}
-							CompareDto compareDto = orignalCompareDtoList.get(originalList.indexOf(originalArr.get(i)));
-							revisedDto.setDeleteData(map);
-							PatchDto patchDto = new PatchDto();
-							patchDto.setOrignalText(originalArr.get(i));
-							patchDto.setChapterIndex(compareDto.getChapterIndex());
-							patchDto.setSectionIndex(compareDto.getSectionIndex());
-							patchDto.setSubSectionIndex(compareDto.getSubSectionIndex());
-							patchDto.setSubsubSectionIndex(compareDto.getSubsubSectionIndex());
-							patchDto.setSubsubsubSectionIndex(compareDto.getSubsubsubSectionIndex());
-							patchDto.setIndexType("orginal");
-							patchList.add(patchDto);
-						}
-							
-					}
-					
-					if (originalArr.size()<revisedArr.size()) {
-						for (int i = 0; i < originalArr.size(); i++) {
-							RevisedDto revisedDto = compare(originalArr.get(i), revisedArr.get(i));
-							PatchDto patchDto = new PatchDto();
-							patchDto.setRevisedDto(revisedDto);
-							CompareDto compareDto = orignalCompareDtoList.get(originalList.indexOf(originalArr.get(i)));
-							patchDto.setOrignalText(originalArr.get(i));
-							patchDto.setChapterIndex(compareDto.getChapterIndex());
-							patchDto.setSectionIndex(compareDto.getSectionIndex());
-							patchDto.setSubSectionIndex(compareDto.getSubSectionIndex());
-							patchDto.setSubsubSectionIndex(compareDto.getSubsubSectionIndex());
-							patchDto.setSubsubsubSectionIndex(compareDto.getSubsubsubSectionIndex());
-							patchDto.setIndexType("revised");
-							patchList.add(patchDto);
-						}
-						for (int i = originalArr.size(); i < revisedArr.size(); i++) {
-							RevisedDto revisedDto = new RevisedDto();
-							Map map = new HashMap<>();
-							for (int j = 0; j < revisedArr.get(i).length(); j++) {
-								map.put(j, revisedArr.get(i).charAt(j));
-							}
-							CompareDto compareDto = revisedCompareDtoList.get(revisedList.indexOf(revisedArr.get(i)));
-							revisedDto.setAddData(map);
-							revisedDto.setRevisedText(revisedArr.get(i));
-							PatchDto patchDto = new PatchDto();
-							patchDto.setChapterIndex(compareDto.getChapterIndex());
-							patchDto.setSectionIndex(compareDto.getSectionIndex());
-							patchDto.setSubSectionIndex(compareDto.getSubSectionIndex());
-							patchDto.setSubsubSectionIndex(compareDto.getSubsubSectionIndex());
-							patchDto.setSubsubsubSectionIndex(compareDto.getSubsubsubSectionIndex());
-							patchDto.setIndexType("revised");
-							patchList.add(patchDto);
-						}
-					}
-				}
-				
-	        }
-			return patchList;
-		} catch (DiffException e) {
-			e.printStackTrace();
-			throw new Exception();
-		}
-		
-	}
-	
-	public static RevisedDto compare(String original, String revised){
-		RevisedDto revisedDto = new RevisedDto();
-		revisedDto.setRevisedText(revised);
-		String[] a = revised.split("(?![-\\w])");
-		List<String> list = new ArrayList<String>();
-		for (String s : a) {
-			if (!s.equals("") && !s.equals(".") && !s.equals(",")) {
-				list.add(s.trim());
-			}
-		}
-		String[] b = original.split("(?![-\\w])");
-		List<String> list1 = new ArrayList<String>();
-		for (String s : b) {
-			if (!s.equals("") && !s.equals(".") && !s.equals(",")) {
-				list1.add(s.trim());
-			}
-		}
-		list1.removeAll(list);
-		
-		if (original.length()>=revised.length()) {
-//			System.out.println("revised增加了："+compareStrshort(revised, original, "blue"));
-//			System.out.println("revised减少了："+compareStrLong(revised, original, "blue"));
-//			revisedDto.setAddData(compareStrshort(revised, original, "blue"));
-//			revisedDto.setDeleteData(compareStrLong(revised, original, "blue"));
-			//按Key进行排序
-			Map<Integer, Character> addDataMap = sortMapByKey(compareStrshort(revised, original, "blue"));    
-			Map<Integer, Character> deleteDataMap = sortMapByKey(compareStrLong(revised, original, "blue"));
-			revisedDto.setAddData(addDataMap);
-			revisedDto.setDeleteData(deleteDataMap);
-			 
-		}else if(original.length()<revised.length()){
-//			System.out.println("revised增加了："+compareStrLong(revised, original, "blue"));
-//			System.out.println("revised减少了："+compareStrshort(revised, original, "blue"));
-//			revisedDto.setAddData(compareStrLong(revised, original, "blue"));
-//			revisedDto.setDeleteData(compareStrshort(revised, original, "blue"));
-			//按Key进行排序
-			Map<Integer, Character> addDataMap = sortMapByKey(compareStrLong(revised, original, "blue"));    
-			Map<Integer, Character> deleteDataMap = sortMapByKey(compareStrshort(revised, original, "blue"));
-			revisedDto.setAddData(addDataMap);
-			revisedDto.setDeleteData(deleteDataMap);
-			
-		}
-		
-		List<Integer> keyList = new ArrayList<Integer>();
-		return revisedDto;
-		
-	}		
 
-	public static Map compareStrLong(String char1, String char2, String colour) {
-		String bcolor = "";
-		String ecolor = "";
-		StringBuffer sb = new StringBuffer();
-		char[] a = new char[char1.length()];
-		for (int i = 0; i < char1.length(); i++) {
-			a[i] = char1.charAt(i);
-		}
-		char[] b = new char[char2.length()];
-		for (int i = 0; i < char2.length(); i++) {
-			b[i] = char2.charAt(i);
-		}
-		// 不同字符集合
-		Map map1 = new HashMap();
-		// 包含字符集合
-		Map map2 = new HashMap();
-		if (char1.length() > char2.length()) {
-			for (int i = 0; i < a.length; i++) {
-				if (i == a.length - 1) {
-					if (i > 1) {
-						if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
-							map2.put(i - 1, a[i - 1]);
-							map2.put(i, a[i]);
-						}else{
-							map1.put(i, a[i]);
-						}
-					} else {
-						map2.put(i, a[i]);
-					}
-				} else {
-					if (String.valueOf(b).contains(String.valueOf(a[i]) + String.valueOf(a[i + 1]))) {
-						if (i > 1) {
-							if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
-								map2.put(i - 1, a[i - 1]);
-								map2.put(i, a[i]);
-							}
-						} else {
-							map2.put(i, a[i]);
-						}
-					} else {
-						if (i > 0) {
-							if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
-								map2.put(i - 1, a[i - 1]);
-								map2.put(i, a[i]);
-							} else {
-								map1.put(i, a[i]);
-							}
-						} else {
-							map1.put(i, a[i]);
-						}
-					}
-				}
-			}
-		} else {
-			for (int i = 0; i < b.length; i++) {
-				if (i == b.length - 1) {
-					if (i > 1) {
-						if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
-							map2.put(i - 1, b[i - 1]);
-							map2.put(i, b[i]);
-						}else{
-							map1.put(i, b[i]);
-						}
-					} else {
-						map2.put(i, b[i]);
-					}
-				} else {
-					if (String.valueOf(a).contains(String.valueOf(b[i]) + String.valueOf(b[i + 1]))) {
-						if (i > 1) {
-							if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
-								map2.put(i - 1, b[i - 1]);
-								map2.put(i, b[i]);
-							}
-						} else {
-							map2.put(i, b[i]);
-						}
-					} else {
-						if (i > 0) {
-							if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
-								map2.put(i - 1, b[i - 1]);
-								map2.put(i, b[i]);
-							} else {
-								map1.put(i, b[i]);
-							}
-						} else {
-							map1.put(i, b[i]);
-						}
-					}
-				}
-			}
-		}
-		if (char1.length() > char2.length()) {
-			for (int i = 0; i < a.length; i++) {
-				if (map1.get(i) != null) {
-					sb.append(bcolor).append(map1.get(i)).append(ecolor);
-				} else if (map2.get(i) != null) {
-					sb.append(map2.get(i));
-				}
-			}
-		} else if (char1.length() <= char2.length()) {
-			for (int i = 0; i < b.length; i++) {
-				if (map1.get(i) != null) {
-					sb.append(bcolor).append(map1.get(i)).append(ecolor);
-				} else if (map2.get(i) != null) {
-					sb.append(map2.get(i));
-				}
-			}
-		}
-//		System.out.println("map1:" + map1);
-//		System.out.println("map2:" + map2);
-//		return sb.toString();
-		return map1;
-	}
+    // sort patchDtoList
+    List<String> sortIdList = new ArrayList<>();
 
-	public static Map compareStrshort(String char1, String char2, String colour) {
-		String bcolor = "";
-		String ecolor = "";
-		StringBuffer sb = new StringBuffer();
-		char[] a = new char[char1.length()];
-		for (int i = 0; i < char1.length(); i++) {
-			a[i] = char1.charAt(i);
-		}
-		char[] b = new char[char2.length()];
-		for (int i = 0; i < char2.length(); i++) {
-			b[i] = char2.charAt(i);
-		}
-		// 不同字符集合
-		Map map1 = new HashMap();
-		// 包含字符集合
-		Map map2 = new HashMap();
-		if (char1.length() > char2.length()) {
-			for (int i = 0; i < b.length; i++) {
-				if (i == b.length - 1) {
-					if (i > 1) {
-						if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
-							map2.put(i - 1, b[i - 1]);
-							map2.put(i, b[i]);
-						}else{
-							map1.put(i, b[i]);
-						}
-					} else {
-						map2.put(i, b[i]);
-					}
-				} else {
-					if (String.valueOf(a).contains(String.valueOf(b[i]) + String.valueOf(b[i + 1]))) {
-						if (i > 1) {
-							if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
-								map2.put(i - 1, b[i - 1]);
-								map2.put(i, b[i]);
-							}
-						} else {
-							map2.put(i, b[i]);
-						}
-					} else {
-						if (i > 0) {
-							if (String.valueOf(a).contains(String.valueOf(b[i - 1]) + String.valueOf(b[i]))) {
-								map2.put(i - 1, b[i - 1]);
-								map2.put(i, b[i]);
-							} else {
-								map1.put(i, b[i]);
-							}
-						} else {
-							map1.put(i, b[i]);
-						}
-					}
-				}
-			}
-		} else {
-			for (int i = 0; i < a.length; i++) {
-				if (i == a.length - 1) {
-					if (i > 1) {
-						if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
-							map2.put(i - 1, a[i - 1]);
-							map2.put(i, a[i]);
-						}else{
-							map1.put(i, a[i]);
-						}
-					} else {
-						map2.put(i, a[i]);
-					}
-				} else {
-					if (String.valueOf(b).contains(String.valueOf(a[i]) + String.valueOf(a[i + 1]))) {
-						if (i > 1) {
-							if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
-								map2.put(i - 1, a[i - 1]);
-								map2.put(i, a[i]);
-							}else{
-								map1.put(i, a[i]);
-							}
-						} else {
-							map2.put(i, a[i]);
-						}
-					} else {
-						if (i > 0) {
-							if (String.valueOf(b).contains(String.valueOf(a[i - 1]) + String.valueOf(a[i]))) {
-								map2.put(i - 1, a[i - 1]);
-								map2.put(i, a[i]);
-							} else {
-								map1.put(i, a[i]);
-							}
-						} else {
-							map1.put(i, a[i]);
-						}
-					}
-				}
-			}
-		}
+    public List<PatchDto> getPatchDtoList(String templatePath, String samplePath) throws Exception {
+        List<PatchDto> patchDtoList = new LinkedList();
 
-		if (char1.length() > char2.length()) {
-			for (int i = 0; i < a.length; i++) {
-				if (map1.get(i) != null) {
-					sb.append(bcolor).append(map1.get(i)).append(ecolor);
-				} else if (map2.get(i) != null) {
-					sb.append(map2.get(i));
-				}
-			}
-		} else if (char1.length() <= char2.length()) {
-			for (int i = 0; i < b.length; i++) {
-				if (map1.get(i) != null) {
-					sb.append(bcolor).append(map1.get(i)).append(ecolor);
-				} else if (map2.get(i) != null) {
-					sb.append(map2.get(i));
-				}
-			}
-		}
-//		System.out.println(map1);
-//		return sb.toString();
-		return map1;
-	}
+        DocProcessor templateProcessor = new DocProcessor(templatePath);
+        templateProcessor.readText(templatePath);
+        FundDoc templateDoc = templateProcessor.process();
 
-	 /**
-     * 使用 Map按key进行排序
-     * @param map
-     * @return
-     */
-	 public static Map<Integer, Character> sortMapByKey(Map<Integer, Character> map) {
-	        if (map == null || map.isEmpty()) {
-	            return null;
-	        }
+        DocProcessor sampleProcessor = new DocProcessor(samplePath);
+        sampleProcessor.readText(samplePath);
+        FundDoc sampleDoc = sampleProcessor.process();
 
-	        Map<Integer, Character> sortMap = new TreeMap<Integer, Character>(new MapKeyComparator());
+        /// Compare first level part
+        List templateTitles = new LinkedList();
+        List sampleTitles = new LinkedList();
 
-	        sortMap.putAll(map);
+        for (int i = 0; i < templateDoc.getParts().size(); ++i) {
+            String title = ((DocPart) templateDoc.getParts().get(i)).getTitle();
+            templateTitles.add(title);
+        }
+        for (int i = 0; i < sampleDoc.getParts().size(); ++i) {
+            String title = ((DocPart) sampleDoc.getParts().get(i)).getTitle();
+            sampleTitles.add(title);
+        }
 
-	        return sortMap;
-	    }
-    
-// @Override            
-// public int compare(Map<String, Object> lhs, Map<String, Object> rhs) {         
-//	 Double d5 = ((Double) rhs.get(OpenPrice));        
-//	 Double d6 = (Double) lhs.get(OpenPrice);           
-//	 if (d5 != null && d6 != null) {                     
-//		 return d5.compareTo(d6);       
-//		 } else {            
-//			 return flag;        
-//			 }                        // return d1.compareTo(d2);}
-//	 }
-// }
+        PartMatch partMatch = StringSimUtils.findBestMatch(templateTitles, sampleTitles);
+        List addList = partMatch.getAddList();
+        List deleteList = partMatch.getDeleteList();
+        Map matchList = partMatch.getMatchList();
+
+        for (int i = 0; i < deleteList.size(); ++i) {
+            int chapterIndex = (int) deleteList.get(i);
+            PatchDto pdt = new PatchDto();
+            pdt.setChapterIndex(chapterIndex);
+            pdt.setChangeType("delete");
+
+            /// TODO: should be recursive
+            /// Delete means exists in template but not in sample
+            DocPart dp = templateDoc.getParts().get(chapterIndex);
+            String pointText = dp.getWholePoint();
+            pdt.setOrignalText(pointText);
+            RevisedDto rdt = new RevisedDto();
+            for (int j = 0; j < pointText.length(); ++j) {
+                Character c = pointText.charAt(j);
+                rdt.deleteData(j, c);
+            }
+            pdt.setPartId(dp.getPartCount());
+            pdt.setPartIndex(dp.getPartIndex());
+            pdt.setChapterTitle(templateDoc.getParts().get(dp.getPartIndex().get(0)).getTitle());
+            pdt.setRevisedDto(rdt);
+            patchDtoList.add(pdt);
+        }
+
+        for (int i = 0; i < addList.size(); ++i) {
+            int chapterIndex = (int) addList.get(i);
+            PatchDto pdt = new PatchDto();
+            pdt.setChapterIndex(chapterIndex);
+            pdt.setChangeType("add");
+            /// TODO: should be recursive
+            /// Add means exists in sample but not in template
+            DocPart dp = sampleDoc.getParts().get(chapterIndex);
+            String pointText = dp.getWholePoint();
+            RevisedDto rdt = new RevisedDto();
+            rdt.setRevisedText(pointText);
+            for (int j = 0; j < pointText.length(); ++j) {
+                Character c = pointText.charAt(j);
+                rdt.addData(j, c);
+            }
+            pdt.setPartId(dp.getPartCount());
+            pdt.setPartIndex(dp.getPartIndex());
+            pdt.setChapterTitle(templateDoc.getParts().get(dp.getPartIndex().get(0)).getTitle());
+            pdt.setRevisedDto(rdt);
+            patchDtoList.add(pdt);
+        }
+
+        Iterator it = matchList.keySet().iterator();
+        while (it.hasNext()) {
+            int templateIndex = (int) it.next();
+            int sampleIndex = (int) matchList.get(templateIndex);
+            PatchDto pdt = new PatchDto();
+            pdt.setChapterIndex(sampleIndex);
+            pdt.setChangeType("change");
+            DocPart templatePart = templateDoc.getParts().get(templateIndex);
+            DocPart samplePart = sampleDoc.getParts().get(sampleIndex);
+            pdt.setPartId(samplePart.getPartCount());
+            pdt.setPartIndex(samplePart.getPartIndex());
+            pdt.setChapterTitle(templateDoc.getParts().get(templatePart.getPartIndex().get(0)).getTitle());
+            /// Then compare children parts
+            compareParts(patchDtoList, templateDoc, sampleDoc, templatePart, samplePart);
+        }
+
+        Collections.sort(patchDtoList);
+        return patchDtoList;
+    }
+
+    public void compareParts(List patchDtoList, 
+            FundDoc templateDoc, FundDoc sampleDoc, 
+            DocPart templatePart, DocPart samplePart) 
+            throws Exception {
+        String templateText = templatePart.getIndex() + templatePart.getPoint();
+        String sampleText = samplePart.getIndex() + samplePart.getPoint();
+        /// Compare templateText and sampleText
+        /// In case they are different, patchDtoList.add
+        if (!templateText.equalsIgnoreCase(sampleText)) {
+
+            Patch<String> patch = DiffUtils.diffInline(templateText, sampleText);
+            List<Delta<String>> deltaList = patch.getDeltas();
+            Map<Integer, Character> deleteMap = new HashMap();
+            Map<Integer, Character> addMap = new HashMap();
+            for (Delta<String> delta : deltaList) {
+                if (delta.getType().equals(DeltaType.CHANGE)) {
+                    for (int i = delta.getOriginal().getPosition(); i < delta.getOriginal().getPosition() + delta.getOriginal().getLines().get(0).length(); i++) {
+                        deleteMap.put(i, templateText.charAt(i));
+                    }
+                    for (int i = delta.getRevised().getPosition(); i < delta.getRevised().getPosition() + delta.getRevised().getLines().get(0).length(); i++) {
+                        addMap.put(i, sampleText.charAt(i));
+                    }
+                }
+                if (delta.getType().equals(DeltaType.DELETE)) {
+                    for (int i = delta.getOriginal().getPosition(); i < delta.getOriginal().getPosition() + delta.getOriginal().getLines().get(0).length(); i++) {
+                        deleteMap.put(i, templateText.charAt(i));
+                    }
+                }
+                if (delta.getType().equals(DeltaType.INSERT)) {
+                    for (int i = delta.getRevised().getPosition(); i < delta.getRevised().getPosition() + delta.getRevised().getLines().get(0).length(); i++) {
+                        addMap.put(i, sampleText.charAt(i));
+                    }
+                }
+            }
+            RevisedDto revisedDto = new RevisedDto();
+            revisedDto.setAddData(addMap);
+            revisedDto.setDeleteData(deleteMap);
+            revisedDto.setRevisedText(sampleText);
+            PatchDto pdt = new PatchDto();
+            pdt.setRevisedDto(revisedDto);
+            pdt.setOrignalText(templateText);
+            pdt.setIndexType("orginal");
+            pdt.setChangeType("change");
+            pdt.setPartId(templatePart.getPartCount());
+            pdt.setPartIndex(templatePart.getPartIndex());
+            pdt.setChapterTitle(templateDoc.getParts().get(templatePart.getPartIndex().get(0)).getTitle());
+            pdt.setOrignalText(templateText);
+            patchDtoList.add(pdt);
+        }
+
+        if (!templatePart.hasPart() && !samplePart.hasPart()) {
+            return;
+        }
+
+        List templateTitles = new LinkedList();
+        List sampleTitles = new LinkedList();
+
+        for (int i = 0; templatePart.hasPart() && i < templatePart.getChildPart().size(); ++i) {
+            String title = ((DocPart) templatePart.getChildPart().get(i)).getTitle();
+            templateTitles.add(title);
+        }
+        for (int i = 0; samplePart.hasPart() && i < samplePart.getChildPart().size(); ++i) {
+            String title = ((DocPart) samplePart.getChildPart().get(i)).getTitle();
+            sampleTitles.add(title);
+        }
+
+        PartMatch partMatch = StringSimUtils.findBestMatch(templateTitles, sampleTitles);
+        List addList = partMatch.getAddList();
+        List deleteList = partMatch.getDeleteList();
+        Map matchList = partMatch.getMatchList();
+
+        for (int i = 0; i < deleteList.size(); ++i) {
+            int chapterIndex = (int) deleteList.get(i);
+            PatchDto pdt = new PatchDto();
+            pdt.setChapterIndex(chapterIndex);
+            pdt.setChangeType("delete");
+            /// TODO: should be recursive
+            /// Delete means exists in template but not in sample
+            DocPart dp = templatePart.getChildPart().get(chapterIndex);
+            String pointText = dp.getWholePoint();
+            pdt.setOrignalText(pointText);
+            RevisedDto rdt = new RevisedDto();
+            for (int j = 0; j < pointText.length(); ++j) {
+                Character c = pointText.charAt(j);
+                rdt.deleteData(j, c);
+            }
+            pdt.setPartId(dp.getPartCount());
+            pdt.setPartIndex(dp.getPartIndex());
+            pdt.setChapterTitle(templateDoc.getParts().get(dp.getPartIndex().get(0)).getTitle());
+            pdt.setRevisedDto(rdt);
+            patchDtoList.add(pdt);
+        }
+
+        for (int i = 0; i < addList.size(); ++i) {
+            int chapterIndex = (int) addList.get(i);
+            PatchDto pdt = new PatchDto();
+            pdt.setChapterIndex(chapterIndex);
+            pdt.setChangeType("add");
+            /// TODO: should be recursive
+            /// Add means exists in sample but not in template
+            DocPart dp = samplePart.getChildPart().get(chapterIndex);
+            String pointText = dp.getWholePoint();
+            RevisedDto rdt = new RevisedDto();
+            rdt.setRevisedText(pointText);
+            for (int j = 0; j < pointText.length(); ++j) {
+                Character c = pointText.charAt(j);
+                rdt.addData(j, c);
+            }
+            pdt.setRevisedDto(rdt);
+            pdt.setPartId(dp.getPartCount());
+            pdt.setPartIndex(dp.getPartIndex());
+            pdt.setChapterTitle(templateDoc.getParts().get(dp.getPartIndex().get(0)).getTitle());
+            patchDtoList.add(pdt);
+        }
+
+        Iterator it = matchList.keySet().iterator();
+        while (it.hasNext()) {
+            int templateIndex = (int) it.next();
+            int sampleIndex = (int) matchList.get(templateIndex);
+            PatchDto pdt = new PatchDto();
+            pdt.setChapterIndex(sampleIndex);
+            pdt.setChangeType("change");
+            DocPart tPart = templatePart.getChildPart().get(templateIndex);
+            DocPart sPart = samplePart.getChildPart().get(sampleIndex);
+            pdt.setPartId(tPart.getPartCount());
+            pdt.setPartIndex(tPart.getPartIndex());
+
+            /// Then compare children parts
+            compareParts(patchDtoList, templateDoc, sampleDoc, tPart, sPart);
+        }
+    }
+
+    public List<String> getSortIdList() {
+        return sortIdList;
+    }
 }
