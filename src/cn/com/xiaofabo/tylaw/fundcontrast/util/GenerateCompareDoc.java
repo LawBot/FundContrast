@@ -21,7 +21,7 @@ import java.util.*;
  *
  * @author 杨敏 email ddl-15 at outlook.com
  * 
- * Modified on 2018-02-14
+ * Modified on 2018-02-14 by G. Chen
  */
 public class GenerateCompareDoc {
     
@@ -85,6 +85,12 @@ public class GenerateCompareDoc {
         tableRowOne.getCell(2).setText(TABLE_COLUMN_3_TEXT);
         tableRowOne.getCell(3).getCTTc().addNewTcPr().addNewTcW().setW(TABLE_COLUMN_4_WIDTH);
         tableRowOne.getCell(3).setText(TABLE_COLUMN_4_TEXT);
+        
+        for(int i = 0; i < contrastList.size(); ++i){
+            PatchDto contrastItem = contrastList.get(i);
+            List<Integer> partIndex = contrastItem.getPartIndex();
+            String changeType = contrastItem.getChangeType();
+        }
 
         for (int i = 0; i < listOfId.size(); i++) {
             String targetId = listOfId.get(i);
