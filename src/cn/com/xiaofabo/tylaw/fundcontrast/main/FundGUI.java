@@ -223,10 +223,8 @@ public class FundGUI extends javax.swing.JFrame {
                 // get patchDtoList
                 List<PatchDto> patchDtoList = null;
                 CompareUtils3 compareUtils3 = new CompareUtils3();
-                List<String> listOfId = new ArrayList<>();
                 try {
                     patchDtoList = compareUtils3.getPatchDtoList(templateDoc, contractPath);
-                    listOfId = compareUtils3.getSortIdList();
                 } catch (Exception e1) {
                     // TODO Auto-generated catch block
                     e1.printStackTrace();
@@ -234,7 +232,7 @@ public class FundGUI extends javax.swing.JFrame {
 
                 try {
                     String genDocPath = jTextField2.getText();
-                    genDoc.generate(title, txt, patchDtoList, genDocPath, listOfId);
+                    int success = genDoc.generate(title, txt, patchDtoList, genDocPath);
                     JOptionPane.showMessageDialog(null, "成功生成对照表！");
                 } catch (IOException e1) {
                     e1.printStackTrace();
