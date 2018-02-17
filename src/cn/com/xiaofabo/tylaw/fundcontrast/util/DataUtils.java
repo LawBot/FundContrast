@@ -56,7 +56,7 @@ public class DataUtils {
     public static String SAMPLE_JTJJ_STOCK_1 =
             "data/Sample/九泰基金/20170413九泰天辰量化新动力混合型/九泰天辰量化新动力混合型证券投资基金合同-0224范-0228TY-0301发托管.doc";
     public static String SAMPLE_JTJJ_STOCK_2 =
-            "data/Sample/九泰基金/九泰天泽灵活配置混合型证券投资基金基金合同（草案）-申请用印版0419-修改为灵配混合0505.doc";
+            "data/Sample/九泰基金/20170419九泰天泽混合型/九泰天泽灵活配置混合型证券投资基金基金合同（草案）-申请用印版0419-修改为灵配混合0505.doc";
     public static String SAMPLE_JTJJ_STOCK_3 =
             "data/Sample/九泰基金/20170925九泰生活方式混合型FOF/九泰生活方式稳健配置混合型基金中基金（FOF）基金合同（草案）20170914流动性新规-20170922新调整.doc";
     public static String SAMPLE_JTJJ_STOCK_4 =

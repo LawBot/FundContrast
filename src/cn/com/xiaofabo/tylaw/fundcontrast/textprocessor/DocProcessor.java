@@ -54,6 +54,11 @@ public class DocProcessor extends TextProcessor {
                 ++lineIdx;
                 continue;
             }
+            
+            if(lineIdx < 20 && currentLine.contains("XX")){
+                ++lineIdx;
+                continue;
+            }
 
             if (lineIdx < 20 && !contractNameFilled) {
                 contractNameComplete.append(currentLine);
@@ -64,15 +69,15 @@ public class DocProcessor extends TextProcessor {
                         ++lineIdx;
                         continue;
                     }
-                    String contractNameCompleteStr = contractNameComplete.toString();
-                    String contractNameStr = contractNameCompleteStr.substring(0, contractNameComplete.indexOf("基金合同"));
+                    String contractNameCompleteStr = TextUtils.removeAllSpaces(contractNameComplete.toString());
+                    String contractNameStr = contractNameCompleteStr.substring(0, contractNameCompleteStr.indexOf("基金合同"));
                     fundDoc.setContractNameComplete(contractNameCompleteStr);
                     fundDoc.setContractName(contractNameStr);;
                     if (contractNameStr.contains("混合") || contractNameStr.contains("股票")) {
                         fundDoc.setType(FundDoc.CONTRACT_TYPE_STOCK);
                     } else if (contractNameStr.contains("指数")) {
                         fundDoc.setType(FundDoc.CONTRACT_TYPE_INDEX);
-                    } else if (contractNameStr.contains("债务")) {
+                    } else if (contractNameStr.contains("债券")) {
                         fundDoc.setType(FundDoc.CONTRACT_TYPE_BOND);
                     } else if (contractNameStr.contains("货币")) {
                         fundDoc.setType(FundDoc.CONTRACT_TYPE_CURRENCY);

@@ -121,6 +121,10 @@ public class TextUtils {
         }
         return title;
     }
+    
+    public static String removeAllSpaces(String input) {
+        return input.replaceAll("\\s+", "");
+    }
 
     private static int zhNum2Int(String s) {
         String x = " 一二三四五六七八九十百";

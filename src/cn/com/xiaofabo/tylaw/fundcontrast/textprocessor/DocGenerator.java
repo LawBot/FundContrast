@@ -72,7 +72,7 @@ public class DocGenerator {
         String templateDocPath;
         switch (sampleDoc.getType()) {
             case 0:
-                templateDocPath = DataUtils.STANDARD_TYPE_STOCK;
+                templateDocPath = DataUtils.STANDARD_TYPE_STOCK_C;
                 break;
             case 1:
                 templateDocPath = DataUtils.STANDARD_TYPE_INDEX;
