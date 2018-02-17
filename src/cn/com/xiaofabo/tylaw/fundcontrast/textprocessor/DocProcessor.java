@@ -35,15 +35,6 @@ public class DocProcessor extends TextProcessor {
         partIdentifiers.add(TextUtils.REGEX_IDENTIFIER_LEVEL_4);
     }
 
-    // 0--3
-    public String getNameForGenDoc() {
-        return this.titleOfGenDoc;
-    }
-
-    public String getTextForGenDoc() {
-        return this.textOfGenDoc;
-    }
-
     public FundDoc process() {
         int currentLevel = -1;
         int lastPartLevel = -1;
@@ -59,13 +50,6 @@ public class DocProcessor extends TextProcessor {
         boolean contractNameFilled = false;
         while (lineIdx < textList.size()) {
             String currentLine = ((String) textList.get(lineIdx)).trim();
-
-            if (lineIdx < 4) {
-                this.titleOfGenDoc += currentLine;
-            }
-            if (lineIdx < 2) {
-                this.textOfGenDoc += currentLine;
-            }
 
             if (lineIdx < 20 && !currentLine.startsWith("基金管理人：") && currentLine.endsWith("有限公司")) {
                 ++lineIdx;
@@ -268,8 +252,6 @@ public class DocProcessor extends TextProcessor {
             }
             ++lineIdx;
         }
-        // sortPartIds
-//        fundDoc = setPartIdsForEachNode(fundDoc);
         return fundDoc;
     }
 }
