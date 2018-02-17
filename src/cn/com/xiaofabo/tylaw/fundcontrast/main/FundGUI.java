@@ -199,8 +199,8 @@ public class FundGUI extends javax.swing.JFrame {
                 }
                 FundDoc fd2 = dp2.process();
 
-                String title = "《" + dp2.getNameForGenDoc() + "》";
-                String txt = dp2.getTextForGenDoc() + "募集申请材料之" + title;
+                String title = "《" + fd2.getContractNameComplete() + "》";
+                String txt = fd2.getContractName() + "募集申请材料之" + title;
                 try {
                     switch (String.valueOf(jComboBox2.getSelectedItem())) {
                         case "股票混合型":

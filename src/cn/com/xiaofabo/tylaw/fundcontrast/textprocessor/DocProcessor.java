@@ -35,21 +35,6 @@ public class DocProcessor extends TextProcessor {
         partIdentifiers.add(TextUtils.REGEX_IDENTIFIER_LEVEL_4);
     }
 
-    public List<Integer> string2List(String currentString) {
-        List<Integer> currentList = new ArrayList<>();
-        String[] tmp = currentString.split("-");
-        for (int i = 0; i < tmp.length; i++) {
-            currentList.add(Integer.valueOf(tmp[i]));
-        }
-        return currentList;
-    }
-
-    public List<Integer> string2ListForC(String currentString) {
-        List<Integer> currentList = new ArrayList<>();
-        currentList.add(Integer.valueOf(currentString));
-        return currentList;
-    }
-
     // 0--3
     public String getNameForGenDoc() {
         return this.titleOfGenDoc;
@@ -70,14 +55,69 @@ public class DocProcessor extends TextProcessor {
         List<Integer> levelMatchList = new LinkedList();
         DocPart currentPart = new DocPart();
         boolean foundFirstIdentifier = false;
+        StringBuilder contractNameComplete = new StringBuilder();
+        boolean contractNameFilled = false;
         while (lineIdx < textList.size()) {
             String currentLine = ((String) textList.get(lineIdx)).trim();
+
             if (lineIdx < 4) {
                 this.titleOfGenDoc += currentLine;
             }
             if (lineIdx < 2) {
                 this.textOfGenDoc += currentLine;
             }
+
+            if (lineIdx < 20 && !currentLine.startsWith("基金管理人：") && currentLine.endsWith("有限公司")) {
+                ++lineIdx;
+                continue;
+            }
+
+            if (lineIdx < 20 && !contractNameFilled) {
+                contractNameComplete.append(currentLine);
+                String nextLine = ((String) textList.get(lineIdx + 1)).trim();
+
+                if (currentLine.endsWith("基金合同") || currentLine.endsWith("（草案）")) {
+                    if (nextLine.endsWith("（草案）")) {
+                        ++lineIdx;
+                        continue;
+                    }
+                    String contractNameCompleteStr = contractNameComplete.toString();
+                    String contractNameStr = contractNameCompleteStr.substring(0, contractNameComplete.indexOf("基金合同"));
+                    fundDoc.setContractNameComplete(contractNameCompleteStr);
+                    fundDoc.setContractName(contractNameStr);;
+                    if (contractNameStr.contains("混合") || contractNameStr.contains("股票")) {
+                        fundDoc.setType(FundDoc.CONTRACT_TYPE_STOCK);
+                    } else if (contractNameStr.contains("指数")) {
+                        fundDoc.setType(FundDoc.CONTRACT_TYPE_INDEX);
+                    } else if (contractNameStr.contains("债务")) {
+                        fundDoc.setType(FundDoc.CONTRACT_TYPE_DEBT);
+                    } else if (contractNameStr.contains("货币")) {
+                        fundDoc.setType(FundDoc.CONTRACT_TYPE_CURRENCY);
+                    } else {
+                        fundDoc.setType(FundDoc.CONTRACT_TYPE_UNKNOWN);
+                    }
+                    contractNameFilled = true;
+                }
+                ++lineIdx;
+                continue;
+            }
+
+            if (lineIdx < 20 && currentLine.startsWith("基金管理人：")) {
+                String establisherCompleteName = currentLine.substring(currentLine.indexOf("基金管理人："));
+                fundDoc.setEstablisherComplete(establisherCompleteName);
+                if (establisherCompleteName.contains("工银")) {
+                    fundDoc.setEstablisher(FundDoc.CONTRACT_ESTABLISHER_GYRX);
+                } else if (establisherCompleteName.contains("华夏")) {
+                    fundDoc.setEstablisher(FundDoc.CONTRACT_ESTABLISHER_HXJJ);
+                } else if (establisherCompleteName.contains("九泰")) {
+                    fundDoc.setEstablisher(FundDoc.CONTRACT_ESTABLISHER_JTJJ);
+                } else {
+                    fundDoc.setEstablisher(FundDoc.CONTRACT_ESTABLISHER_UNKNOWN);
+                }
+                ++lineIdx;
+                continue;
+            }
+
             int currentPartLevel = -1;
             boolean foundIdentifier = false;
             for (int i = 0; i < partIdentifiers.size(); ++i) {
@@ -229,69 +269,7 @@ public class DocProcessor extends TextProcessor {
             ++lineIdx;
         }
         // sortPartIds
-        fundDoc = setPartIdsForEachNode(fundDoc);
+//        fundDoc = setPartIdsForEachNode(fundDoc);
         return fundDoc;
-    }
-
-    /**
-     * @param myFundDOc
-     * @return
-     */
-    private FundDoc setPartIdsForEachNode(FundDoc myFundDOc) {
-        for (int i = 0; i < myFundDOc.getParts().size(); i++) {
-            DocPart tmpDocPart = new DocPart();
-            tmpDocPart = myFundDOc.getParts().get(i);
-            String[] tmpList = new String[myFundDOc.getParts().size()];
-            tmpList[i] = i + "";
-            myFundDOc.getParts().get(i).setPartCount(tmpList[i]);
-            myFundDOc.getParts().get(i).setPartId(string2ListForC(myFundDOc.getParts().get(i).getPartCount()));
-
-            if (tmpDocPart.hasPart()) {
-                for (int j = 0; j < tmpDocPart.getChildPart().size(); j++) {
-                    DocPart tmpSection = new DocPart();
-                    tmpSection = tmpDocPart.getChildPart().get(j);
-                    String[] tmpSectionList = new String[tmpDocPart.getChildPart().size()];
-                    tmpSectionList[j] = tmpDocPart.getPartCount() + "-";
-                    tmpSectionList[j] = tmpSectionList[j] + j;
-                    tmpDocPart.getChildPart().get(j).setPartCount(tmpSectionList[j]);
-                    tmpDocPart.getChildPart().get(j).setPartId(string2List(tmpDocPart.getChildPart().get(j).getPartCount()));
-
-                    if (tmpSection.hasPart()) {
-                        for (int k = 0; k < tmpSection.getChildPart().size(); k++) {
-                            DocPart tmpSubSection = new DocPart();
-                            tmpSubSection = tmpSection.getChildPart().get(k);
-                            String[] tmpSubSectionList = new String[tmpSection.getChildPart().size()];
-                            tmpSubSectionList[k] = tmpSection.getPartCount() + "-";
-                            tmpSubSectionList[k] = tmpSubSectionList[k] + k;
-                            tmpSection.getChildPart().get(k).setPartCount(tmpSubSectionList[k]);
-                            tmpSection.getChildPart().get(k).setPartId(string2List(tmpSection.getChildPart().get(k).getPartCount()));
-
-                            if (tmpSubSection.hasPart()) {
-                                for (int m = 0; m < tmpSubSection.getChildPart().size(); m++) {
-                                    DocPart tmpSubSubSection = new DocPart();
-                                    tmpSubSubSection = tmpSubSection.getChildPart().get(m);
-                                    String[] tmpSubSubSectionList = new String[tmpSubSection.getChildPart().size()];
-                                    tmpSubSubSectionList[m] = tmpSubSection.getPartCount() + "-";
-                                    tmpSubSubSectionList[m] = tmpSubSubSectionList[m] + m;
-                                    tmpSubSection.getChildPart().get(m).setPartCount(tmpSubSubSectionList[m]);
-                                    tmpSubSection.getChildPart().get(m).setPartId(string2List(tmpSubSection.getChildPart().get(m).getPartCount()));
-
-                                    if (tmpSubSubSection.hasPart()) {
-                                        for (int n = 0; n < tmpSubSubSection.getChildPart().size(); n++) {
-                                            String[] tmpSubSubSubSectionList = new String[tmpSubSubSection.getChildPart().size()];
-                                            tmpSubSubSubSectionList[n] = tmpSubSubSection.getPartCount() + "-";
-                                            tmpSubSubSubSectionList[n] = tmpSubSubSubSectionList[n] + n;
-                                            tmpSubSubSection.getChildPart().get(n).setPartCount(tmpSubSubSubSectionList[n]);
-                                            tmpSubSubSection.getChildPart().get(n).setPartId(string2List(tmpSubSubSection.getChildPart().get(n).getPartCount()));
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return myFundDOc;
     }
 }

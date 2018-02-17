@@ -15,10 +15,31 @@ import java.util.List;
 public class FundDoc {
 
     private String title;
+    private String establisher;
+    private String establisherComplete;
+    private int type;
+    private String contractName;
+    private String contractNameComplete;
     private List<DocPart> parts;
+
+    public static int CONTRACT_TYPE_UNKNOWN = -1;
+    public static int CONTRACT_TYPE_STOCK = 0;
+    public static int CONTRACT_TYPE_INDEX = 1;
+    public static int CONTRACT_TYPE_DEBT = 2;
+    public static int CONTRACT_TYPE_CURRENCY = 3;
+
+    public static String CONTRACT_ESTABLISHER_UNKNOWN = "UNKNOWN";
+    public static String CONTRACT_ESTABLISHER_GYRX = "GYRX";
+    public static String CONTRACT_ESTABLISHER_HXJJ = "HXJJ";
+    public static String CONTRACT_ESTABLISHER_JTJJ = "JTJJ";
 
     public FundDoc(String title) {
         this.title = title;
+        this.establisher = CONTRACT_ESTABLISHER_UNKNOWN;
+        this.establisherComplete = "";
+        this.type = CONTRACT_TYPE_UNKNOWN;
+        this.contractName = "";
+        this.contractNameComplete = "";
     }
 
     public String getTitle() {
@@ -42,6 +63,46 @@ public class FundDoc {
             parts = new LinkedList();
         }
         return parts.add(part);
+    }
+
+    public String getEstablisher() {
+        return establisher;
+    }
+
+    public void setEstablisher(String establisher) {
+        this.establisher = establisher;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getContractName() {
+        return contractName;
+    }
+
+    public void setContractName(String contractName) {
+        this.contractName = contractName;
+    }
+
+    public String getEstablisherComplete() {
+        return establisherComplete;
+    }
+
+    public void setEstablisherComplete(String establisherComplete) {
+        this.establisherComplete = establisherComplete;
+    }
+
+    public String getContractNameComplete() {
+        return contractNameComplete;
+    }
+
+    public void setContractNameComplete(String contractNameComplete) {
+        this.contractNameComplete = contractNameComplete;
     }
 
 //    @Override
