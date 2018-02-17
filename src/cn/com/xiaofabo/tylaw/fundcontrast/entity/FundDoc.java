@@ -25,7 +25,7 @@ public class FundDoc {
     public static int CONTRACT_TYPE_UNKNOWN = -1;
     public static int CONTRACT_TYPE_STOCK = 0;
     public static int CONTRACT_TYPE_INDEX = 1;
-    public static int CONTRACT_TYPE_DEBT = 2;
+    public static int CONTRACT_TYPE_BOND = 2;
     public static int CONTRACT_TYPE_CURRENCY = 3;
 
     public static String CONTRACT_ESTABLISHER_UNKNOWN = "UNKNOWN";

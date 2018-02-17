@@ -60,7 +60,7 @@ public class GenerateCompareDoc {
         log.info("Create an empty document");
         int nRow = contrastList.size() + 1;
         XWPFDocument document = new XWPFDocument();
-        FileOutputStream out = new FileOutputStream(new File(outputPath + "/条文对照表.docx"));
+        FileOutputStream out = new FileOutputStream(new File(outputPath));
 
         /// Document page setup
         pageSetup(document);

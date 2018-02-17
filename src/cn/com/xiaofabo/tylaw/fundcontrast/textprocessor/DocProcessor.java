@@ -9,7 +9,6 @@ import cn.com.xiaofabo.tylaw.fundcontrast.entity.DocPart;
 import cn.com.xiaofabo.tylaw.fundcontrast.entity.FundDoc;
 import cn.com.xiaofabo.tylaw.fundcontrast.util.TextUtils;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -74,7 +73,7 @@ public class DocProcessor extends TextProcessor {
                     } else if (contractNameStr.contains("指数")) {
                         fundDoc.setType(FundDoc.CONTRACT_TYPE_INDEX);
                     } else if (contractNameStr.contains("债务")) {
-                        fundDoc.setType(FundDoc.CONTRACT_TYPE_DEBT);
+                        fundDoc.setType(FundDoc.CONTRACT_TYPE_BOND);
                     } else if (contractNameStr.contains("货币")) {
                         fundDoc.setType(FundDoc.CONTRACT_TYPE_CURRENCY);
                     } else {

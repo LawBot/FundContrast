@@ -113,7 +113,7 @@ public class CompareUtils {
         return patchDtoList;
     }
 
-    public void compareParts(List patchDtoList, 
+    private void compareParts(List patchDtoList, 
             FundDoc templateDoc, FundDoc sampleDoc, 
             DocPart templatePart, DocPart samplePart) 
             throws Exception {
